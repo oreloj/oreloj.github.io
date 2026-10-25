@@ -10,7 +10,7 @@ Access:   http://oreloj.local:5000
 
 import csv, datetime, io, json, os, re, select, subprocess, threading, time, urllib.request
 from pathlib import Path
-from flask import Flask, send_file, jsonify, request, abort, redirect
+from flask import Flask, send_file, send_from_directory, jsonify, request, abort, redirect
 
 SCRIPT_DIR       = Path(__file__).parent
 
@@ -882,6 +882,13 @@ for _path in [
 def index():
     """Serve the unified index.html UI."""
     return send_file(SCRIPT_DIR / "index.html")
+
+
+@app.get("/vendor/<path:filename>")
+def vendor(filename):
+    """Serve the bundled map libraries, world outline and fonts, so the UI
+    works with no internet (e.g. phone joined to the Oreloj setup hotspot)."""
+    return send_from_directory(SCRIPT_DIR / "vendor", filename, max_age=86400)
 
 
 if __name__ == "__main__":

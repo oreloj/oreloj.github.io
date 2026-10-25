@@ -62,7 +62,7 @@ You can also drive the globe (or just browse it) from a web page. On the same Wi
 - **Volume slider** at the top.
 - **+ add radio** lets you add your own station (see the Developer Guide).
 
-There's also a public version online at **https://n8b2bp67qj-collab.github.io/oreloj/** — the same globe, browseable from anywhere, though it can't control the physical device.
+There's also a public version online at **https://oreloj.github.io/** — the same globe, browseable from anywhere, though it can't control the physical device.
 
 ---
 

@@ -10,8 +10,8 @@ Oreloj is a hacked Oregon Scientific Horizon globe that plays live web radio fro
 
 ## Repo & live site
 
-- **Repo:** https://github.com/n8b2bp67qj-collab/oreloj
-- **Live site:** https://n8b2bp67qj-collab.github.io/oreloj/
+- **Repo:** https://github.com/oreloj/oreloj.github.io
+- **Live site:** https://oreloj.github.io/
 - **Pi interface:** http://oreloj.local:5000 — unified website + admin UI
 
 ## Editing & deploy model — READ BEFORE CHANGING ANYTHING
@@ -66,7 +66,7 @@ One file serves as both the public website (GitHub Pages) and the Pi admin UI (`
 | `rw_favs` | Favourite names (cache; Pi is source of truth when connected) |
 | `oreloj_dev_pin` | SHA-256 hash of developer PIN |
 | `oreloj_gh_token` | GitHub PAT |
-| `oreloj_gh_repo` | GitHub repo (default: `n8b2bp67qj-collab/oreloj`) |
+| `oreloj_gh_repo` | GitHub repo (default: `oreloj/oreloj.github.io`) |
 
 ### actions.json schema
 

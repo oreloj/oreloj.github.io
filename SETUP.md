@@ -91,7 +91,7 @@ ssh oreloj@oreloj.local
 The repo is public — clone it straight onto the Pi (no token needed):
 
 ```bash
-git clone https://github.com/n8b2bp67qj-collab/oreloj.git ~/globe
+git clone https://github.com/oreloj/oreloj.github.io.git ~/globe
 ```
 
 Because `~/globe` is a git clone, the admin UI's **update** feature

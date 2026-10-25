@@ -5,6 +5,14 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-10-25 — control page works offline, new repo address
+
+### Fixed
+- **Globe now draws with no internet** (`index.html`, `admin.py`, new `vendor/`) — the map library (d3), world outline, topojson helper, hls.js and the Space Mono / Syne fonts are served by the Pi itself via a new `/vendor/` route, with pinned CDN fallbacks. Before, all of these came from unpkg/jsdelivr/Google Fonts, so in hotspot setup mode (phone joined to the "Oreloj" network, no internet) the globe never appeared. (The 2026-05-25 attempt at this was reverted the same day and never had a Pi route.)
+- **Old repo address removed** — the "update available" check and the Push-to-GitHub default still pointed at `n8b2bp67qj-collab/oreloj`; now `oreloj/oreloj.github.io`. A previously saved old name in the browser is upgraded automatically. SETUP.md clone URL, CLAUDE.md and USER_GUIDE.md fixed too.
+
+---
+
 ## 2026-07-16 (part 2) — multi-globe support
 
 ### Changed
