@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oreloj</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<!-- Fonts and map libraries are served from vendor/ so the page works with no internet (hotspot setup mode). -->
+<link href="vendor/fonts.css" rel="stylesheet">
 <style>
 :root {
   --bg: #0e0e0e;
@@ -907,8 +908,10 @@ audio { display: none; }
   </div>
 </div>
 
-<script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
-<script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="vendor/d3.min.js"></script>
+<script>window.d3 || document.write('<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"><\/script>')</script>
+<script src="vendor/topojson-client.min.js"></script>
+<script>window.topojson || document.write('<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"><\/script>')</script>
 <script>
 // ── Pi API helpers ────────────────────────────────────────────────────────
 // PI_BASE is '' when running on the Pi itself (any *.local hostname —
@@ -983,7 +986,8 @@ async function _hashPin(pin) {
 function ghCfg() {
   return {
     token:  localStorage.getItem('oreloj_gh_token')  || '',
-    repo:   localStorage.getItem('oreloj_gh_repo')   || 'n8b2bp67qj-collab/oreloj',
+    // Old repo name (before the move to oreloj/oreloj.github.io) is upgraded automatically.
+    repo:   ((r) => (!r || r === 'n8b2bp67qj-collab/oreloj') ? 'oreloj/oreloj.github.io' : r)(localStorage.getItem('oreloj_gh_repo')),
     branch: localStorage.getItem('oreloj_gh_branch') || 'main',
   };
 }
@@ -1432,12 +1436,13 @@ const audio = document.getElementById('audio-el');
 let _hls = null, _hlsLoader = null;
 function _loadHlsJs() {
   if (window.Hls) return Promise.resolve();
-  if (!_hlsLoader) _hlsLoader = new Promise((res, rej) => {
+  const load = src => new Promise((res, rej) => {
     const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';
-    s.onload = res; s.onerror = rej;
+    s.src = src; s.onload = res; s.onerror = rej;
     document.head.appendChild(s);
   });
+  if (!_hlsLoader) _hlsLoader = load('vendor/hls.min.js')
+    .catch(() => load('https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js'));
   return _hlsLoader;
 }
 async function setAudioSource(url) {
@@ -1706,7 +1711,9 @@ document.addEventListener('keydown', e => {
 });
 
 async function loadWorld() {
-  const topo = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json());
+  const getJson = u => fetch(u).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  const topo = await getJson('vendor/countries-110m.json')
+    .catch(() => getJson('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json'));
   world = topojson.feature(topo, topo.objects.countries);
   resize();
   drawGlobe();
@@ -2245,7 +2252,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   }
   // Restore GitHub dev settings into inputs
   const ghTok = localStorage.getItem('oreloj_gh_token') || '';
-  const ghRepo = localStorage.getItem('oreloj_gh_repo') || 'n8b2bp67qj-collab/oreloj';
+  const ghRepo = ghCfg().repo;
   document.getElementById('gh-token-input').value = ghTok;
   document.getElementById('gh-repo-input').value = ghRepo;
 
@@ -4321,7 +4328,7 @@ async function checkForUpdates() {
     if (isNaN(piTime)) return;
 
     const ghResp = await fetch(
-      'https://api.github.com/repos/n8b2bp67qj-collab/oreloj/commits?per_page=1',
+      `https://api.github.com/repos/${ghCfg().repo}/commits?per_page=1`,
       { headers: { 'Accept': 'application/vnd.github.v3+json' } }
     );
     if (!ghResp.ok) return;
