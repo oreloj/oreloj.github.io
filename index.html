@@ -1233,7 +1233,7 @@ async function ghTestConnection() {
 const BUILT_IN = [
   // Europe
   {name:"NTS Radio",city:"London",country:"UK",lat:51.52,lng:-0.09,web:"https://nts.live",stream:"https://stream-relay-geo.ntslive.net/stream",desc:"London's cult independent broadcaster. Eclectic, adventurous, anti-algorithm."},
-  {name:"Rinse FM",city:"London",country:"UK",lat:51.53,lng:-0.08,web:"https://rinse.fm",desc:"Grime, garage, house and UK bass. Heartbeat of London's underground since 1994."},
+  {name:"Rinse FM",city:"London",country:"UK",lat:51.53,lng:-0.08,web:"https://rinse.fm",stream:"https://admin.stream.rinse.fm/proxy/rinse_uk/stream",desc:"Grime, garage, house and UK bass. Heartbeat of London's underground since 1994."},
   {name:"Worldwide FM",city:"London",country:"UK",lat:51.5,lng:-0.12,web:"https://worldwidefm.net",stream:"https://worldwide-fm.radiocult.fm/stream",desc:"Global grooves curated by Gilles Peterson. Jazz, soul, afrobeat and everything between."},
   {name:"Noods Radio",city:"Bristol",country:"UK",lat:51.45,lng:-2.6,web:"https://noodsradio.com",desc:"Bristol's fiercely independent station. Community-first and boundary-pushing since 2018."},
   {name:"Resonance Extra",city:"London",country:"UK",lat:51.5,lng:-0.09,web:"https://resonancefm.com",stream:"https://stream.resonance.fm/resonance-extra",desc:"Arts radio broadcasting experimental and avant-garde programming since 2002."},
@@ -1251,11 +1251,11 @@ const BUILT_IN = [
   {name:"LYL Radio",city:"Lyon",country:"France",lat:45.75,lng:4.85,web:"https://lyl.live",stream:"https://icecast.lyl.live/live",desc:"Lyon's cult independent station. Disco, experimental, techno and world — live since 2018."},
   {name:"RTL3",city:"Grenoble",country:"France",lat:45.188,lng:5.724,web:"https://rtl3.fr",stream:"https://rtl3.radiocult.fm/stream",desc:"Radio indépendante au Couvent des Minimes, Grenoble. Musiques électroniques et scène locale alpine."},
   {name:"Le Mellotron",city:"Paris",country:"France",lat:48.87,lng:2.36,web:"https://lemellotron.com",desc:"Parisian global music radio since 2007. Soul, jazz, funk, world — always exigeant."},
-  {name:"Radio Meuh",city:"Annecy",country:"France",lat:45.9,lng:6.12,web:"https://radiomeuh.com",desc:"Electronic, soul and funk from the French Alps. Independent and joyful since 2001."},
+  {name:"Radio Meuh",city:"Annecy",country:"France",lat:45.9,lng:6.12,web:"https://radiomeuh.com",stream:"https://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3",desc:"Electronic, soul and funk from the French Alps. Independent and joyful since 2001."},
   {name:"Radio DY10",city:"Nantes",country:"France",lat:47.22,lng:-1.55,web:"https://radiody10.com",desc:"Nantes-based station. Balearic, tropical sounds, dance music and trippy electronic."},
   {name:"Let Him Cook",city:"Paris",country:"France",lat:48.86,lng:2.33,web:"https://lethimcook.radio",desc:"Artists mix live inside a real restaurant kitchen. Music fused with working service energy."},
   {name:"Radio Grenouille",city:"Marseille",country:"France",lat:43.3,lng:5.38,web:"https://radiogrenouille.com",desc:"Marseille's eclectic free radio since 1981. World music, jazz and Mediterranean culture."},
-  {name:"Cinemix",city:"Paris",country:"France",lat:48.88,lng:2.34,web:"https://cinemix.us",desc:"Radio dedicated to film and TV soundtracks. Future classics and golden-era scores."},
+  {name:"Cinemix",city:"Paris",country:"France",lat:48.88,lng:2.34,web:"https://cinemix.us",stream:"https://kathy.torontocast.com:1825/stream",desc:"Radio dedicated to film and TV soundtracks. Future classics and golden-era scores."},
   {name:"Kiosk Radio",city:"Brussels",country:"Belgium",lat:50.85,lng:4.36,web:"https://kioskradio.com",desc:"Brussels' eclectic broadcast from the Bozar kiosk. Community, arts and rare sounds."},
   {name:"Radio Centraal",city:"Antwerp",country:"Belgium",lat:51.22,lng:4.4,web:"https://radiocentraal.be",desc:"Community radio from Antwerp since 1980. One of Belgium's oldest independent stations."},
   {name:"Red Light Radio",city:"Amsterdam",country:"Netherlands",lat:52.37,lng:4.9,web:"https://redlightradio.net",desc:"Amsterdam's underground electronic station. Live sets from the city's best DJs, every day."},
@@ -1265,7 +1265,7 @@ const BUILT_IN = [
   {name:"Radio 80000",city:"Munich",country:"Germany",lat:48.14,lng:11.58,web:"https://80000.de",desc:"Munich's independent underground station. Electronic music and club culture from Bavaria."},
   {name:"Reboot FM",city:"Berlin",country:"Germany",lat:52.5,lng:13.41,web:"https://reboot.fm",desc:"Free artist radio from Berlin. Art, discourse and electronic music since 2005."},
   {name:"Refuge Worldwide",city:"Berlin",country:"Germany",lat:52.47,lng:13.44,web:"https://refugeworldwide.com",desc:"Community radio from Berlin-Neukölln in solidarity with grassroots organisations."},
-  {name:"Radio Corax",city:"Halle",country:"Germany",lat:51.48,lng:11.97,web:"https://radiocorax.de",desc:"Free non-commercial radio from Halle. 300 volunteer contributors."},
+  {name:"Radio Corax",city:"Halle",country:"Germany",lat:51.48,lng:11.97,web:"https://radiocorax.de",stream:"https://streaming.fueralle.org/corax_192.mp3",desc:"Free non-commercial radio from Halle. 300 volunteer contributors."},
   {name:"Rádio Quântica",city:"Lisbon",country:"Portugal",lat:38.72,lng:-9.14,web:"https://radioquantica.com",desc:"Lisbon's community radio since 2015. Safe haven for underground artists and activists."},
   {name:"Radio Raheem",city:"Milan",country:"Italy",lat:45.46,lng:9.19,web:"https://radioraheem.it",desc:"Milan's cosmopolitan independent radio. A richly curated journey across all genres."},
   {name:"NEU Radio",city:"Bologna",country:"Italy",lat:44.49,lng:11.34,web:"https://neu.radio",desc:"Bologna's cultural hub radio. Afrobeats to indie rock, always with an Italian edge."},
@@ -1273,13 +1273,13 @@ const BUILT_IN = [
   {name:"The Lake Radio",city:"Copenhagen",country:"Denmark",lat:55.68,lng:12.57,web:"https://thelakeradio.com",desc:"Copenhagen's independent station. Carefully programmed music and cultural programming."},
   {name:"Retreat Radio",city:"Malmö",country:"Sweden",lat:55.6,lng:13.0,web:"https://retreatradio.com",desc:"Malmö's independent electronic station. A retreat from mainstream broadcasting."},
   {name:"IDA Radio",city:"Tallinn",country:"Estonia",lat:59.44,lng:24.75,web:"https://idaradio.com",desc:"Tallinn-via-Helsinki community radio. Underground music from the Baltics."},
-  {name:"20ft Radio",city:"Kyiv",country:"Ukraine",lat:50.45,lng:30.52,web:"https://20ftradio.com",desc:"Kyiv's underground music station. Resilient cultural broadcasting from Ukraine."},
+  {name:"20ft Radio",city:"Kyiv",country:"Ukraine",lat:50.45,lng:30.52,web:"https://20ftradio.com",stream:"https://20ft-radio.radiocult.fm/stream",desc:"Kyiv's underground music station. Resilient cultural broadcasting from Ukraine."},
   // Asia
   {name:"Mutant Radio",city:"Tbilisi",country:"Georgia",lat:41.69,lng:44.83,web:"https://mutantradio.net",desc:"Tbilisi's independent experimental station. Underground music from the Caucasus."},
   // Europe
-  {name:"Movement Radio",city:"Athens",country:"Greece",lat:37.98,lng:23.73,web:"https://movementradio.gr",desc:"Athens' independent underground radio. Electronic music and counterculture."},
+  {name:"Movement Radio",city:"Athens",country:"Greece",lat:37.98,lng:23.73,web:"https://movementradio.gr",stream:"https://movementathens.out.airtime.pro/movementathens_a",desc:"Athens' independent underground radio. Electronic music and counterculture."},
   // Asia
-  {name:"Radio Alhara",city:"Bethlehem",country:"Palestine",lat:31.7,lng:35.2,web:"https://radioalhara.net",desc:"Neighbourhood radio from Palestine. Diaspora voices, Arabic music and community spirit."},
+  {name:"Radio Alhara",city:"Bethlehem",country:"Palestine",lat:31.7,lng:35.2,web:"https://radioalhara.net",stream:"https://stream.radioalhara.net/ra",desc:"Neighbourhood radio from Palestine. Diaspora voices, Arabic music and community spirit."},
   // Africa
   {name:"Oroko Radio",city:"Accra",country:"Ghana",lat:5.56,lng:-0.2,web:"https://oroko.live",desc:"Not-for-profit community radio from Accra. Connecting African and diasporic voices globally."},
   // Asia
@@ -1300,9 +1300,9 @@ const BUILT_IN = [
   {name:"Radio Paradise",city:"Paradise",country:"USA",lat:39.76,lng:-121.6,web:"https://radioparadise.com",stream:"https://stream.radioparadise.com/aac-320",desc:"Eclectic freeform radio mixing rock, world and indie. Listener-supported since 2000."},
   {name:"CKUT",city:"Montreal",country:"Canada",lat:45.5,lng:-73.58,web:"https://ckut.ca",desc:"McGill University's non-commercial community radio. Multilingual and radically open."},
   // Mexico
-  {name:"Radio IPN",city:"Mexico City",country:"Mexico",lat:19.43,lng:-99.13,web:"https://www.ipn.mx/radio/",stream:"https://broadcast.radio.ipn.mx/RadioIPN",desc:"La comunidad politécnica se conecta con su voz. La academia, la educación, la ciencia, el deporte y la cultura."},
+  {name:"Radio IPN",city:"Mexico City",country:"Mexico",lat:19.43,lng:-99.13,web:"https://www.ipn.mx/radio/",stream:"http://201.124.60.85:8000/radio.mp3",desc:"La comunidad politécnica se conecta con su voz. La academia, la educación, la ciencia, el deporte y la cultura."},
   {name:"Ibero 909",city:"Mexico City",country:"Mexico",lat:19.42,lng:-99.16,web:"https://ibero909.fm/",stream:"https://noasrv.caster.fm:10182/live",desc:"A Ibero 90.9 le gusta la música ecléctica y alternativa que no suena en los medios convencionales. No usamos algoritmos ni catálogos aleatorios. Cada canción que tocamos está curada a mano."},
-  {name:"El Recreo FM",city:"Mexico City",country:"Mexico",lat:19.44,lng:-99.12,web:"https://elrecreo.fm/radio",stream:"https://stream.zeno.fm/wju2nzhalbztv",desc:"Música y Cultura"},
+  {name:"El Recreo FM",city:"Mexico City",country:"Mexico",lat:19.44,lng:-99.12,web:"https://elrecreo.fm/radio",stream:"https://radio.elrecreo.fm/listen/elrecreo.fm/radio.mp3",desc:"Música y Cultura"},
   // South America
   {name:"Rádio Batuta",city:"Rio de Janeiro",country:"Brazil",lat:-22.9,lng:-43.18,web:"https://radiobatuta.com.br",desc:"Brazilian cultural radio. MPB, jazz and samba with deep care."},
   {name:"Vorterix",city:"Buenos Aires",country:"Argentina",lat:-34.61,lng:-58.37,web:"https://vorterix.com",desc:"Buenos Aires' leading rock and alternative station. Voice of Argentine underground culture."},
@@ -1319,7 +1319,7 @@ const BUILT_IN = [
   // Europe
   {name:"Radio Relativa",city:"Madrid",country:"Spain",lat:40.42,lng:-3.7,web:"https://radiorelativa.eu/",stream:"https://streamer.radio.co/sd6131729c/listen",desc:"Since 2018. Radio Relativa is a community, independent, and experimental platform dedicated to promoting and connecting diverse artists and cultural initiatives from Madrid to the world."},
   // South America
-  {name:"Radio Caso",city:"Buenos Aires",country:"Argentina",lat:-34.61,lng:-58.37,web:"https://www.radiocaso.xyz/agenda",stream:"https://stream.radiojar.com/34efk49zvncwv",desc:"Radio CASo es una plataforma de investigación y experimentación a través del sonido y la escucha, basada en Buenos Aires, Argentina. Fue fundada en el 2020 entre los programas culturales del Centro de Arte Sonoro y hoy continua su actividad de manera independiente."},
+  {name:"Radio Caso",city:"Buenos Aires",country:"Argentina",lat:-34.61,lng:-58.37,web:"https://www.radiocaso.xyz/agenda",stream:"https://play.radiocaso.xyz/main",desc:"Radio CASo es una plataforma de investigación y experimentación a través del sonido y la escucha, basada en Buenos Aires, Argentina. Fue fundada en el 2020 entre los programas culturales del Centro de Arte Sonoro y hoy continua su actividad de manera independiente."},
   {name:"Mutante Rádio",city:"Sao Paulo",country:"Brazil",lat:-23.55,lng:-46.63,web:"https://www.mutanteradio.com/",stream:"https://s30.maxcast.com.br:8190/live?id=536069974467",desc:"A Casa do Underground!"},
   // Other
   {name:"Radio Kurruf",city:"Temuco",country:"Chile",lat:-38.74,lng:-72.6,web:"https://radiokurruf.org/",stream:"https://radio.latina.red/radiokurruf.mp3",desc:"From 2015 Radio Kvrruf es un medio de comunicación social, comunitario, libre y autónomo, difundimos información a través plataformas digitales y redes sociales, cubriendo hechos y situaciones asociadas a reivindicaciones sociales, defensa del territorio y la vida, promoción y defensa de los Derechos Humanos, y la búsqueda del buen vivir."},
@@ -1328,7 +1328,7 @@ const BUILT_IN = [
   {name:"Wayna Tambo",city:"El Alto",country:"Bolivia",lat:-16.5,lng:-68.18,web:"https://radiowaynatambobolivia.blogspot.com/",stream:"https://s2.myradiostream.com/5038/listen.mp3",desc:"Radio Intercultural y Comunitaria de la Red de la Diversidad que busca contribuir a la reconfiguración y vigorización de lo comunitario en Bolivia, desde la perspectiva del Vivir Bien como horizonte civilizatorio alternativo, y la Plurinacionalidad..."},
   {name:"Radio Filarmonía",city:"Lima",country:"Peru",lat:-12.05,lng:-77.04,web:"https://www.radiosdelperu.com.pe/radio-filarmonia",stream:"https://c22.radioboss.fm:8100/stream",desc:"Radio Filarmonía, una emisora peruana muy querida, se dedica a la música clásica y a la promoción de la cultura. Su programación incluye una gran variedad de contenidos, como conciertos en vivo, entrevistas a músicos y compositores destacados, y programas educativos y culturales que enriquecen la vida de sus oyentes."},
   // South America
-  {name:"Veneno",city:"Sao Paulo",country:"Brazil",lat:-23.55,lng:-46.63,web:"https://veneno.live/",stream:"https://stream.zeno.fm/dy417tqqmd0uv",desc:"Created in 2018, Veneno was born from the idea of ​​unifying and solidifying the most diverse cultural initiatives. Based in downtown São Paulo, the radio today broadcasts a wide range of programs, dialoguing with different aesthetics and concepts."},
+  {name:"Veneno",city:"Sao Paulo",country:"Brazil",lat:-23.55,lng:-46.63,web:"https://veneno.live/",stream:"https://radio.veneno.live/stream/main",desc:"Created in 2018, Veneno was born from the idea of ​​unifying and solidifying the most diverse cultural initiatives. Based in downtown São Paulo, the radio today broadcasts a wide range of programs, dialoguing with different aesthetics and concepts."},
   // Other
   {name:"Areito Stéreo",city:"Quibdó",country:"Colombia",lat:5.69,lng:-76.66,web:"http://www.areito.com.co/",stream:"https://estructuraweb.com.co:9207/live",desc:"Areito, Danza que los habitantes aborígenes de las Antillas Mayores acompañaban con cantos durante sus fiestas y ritos religiosos. Su grupo objetivo es hombres y mujeres mayores de 30 años de estrato socio económico bajo, medio y alto."},
   {name:"Javeriana Estéreo 91,9",city:"Bogotá",country:"Colombia",lat:4.71,lng:-74.07,web:"https://javerianaestereo.com/player-javeriana-estereo",stream:"https://radio06.cehis.net/proxy/javerian?mp=%2Fstream",desc:"Cuando empezó a funcionar, el 7 de septiembre de 1977, la entonces llamada Emisora Javeriana se convirtió en la primera estación radial universitaria en la banda de FM en el país y también la primera de su género en Bogotá."},
@@ -1345,7 +1345,7 @@ const BUILT_IN = [
   {name:"Radio Camoapa",city:"Camoapa",country:"Nicaragua",lat:12.39,lng:-85.52,web:"https://radiocamoapa.com/quienes-somos/",stream:"https://c30.radioboss.fm:18546/radiocamoapa",desc:"Radio Camoapa es una emisora comunitaria, establecido una fuerte relación con la comunidad, permitiéndole afianzarse como el medio de comunicación de mayor impacto en la región central del país y ser una de las emisoras más importantes de Nicaragua."},
   {name:"Subterraneo Americal",city:"Talanga",country:"Honduras",lat:14.42,lng:-87.08,web:"https://subterraneoamerical.com/",stream:"https://custom-azura1.asurahosting.com/listen/subterraneo_americal_radio/radio.mp3",desc:"Subterráneo Americal noticias Rock & Metal en todas su vertientes."},
   // Europe
-  {name:"Radio 3 RNE",city:"Madrid",country:"Spain",lat:40.42,lng:-3.7,web:"https://rtve.es/radio/radio3",desc:"Spain's beloved public indie station. Alternative, experimental, Spanish music since 1979."},
+  {name:"Radio 3 RNE",city:"Madrid",country:"Spain",lat:40.42,lng:-3.7,web:"https://rtve.es/radio/radio3",stream:"https://rtvelivestream.rtve.es/rtvesec/rne/rne_r3_main.m3u8",desc:"Spain's beloved public indie station. Alternative, experimental, Spanish music since 1979."},
   {name:"Radio Gladys Palmora",city:"Madrid",country:"Spain",lat:40.42,lng:-3.7,web:"https://gladyspalmera.com/",stream:"https://streams.radio.co/s496c4d2e8/listen",desc:"En Radio Gladys Palmera nos gustan los ritmos con mucha personalidad, música con olor y sabor intensos, que suene distinguible, contundente y, porqué no, que sea arriesgada."},
   // Other
   {name:"Meow Club 91",city:"Tegucigalpa",country:"Honduras",lat:14.08,lng:-87.21,web:"https://thenonstopradio.com/radio/meow-club-91-radio",stream:"https://stream.zeno.fm/0chh40kgdwzuv?rj-ttl=5&rj-tok=AAABfAK1xvMAyZ0wO9HSPLNGOA",desc:"User-added station."},
