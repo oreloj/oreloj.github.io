@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oreloj setup</title>
+<!-- Served by admin.py at /setup. Must work with no internet (phone joined to
+     the globe's setup Wi-Fi), so: no CDN, fonts from /vendor, everything else inline. -->
+<link rel="stylesheet" href="/vendor/fonts.css">
+<style>
+:root {
+  --bg: #0e0e0e; --surface: #161616; --surface2: #222; --border: #2e2e2e;
+  --text: #f0f0f0; --muted: #8a8a8a; --dim: #555; --accent: #d42b2b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: 'Space Mono', ui-monospace, Menlo, monospace; font-size: 15px; line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 480px; margin: 0 auto; padding: 20px 16px 48px; }
+h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; margin: 0; letter-spacing: -0.5px; }
+h1 span { color: var(--accent); }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted);
+     font-weight: 400; margin: 28px 0 8px; }
+.status { margin-top: 6px; color: var(--muted); font-size: 13px; min-height: 20px; }
+.status b { color: var(--text); font-weight: 400; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+.row { display: flex; align-items: center; gap: 10px; padding: 0 14px; min-height: 52px;
+       border-bottom: 1px solid var(--border); }
+.row:last-child { border-bottom: none; }
+.row .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .meta { color: var(--dim); font-size: 12px; }
+button.row { width: 100%; background: none; border: none; border-bottom: 1px solid var(--border);
+             color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+button.row:last-child { border-bottom: none; }
+button.row:active { background: var(--surface2); }
+.bars { display: inline-flex; gap: 2px; align-items: flex-end; height: 14px; }
+.bars i { width: 3px; background: var(--dim); border-radius: 1px; }
+.bars i.on { background: var(--text); }
+.join { padding: 12px 14px 14px; border-bottom: 1px solid var(--border); display: grid; gap: 10px; }
+input[type=text], input[type=password] {
+  width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px; font: inherit; outline: none;
+}
+input:focus { border-color: var(--text); }
+.btn { min-height: 46px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2);
+       color: var(--text); font: inherit; padding: 0 16px; cursor: pointer; }
+.btn.primary { background: var(--text); color: #000; border-color: var(--text); font-weight: 700; }
+.btn.small { min-height: 34px; padding: 0 12px; font-size: 13px; }
+.btn:disabled { opacity: .45; cursor: default; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btns .btn { flex: 1; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; }
+.note { color: var(--muted); font-size: 13px; padding: 12px 14px; }
+.msg { padding: 16px 14px; display: grid; gap: 8px; }
+.msg .big { font-size: 17px; }
+.msg.bad .big { color: var(--accent); }
+.empty { color: var(--dim); padding: 14px; font-size: 13px; font-style: italic; }
+.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--dim);
+        border-top-color: var(--text); border-radius: 50%; animation: s 0.8s linear infinite; vertical-align: -1px; }
+@keyframes s { to { transform: rotate(360deg); } }
+.foot { margin-top: 32px; display: grid; gap: 10px; }
+.foot a { color: var(--muted); font-size: 13px; text-align: center; }
+.kv { font-size: 13px; color: var(--muted); padding: 12px 14px; display: grid; gap: 4px; }
+.kv b { color: var(--text); font-weight: 400; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Oreloj<span>.</span></h1>
+  <div class="status" id="status"><span class="spin"></span></div>
+
+  <!-- Result of a Wi-Fi change -->
+  <div id="result" class="card" style="margin-top:20px" hidden></div>
+
+  <section id="wifi-section">
+    <h2>Wi-Fi</h2>
+    <div class="card" id="wifi-list"><div class="empty"><span class="spin"></span> looking…</div></div>
+    <div class="btns" style="margin-top:8px">
+      <button class="btn small" id="rescan-btn" onclick="loadWifi(true)">Refresh</button>
+      <button class="btn small" onclick="showOther()">Other network…</button>
+    </div>
+    <div class="card" id="other" style="margin-top:8px" hidden>
+      <div class="join">
+        <input type="text" id="other-ssid" placeholder="Network name" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <input type="password" id="other-pw" placeholder="Password (empty if none)">
+        <label class="check"><input type="checkbox" id="other-hidden"> hidden network</label>
+        <button class="btn primary" onclick="joinOther()">Join</button>
+      </div>
+    </div>
+    <div id="saved-wrap" hidden>
+      <h2>Saved networks</h2>
+      <div class="card" id="saved-list"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Speaker</h2>
+    <div class="card">
+      <div id="bt-paired"></div>
+      <div class="note">Put your Bluetooth speaker in pairing mode (usually: hold its Bluetooth button until it blinks), then:</div>
+      <div style="padding:0 14px 14px"><button class="btn primary" style="width:100%" id="pair-btn" onclick="pairNearest()">Pair nearest speaker</button></div>
+      <div class="note" id="bt-msg" hidden></div>
+    </div>
+  </section>
+
+  <section id="setup-info" hidden>
+    <h2>This globe's setup Wi-Fi</h2>
+    <div class="card kv">
+      <div>name <b id="si-name"></b></div>
+      <div>password <b id="si-pw"></b></div>
+      <div>It opens by itself when the globe can't find a known Wi-Fi, or when you tap the "setup" spot with the pen.</div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <button class="btn" id="leave-btn" onclick="leaveSetup()" hidden>Done — close setup Wi-Fi</button>
+    <button class="btn" id="enter-btn" onclick="enterSetup()" hidden>Open setup Wi-Fi</button>
+    <a href="/">open the full globe page</a>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const onSetupWifi = location.hostname === '192.168.4.1';
+let net = null, lastEventSeen = 0, waitingFor = null, enterArmed = false;
+
+async function api(method, path, body, ms = 8000) {
+  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const r = await fetch(path, { method, signal: ctrl.signal,
+      headers: body ? {'Content-Type': 'application/json'} : {},
+      body: body ? JSON.stringify(body) : undefined });
+    const j = await r.json().catch(() => null);
+    return r.ok ? j : (j || null);
+  } catch (e) { return null; } finally { clearTimeout(t); }
+}
+
+function bars(signal) {
+  const n = signal > 75 ? 4 : signal > 50 ? 3 : signal > 25 ? 2 : 1;
+  return '<span class="bars">' + [5,8,11,14].map((h, i) =>
+    `<i style="height:${h}px" class="${i < n ? 'on' : ''}"></i>`).join('') + '</span>';
+}
+
+// ── status ────────────────────────────────────────────────────────────────
+async function loadNet() {
+  const n = await api('GET', '/api/net');
+  if (!n) { $('status').textContent = 'globe not reachable'; return; }
+  net = n;
+  if (!n.netwatch) {
+    $('status').innerHTML = 'Wi-Fi: ' + 'setup mode is not installed on this globe yet';
+    return;
+  }
+  const modes = {
+    online:     () => `connected to <b>${esc(n.ssid)}</b>`,
+    setup:      () => `setup mode — <b>${esc(n.setup_ssid)}</b>`,
+    offline:    () => 'no Wi-Fi',
+    connecting: () => `joining <b>${esc(n.target || '')}</b>…`,
+    searching:  () => 'looking for a known Wi-Fi…',
+    starting:   () => 'starting…',
+  };
+  $('status').innerHTML = (modes[n.mode] || (() => esc(n.mode)))();
+  $('leave-btn').hidden = !(n.mode === 'setup' || n.mode === 'offline') || !(n.saved || []).length;
+  $('enter-btn').hidden = n.mode !== 'online';
+  if (n.setup_ssid) {
+    $('setup-info').hidden = false;
+    $('si-name').textContent = n.setup_ssid;
+    $('si-pw').textContent = n.setup_password || '';
+  }
+  renderSaved(n.saved || []);
+  // Report the outcome of a Wi-Fi change while we can still reach the globe.
+  for (const ev of n.events || []) {
+    if (ev.id <= lastEventSeen) continue;
+    lastEventSeen = ev.id;
+    if (!waitingFor) continue;
+    if (ev.type === 'connected' && ev.ssid === waitingFor) showResult(true, `Connected to ${ev.ssid}.`, 'All good. You can close this page.');
+    if (ev.type === 'connect_failed' && ev.ssid === waitingFor) {
+      const why = { wrong_password: 'The password seems wrong.', not_found: `No network called “${ev.ssid}” was found nearby.` }[ev.why] || 'It did not work.';
+      showResult(false, `Couldn't join ${ev.ssid}.`, why + ' Try again below.');
+      waitingFor = null;
+    }
+  }
+}
+
+// ── Wi-Fi ─────────────────────────────────────────────────────────────────
+let networks = [];
+async function loadWifi(manual) {
+  const list = $('wifi-list');
+  if (manual) list.innerHTML = '<div class="empty"><span class="spin"></span> looking…</div>';
+  const r = await api('GET', '/api/wifi/networks', null, 20000);
+  networks = Array.isArray(r) ? r : [];
+  if (!networks.length) {
+    list.innerHTML = '<div class="empty">No networks found. Use “Other network…” to type the name.</div>';
+    return;
+  }
+  list.innerHTML = networks.slice(0, 15).map((n, i) => `
+    <button class="row" onclick="openJoin(${i})" id="net-${i}">
+      <span class="name">${n.connected ? '● ' : ''}${esc(n.ssid)}</span>
+      <span class="meta">${n.security === 'open' || !n.security ? 'open' : ''}</span>
+      ${bars(n.signal)}
+    </button>
+    <div class="join" id="join-${i}" hidden>
+      ${n.security === 'open' || !n.security ? '<div class="meta">Open network, no password.</div>'
+        : `<input type="password" id="pw-${i}" placeholder="Password for ${esc(n.ssid)}" onkeydown="if(event.key==='Enter')join(${i})">`}
+      <label class="check"><input type="checkbox" onchange="const p=$('pw-${i}'); if(p) p.type=this.checked?'text':'password'"> show password</label>
+      <button class="btn primary" onclick="join(${i})">Join ${esc(n.ssid)}</button>
+    </div>`).join('') +
+    (networks[0]?.cached ? '<div class="note">List made just before setup mode started. “Refresh” can’t look again while your phone is connected to the globe.</div>' : '');
+}
+
+function openJoin(i) {
+  document.querySelectorAll('.join[id^=join-]').forEach(el => { if (el.id !== 'join-' + i) el.hidden = true; });
+  const el = $('join-' + i); el.hidden = !el.hidden;
+  const pw = $('pw-' + i); if (!el.hidden && pw) pw.focus();
+}
+
+function showOther() { $('other').hidden = !$('other').hidden; if (!$('other').hidden) $('other-ssid').focus(); }
+
+function join(i) {
+  const n = networks[i]; const pw = $('pw-' + i)?.value || '';
+  connect(n.ssid, pw, false);
+}
+function joinOther() {
+  const ssid = $('other-ssid').value;
+  if (!ssid.trim()) { $('other-ssid').focus(); return; }
+  connect(ssid, $('other-pw').value, $('other-hidden').checked);
+}
+
+async function connect(ssid, password, hidden) {
+  if (password && (password.length < 8 || password.length > 63)) {
+    showResult(false, 'That password is too short.', 'Wi-Fi passwords are 8 to 63 characters.');
+    return;
+  }
+  const r = await api('POST', '/api/wifi/connect', { ssid, password, hidden });
+  if (!r || !r.ok) { showResult(false, `Couldn't start joining ${ssid}.`, (r && r.msg) || 'The globe did not answer.'); return; }
+  if (!r.queued) { showResult(true, `Connected to ${ssid}.`, ''); return; }
+  waitingFor = ssid;
+  const back = onSetupWifi
+    ? `Your phone will now drop off <b>${esc(net?.setup_ssid || 'the setup Wi-Fi')}</b> — that's normal.`
+    : 'This page may stop responding if the globe moves to another network.';
+  showResult(null, `Joining ${ssid}…`,
+    `${back}<br><br>Listen to the globe: it says <b>“Connected to ${esc(ssid)}”</b> when it worked, or what went wrong.
+     If it failed, the setup Wi-Fi comes back within a minute — join it again and retry.<br><br>
+     Afterwards, on that network, the globe page is <b>http://${esc(location.hostname === '192.168.4.1' ? ((net && net.hostname) || 'oreloj') + '.local' : location.host)}</b>.`);
+}
+
+function showResult(ok, title, body) {
+  const el = $('result');
+  el.hidden = false;
+  el.innerHTML = `<div class="msg ${ok === false ? 'bad' : ''}"><div class="big">${ok === null ? '<span class="spin"></span> ' : ''}${esc(title)}</div><div class="meta" style="color:var(--muted);font-size:13px">${body}</div></div>`;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+let _savedKey = null;
+function renderSaved(saved) {
+  const key = JSON.stringify([saved, net && net.ssid]);
+  if (key === _savedKey) return;          // don't reset a "Sure?" button every 3 s
+  _savedKey = key;
+  $('saved-wrap').hidden = !saved.length;
+  $('saved-list').innerHTML = saved.map(s => `
+    <div class="row"><span class="name">${esc(s)}${net && net.ssid === s ? ' <span class="meta">· in use</span>' : ''}</span>
+      <button class="btn small" data-ssid="${esc(s)}" onclick="forget(this)">Forget</button></div>`).join('');
+}
+
+async function forget(btn) {
+  const ssid = btn.dataset.ssid;
+  if (btn.dataset.armed !== '1') { btn.dataset.armed = '1'; btn.textContent = 'Sure?'; return; }
+  btn.disabled = true;
+  await api('POST', '/api/wifi/forget', { ssid });
+  setTimeout(loadNet, 4000);
+}
+
+async function leaveSetup() {
+  $('leave-btn').disabled = true;
+  await api('POST', '/api/net/leave');
+  showResult(null, 'Looking for a known Wi-Fi…', 'The setup Wi-Fi closes now and your phone will drop off. If no known network is around, it opens again by itself.');
+}
+
+async function enterSetup() {
+  const b = $('enter-btn');
+  if (!enterArmed) { enterArmed = true; b.textContent = 'Sure? The globe leaves this Wi-Fi — tap again'; return; }
+  b.disabled = true;
+  await api('POST', '/api/net/setup');
+  showResult(null, 'Opening the setup Wi-Fi…',
+    `Join <b>${esc(net?.setup_ssid || 'the Oreloj Wi-Fi')}</b> on your phone (password above); this page opens by itself.`);
+}
+
+// ── Bluetooth ─────────────────────────────────────────────────────────────
+async function loadPaired() {
+  const d = await api('GET', '/api/bt/devices');
+  const el = $('bt-paired');
+  if (!Array.isArray(d) || !d.length) { el.innerHTML = ''; return; }
+  el.innerHTML = d.map(x => `
+    <div class="row"><span class="name">${x.connected ? '● ' : ''}${esc(x.name)}</span>
+      ${x.connected ? '' : `<button class="btn small" data-mac="${esc(x.mac)}" onclick="btConnect(this)">Connect</button>`}
+      <button class="btn small" data-mac="${esc(x.mac)}" onclick="btForget(this)">Forget</button></div>`).join('');
+}
+async function btConnect(b) { b.disabled = true; b.innerHTML = '<span class="spin"></span>'; await api('POST', '/api/bt/connect', { mac: b.dataset.mac }, 30000); loadPaired(); }
+async function btForget(b) {
+  if (b.dataset.armed !== '1') { b.dataset.armed = '1'; b.textContent = 'Sure?'; return; }
+  b.disabled = true; await api('POST', '/api/bt/forget', { mac: b.dataset.mac }, 20000); loadPaired();
+}
+async function pairNearest() {
+  const b = $('pair-btn'), m = $('bt-msg');
+  b.disabled = true; b.innerHTML = '<span class="spin"></span> looking for a speaker…';
+  m.hidden = true;
+  const r = await api('POST', '/api/bt/pair-nearest', null, 120000);
+  b.disabled = false; b.textContent = 'Pair nearest speaker';
+  m.hidden = false;
+  m.textContent = r && r.ok ? `✓ Connected to ${r.name}.` : (r && r.msg) || 'No answer from the globe.';
+  loadPaired();
+}
+
+// ── go ────────────────────────────────────────────────────────────────────
+loadNet();
+loadWifi(false);
+loadPaired();
+setInterval(loadNet, 3000);
+</script>
+</body>
+</html>

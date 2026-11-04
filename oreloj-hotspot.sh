@@ -6,6 +6,14 @@
 
 set -euo pipefail
 
+# LEGACY — replaced by oreloj-netwatch (install-setup-mode.sh), which removes
+# this unit. Kept only so a globe that pulls the update before running the
+# installer still has a fallback. Stand down if the new watchdog is running.
+if systemctl is-active --quiet oreloj-netwatch.service 2>/dev/null \
+   || systemctl is-enabled --quiet oreloj-netwatch.service 2>/dev/null; then
+    exit 0
+fi
+
 log() { echo "$(date '+%H:%M:%S') oreloj-hotspot: $*" >&2; }
 
 log "Waiting 20 s for Wi-Fi..."

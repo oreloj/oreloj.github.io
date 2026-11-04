@@ -5,7 +5,7 @@
 # Tap an action zone → execute action (e.g. favourite toggle) with TTS feedback.
 # Usage: python3 globe.py [--calibrate]
 
-import sys, csv, queue, time, signal, random, logging, subprocess, requests, platform, threading, json, tempfile, os, wave, math, struct
+import sys, csv, queue, re, time, signal, random, logging, subprocess, requests, platform, threading, json, tempfile, os, wave, math, struct
 from pathlib import Path
 
 OS = platform.system()   # 'Darwin' on Mac, 'Linux' on Pi
@@ -501,14 +501,196 @@ def _tts(text: str) -> None:
         log.warning(f"TTS not available (tried {'say' if OS == 'Darwin' else 'espeak-ng'})")
 
 
+_speech_lock = threading.Lock()   # the pen and the network voice can both talk
+
+
 def speak(text: str) -> None:
     """Blocking TTS with auto-dim: lowers mpv volume while speaking, then restores."""
-    playing = _mpv is not None and _mpv.poll() is None
-    if playing:
-        _mpv_set_volume(15)
-    _tts(text)
-    if playing:
-        _mpv_set_volume(_current_volume)
+    with _speech_lock:
+        playing = _mpv is not None and _mpv.poll() is None
+        if playing:
+            _mpv_set_volume(15)
+        _tts(text)
+        if playing:
+            _mpv_set_volume(_current_volume)
+
+
+# ── Network voice: the globe says what its Wi-Fi is doing ─────────────────────
+# oreloj-netwatch (root service) publishes its state + recent events to
+# /run/oreloj/net.json; we read them aloud. Pen actions send it requests.
+NET_RUN_DIR  = Path(os.environ.get("ORELOJ_RUN_DIR", "/run/oreloj"))
+NET_STATE    = NET_RUN_DIR / "net.json"
+NET_REQ_DIR  = NET_RUN_DIR / "requests"
+_SPOKEN_PATH = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "oreloj-net-spoken"
+
+
+def _read_net() -> dict | None:
+    try:
+        data = json.loads(NET_STATE.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return data if time.time() - float(data.get("updated_at", 0)) < 180 else None
+
+
+def _net_request(action: str, **fields) -> bool:
+    try:
+        name = f"{time.time_ns()}-globe"
+        tmp = NET_REQ_DIR / f"{name}.tmp"
+        tmp.write_text(json.dumps({"action": action, **fields}), encoding="utf-8")
+        os.replace(tmp, NET_REQ_DIR / f"{name}.json")
+        return True
+    except Exception as e:
+        log.warning(f"Could not send network request: {e}")
+        return False
+
+
+def _say_name(name: str) -> str:
+    """'Oreloj-1' → 'Oreloj 1' so espeak doesn't say 'minus'."""
+    return name.replace("-", " ").replace("_", " ").strip()
+
+
+def _say_password(pw: str) -> str:
+    """Make a password speakable: 'amber-falcon-427' → 'amber, dash, falcon,
+    dash, 4 2 7'. Anything unusual is spelled letter by letter."""
+    if re.fullmatch(r"[a-z]+(-[a-z0-9]+)*", pw):
+        parts = []
+        for chunk in pw.split("-"):
+            parts.append(" ".join(chunk) if chunk.isdigit() else chunk)
+        return ", dash, ".join(parts)
+    out = []
+    for ch in pw:
+        if ch.isupper():
+            out.append(f"capital {ch}")
+        elif ch == "-":
+            out.append("dash")
+        elif ch == " ":
+            out.append("space")
+        else:
+            out.append(ch)
+    return ", ".join(out)
+
+
+def _say_ip(ip: str) -> str:
+    return ip.replace(".", " dot ")
+
+
+def _setup_speech(net: dict, reason: str | None) -> str:
+    name = _say_name(net.get("setup_ssid") or "Oreloj")
+    if reason == "connect_failed":
+        return f"Setup mode is back on. Join {name} again to try another password."
+    intro = {"no_wifi":   "I can't find a Wi-Fi I know.",
+             "wifi_lost": "I lost the Wi-Fi.",
+             "manual":    "Setup mode."}.get(reason or "", "Setup mode.")
+    msg = f"{intro} On your phone, join the Wi-Fi called {name}"
+    if net.get("speak_password", True) and net.get("setup_password"):
+        msg += f". The password is: {_say_password(net['setup_password'])}"
+    return msg + "."
+
+
+def _net_event_speech(ev: dict, net: dict) -> str | None:
+    t, ssid = ev.get("type"), _say_name(str(ev.get("ssid") or ""))
+    if ev.get("quiet"):
+        return None
+    if t == "setup":
+        return _setup_speech(net, ev.get("reason"))
+    if t == "connecting":
+        return f"Joining {ssid}."
+    if t == "connected":
+        return f"Connected to {ssid}. All good."
+    if t == "online":
+        return f"Back online, on {ssid}." if ssid else "Back online."
+    if t == "connect_failed":
+        why = ev.get("why")
+        if why == "wrong_password":
+            return f"I couldn't join {ssid}. The password seems wrong."
+        if why == "not_found":
+            return f"I can't find a Wi-Fi called {ssid}."
+        if why == "invalid":
+            return "That Wi-Fi name or password doesn't look right."
+        return f"I couldn't join {ssid}."
+    if t == "wifi_added":
+        return f"Found a new Wi-Fi on the memory card: {ssid}."
+    if t == "wifi_file_invalid":
+        return "The Wi-Fi written on the memory card doesn't look right."
+    return None
+
+
+def _net_voice_loop() -> None:
+    """Speak every new network event once (survives globe.py restarts)."""
+    try:
+        last_sess, last_id = _SPOKEN_PATH.read_text().split(":")
+        last_id = int(last_id)
+    except Exception:
+        last_sess, last_id = "", 0
+    while True:
+        net = _read_net()
+        if net:
+            sess = str(net.get("session", ""))
+            for ev in net.get("events") or []:
+                eid = int(ev.get("id", 0))
+                if sess == last_sess and eid <= last_id:
+                    continue
+                last_sess, last_id = sess, eid
+                try:
+                    _SPOKEN_PATH.write_text(f"{sess}:{eid}")
+                except Exception:
+                    pass
+                if time.time() - float(ev.get("at", 0)) > 300:
+                    continue          # old news (e.g. globe.py restarted much later)
+                text = _net_event_speech(ev, net)
+                if text:
+                    log.info(f"Network: {text}")
+                    speak(text)
+        time.sleep(2)
+
+
+def _local_ip() -> str:
+    try:
+        out = subprocess.run(["hostname", "-I"], capture_output=True, text=True,
+                             timeout=3).stdout.split()
+        return next((a for a in out if "." in a), "")
+    except Exception:
+        return ""
+
+
+def action_setup_mode() -> None:
+    if not _read_net():
+        speak("Setup mode isn't installed on this globe yet.")
+        return
+    if _net_request("setup"):
+        speak("One moment.")
+
+
+def action_say_address() -> None:
+    net = _read_net() or {}
+    if net.get("mode") in ("setup", "offline"):
+        speak(_setup_speech(net, "manual") +
+              f" If no page opens, go to {_say_ip(net.get('setup_ip') or '192.168.4.1')}.")
+        return
+    host = __import__("socket").gethostname().split(".")[0]
+    ip = net.get("ip") or _local_ip()
+    where = f"I'm on {_say_name(net['ssid'])}. " if net.get("ssid") else ""
+    if ip:
+        speak(f"{where}Open {host} dot local in a browser, or {_say_ip(ip)}.")
+    else:
+        speak("I'm not connected to any Wi-Fi.")
+
+
+def action_pair_speaker() -> None:
+    """Runs in a thread: scanning + pairing takes up to a minute."""
+    speak("Looking for a speaker. Put it in pairing mode.")
+    try:
+        r = requests.post("http://127.0.0.1:5000/api/bt/pair-nearest", timeout=120)
+        res = r.json()
+    except Exception as e:
+        log.warning(f"pair-nearest failed: {e}")
+        res = {"ok": False}
+    if res.get("ok"):
+        speak(f"Connected to {res.get('name') or 'the speaker'}.")
+    elif "busy" in str(res.get("msg", "")):
+        speak("Still looking.")
+    else:
+        speak("I didn't find a speaker in pairing mode.")
 
 
 def _write_tone_wav(path, notes, note_dur=0.13, rate=22050, vol=0.5) -> None:
@@ -717,6 +899,15 @@ def dispatch_action(action: str, curated: dict[str, list[dict]]) -> None:
         play(preset["url"], preset.get("name") or label)
         speak(label)
 
+    elif action == "setup_mode":
+        action_setup_mode()
+
+    elif action == "say_address":
+        action_say_address()
+
+    elif action == "pair_speaker":
+        threading.Thread(target=action_pair_speaker, daemon=True).start()
+
     else:
         log.warning(f"Unknown action: {action}")
 
@@ -823,6 +1014,7 @@ def main() -> None:
         calibrate(); return
 
     _write_state()   # publish initial (idle) state for the admin UI
+    threading.Thread(target=_net_voice_loop, daemon=True).start()
 
     last_code:    str | None = None
     last_trigger: float      = 0.0

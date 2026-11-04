@@ -1,75 +1,117 @@
 # Oreloj — connecting at a new place (Wi-Fi + Bluetooth)
 
-Short owner's guide, written 2026-06-10. Current device state: Raspberry Pi OS
-Trixie, cloud-init + NetworkManager, instance-id suffix `-net5` in `cmdline.txt`.
+Owner's guide for globes with **setup mode** (installed by
+`install-setup-mode.sh`, Nov 2026). Older globes: see "Globes without setup
+mode" at the bottom.
+
+Think of the globe like a hotel guest: normally it sits on your Wi-Fi like
+any device. When it can't find a Wi-Fi it knows, it opens its own little
+Wi-Fi — **its "setup Wi-Fi"** — so your phone can walk over and tell it
+where to go.
+
+Each globe has its own setup Wi-Fi name and password, e.g. **Oreloj-1** /
+`amber-falcon-427`. They're printed by the installer, saved on the SD card in
+`oreloj-setup.txt`, shown in the web page (system → wi-fi), and the globe
+says them out loud in setup mode. Write them on a sticker under the globe.
 
 ---
 
-## Wi-Fi — two ways
+## Wi-Fi — three ways
 
-### Way 1 (best): add the network BEFORE you move the globe
+### 1. Phone (normal way)
 
-While the globe is still online at the current place:
+1. Switch the globe on. If it doesn't know any Wi-Fi around, after about a
+   minute it says *"I can't find a Wi-Fi I know. On your phone, join the
+   Wi-Fi called Oreloj 1…"*.
+   - Want to change Wi-Fi while it's still online? Tap the **setup** spot
+     with the pen (or *system → wi-fi → open setup Wi-Fi* in the web page).
+2. On your phone, join **Oreloj-1** with its password. A setup page opens by
+   itself. (If not, open a browser at **http://192.168.4.1**.)
+3. Tap your network, type its password, **Join**. Your phone drops off
+   Oreloj-1 — normal. Listen to the globe:
+   - *"Connected to … All good."* → done.
+   - *"The password seems wrong"* / *"I can't find a Wi-Fi called …"* → the
+     setup Wi-Fi comes back within a minute; join it again and retry.
 
-1. Open **http://oreloj.local:5000 → Wi-Fi panel**, add the new place's
-   network name + password. *(Or ask Claude to pre-add it over SSH.)*
-2. That's it — at the new place the Pi joins by itself within ~2 minutes of
-   power-on. `oreloj.local:5000` works once your laptop is on the same wifi.
+The globe also opens the setup Wi-Fi **by itself** if your Wi-Fi drops for
+more than 2 minutes, and keeps trying your known networks every few minutes
+(never while your phone is on the setup page). So after a power cut it
+reconnects by itself once the router is back.
 
-### Way 2 (fallback): the SD card method — when the globe is already offline
+### 2. Before you move (from home)
 
-1. Unplug the Pi, take out the SD card, put it in the Mac. Wait for
-   **"bootfs"** to appear in Finder (if it doesn't, re-seat the card).
-2. Open the file `network-config` on bootfs. Under `access-points:` add the
-   new network **below the existing ones**, exactly like this (2-space
-   indentation matters):
+While the globe is still online: web page → *system → wi-fi → Scan*, or the
+phone page **http://oreloj.local/setup** → *Other network…* — add the new
+place's network. If it isn't in range the globe says so and stays on your
+current Wi-Fi (it rolls back), but you can add it at the new place with way 1.
 
-   ```yaml
-         access-points:
-           "Existing Network":
-             password: "..."
-           "NEW NETWORK NAME":
-             password: "NEW PASSWORD"
+### 3. SD card (from any computer)
+
+1. Unplug the globe, put its SD card in a Mac/PC. Open **bootfs**.
+2. Open `oreloj-wifi.txt`, fill in:
    ```
+   wifi_name=My Network
+   wifi_password=my password
+   ```
+   Capitals and spaces count. If the name ends with a space (the
+   "Freebox Bestron " case), put it in quotes: `wifi_name="Freebox Bestron "`.
+3. Save, eject, card back in, power on. The globe says *"Found a new Wi-Fi on
+   the memory card"*, joins it, and empties the file again (your password
+   doesn't stay on the card).
 
-   ⚠️ The network name must match **character for character** — capitals,
-   accents, and even spaces at the end (the "Freebox Bestron " incident: its
-   real name ends with an invisible space). On a Mac on that wifi, the exact
-   name shows in System Settings → Wi-Fi, or via
-   `networksetup -listpreferredwirelessnetworks en0`.
+Forgot the setup password? It's in `oreloj-setup.txt` on the same card — you
+can also change it there (8–63 characters).
 
-3. Open `cmdline.txt` (one long line). Find `i=rpi-imager-1778777569304-net5`
-   and bump the suffix: `-net5` → `-net6` (any new value works; this is what
-   makes the Pi re-read the wifi config — without it, edits are ignored).
-4. Eject the card properly (Finder ⏏), back into the Pi, power on, wait
-   3 minutes. The globe appears at `oreloj.local:5000`.
-5. If SSH complains "REMOTE HOST IDENTIFICATION HAS CHANGED" afterwards:
-   `ssh-keygen -R oreloj.local` and reconnect — expected after this method.
+---
 
-*Easiest of all: put the SD card in the Mac and ask Claude
-"add wifi <name> / <password>" — these edits are fiddly by hand.*
+## Finding the globe's web page
+
+- Same Wi-Fi as the globe: **http://oreloj.local** (Oreloj 2:
+  `http://oreloj2.local`). `:5000` still works too.
+- `.local` not working (some Android phones, guest networks)? Tap the
+  **say address** spot: the globe reads out its number, e.g.
+  *"192 dot 168 dot 1 dot 147"*.
+- The public site https://oreloj.github.io/ **can't** change globe settings —
+  browsers block a secure page from talking to a device on your network.
 
 ---
 
 ## Bluetooth speaker
 
-1. **Phones first:** turn Bluetooth OFF on all phones nearby — speakers
-   latch onto the last phone they saw and hijack the pairing window.
-2. **If the speaker has met many devices** (or pairing keeps un-pairing
-   itself): wipe its device list. On a Bose SoundLink III: hold the
-   Bluetooth button **a full 10 seconds, past the blinking, until a voice
-   prompt confirms the list was cleared.** No voice prompt = not wiped.
-3. The speaker should now blink blue (pairing mode).
-4. Open **http://oreloj.local:5000 → Bluetooth → Scan**, then **Pair** next
-   to the speaker. The UI verifies the pairing for real and wires the
-   speaker into the globe's audio automatically.
-5. Done. From then on the Pi reconnects the speaker **by itself within
-   2 minutes** whenever it's on and in range — just switch the speaker on.
+**Fast way:** put the speaker in pairing mode, then tap the **pair speaker**
+spot with the pen (or *Pair nearest speaker* on the phone setup page). The
+globe picks the closest speaker in pairing mode and says *"Connected to …"*.
+From then on it reconnects the speaker by itself within 2 minutes whenever
+it's on and in range.
+
+To swap speakers: phone setup page → Speaker → **Forget** the old one, then
+pair the new one.
+
+If pairing fails:
+1. Turn Bluetooth **off on phones nearby** — speakers latch onto the last
+   phone they saw.
+2. Wipe the speaker's device list (Bose SoundLink III: hold the Bluetooth
+   button a full 10 seconds until a voice confirms).
+3. Try again. Web page → *system → bluetooth → Scan* lists everything it sees.
 
 ### If the globe seems dead (taps register, no sound)
 
-It is almost never a crash — it's the speaker link. The globe keeps playing
-into the empty headphone jack, which is silent. Check the Bluetooth panel:
-if the speaker isn't connected, switch it on and wait 2 minutes, or redo
-step 2–4. **Plan B that always works: a 3.5 mm aux cable from the Pi's jack
-to the speaker's AUX input — no Bluetooth involved at all.**
+Almost never a crash — it's the speaker link; the globe keeps playing into
+the empty headphone jack. Switch the speaker on and wait 2 minutes, or pair
+again. **Plan B that always works:** a 3.5 mm aux cable from the Pi's jack to
+the speaker's AUX input.
+
+---
+
+## Globes without setup mode
+
+Run once on the globe (it needs the globe online and your password):
+
+```
+ssh -t oreloj@oreloj.local "cd ~/globe && git pull && sudo bash install-setup-mode.sh"
+```
+
+Until then, the only offline fix is the old cloud-init trick: on the SD card,
+add the network under `access-points:` in `network-config`, and change the
+`i=rpi-imager-…-netN` number in `cmdline.txt` (and `instance-id` in
+`meta-data`) so the Pi re-reads it. Ask Claude — it's fiddly by hand.

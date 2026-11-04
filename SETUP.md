@@ -147,24 +147,26 @@ systemctl --user enable --now globe admin
 sudo loginctl enable-linger oreloj
 ```
 
-Two system units (WiFi hotspot fallback + Bluetooth speaker reconnect):
+Bluetooth speaker reconnect (system timer):
 
 ```bash
-sudo cp ~/globe/oreloj-hotspot.service /etc/systemd/system/
 sudo cp ~/globe/bt-autoconnect.service ~/globe/bt-autoconnect.timer /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable oreloj-hotspot.service
 sudo systemctl enable --now bt-autoconnect.timer
 ```
 
-`oreloj-hotspot.sh` activates a NetworkManager profile named `hotspot` — it
-does **not** create it. Create it once:
+**Setup mode** (Wi-Fi watchdog + password-protected setup Wi-Fi + captive
+portal + SD-card Wi-Fi file). One command, safe to re-run:
 
 ```bash
-sudo nmcli con add type wifi ifname wlan0 con-name hotspot autoconnect no \
-    ssid Oreloj 802-11-wireless.mode ap 802-11-wireless.band bg \
-    ipv4.method shared ipv4.addresses 192.168.4.1/24
+sudo bash ~/globe/install-setup-mode.sh
 ```
+
+It prints the globe's setup Wi-Fi name and password (`Oreloj-1`,
+`Oreloj-2`… from the hostname) — write them on a sticker under the globe.
+They live on the SD card in `oreloj-setup.txt`. Re-run the installer
+whenever `oreloj-netwatch.py` changes (the web page's wi-fi panel says so).
+See CONNECT-HOWTO.md for how owners use it.
 
 Check both user services are alive:
 

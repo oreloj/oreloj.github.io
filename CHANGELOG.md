@@ -5,6 +5,28 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-04 — setup mode: change Wi-Fi or speaker from a phone, any time
+
+### Added
+- **Wi-Fi watchdog** (`oreloj-netwatch.py`, root service, replaces `oreloj-hotspot.sh`). Owns the Wi-Fi chip. No known Wi-Fi after 60 s at boot, Wi-Fi gone for 2 min, or a pen tap on the new **setup** spot → opens the globe's **setup Wi-Fi** (`Oreloj-1`, `Oreloj-2`… from the hostname), now **WPA2 password-protected** (the old `oreloj` hotspot was open). In setup mode it re-tries known networks every 3 min, but never while a phone is on the setup page. The old version only checked once, 20 s after boot.
+- **Safe network switching** — a new network is tried under a temporary profile; a wrong password or wrong name rolls back to the previous Wi-Fi (or reopens the setup Wi-Fi) instead of leaving the globe stranded.
+- **The globe talks you through it** (`globe.py`): "Setup mode. Join the Wi-Fi called Oreloj 1, the password is…", "Joining…", "Connected to … All good.", "The password seems wrong.", "Back online."
+- **Phone setup page** `/setup` (`setup.html`) — opens by itself when a phone joins the setup Wi-Fi (captive portal: DNS answers every name with the Pi, admin.py also listens on port 80). Wi-Fi list, other/hidden network, saved networks with Forget, Pair nearest speaker, paired speakers with Connect/Forget.
+- **SD-card files** on bootfs: `oreloj-wifi.txt` (type a Wi-Fi name + password on any computer; applied at boot, then wiped) and `oreloj-setup.txt` (setup Wi-Fi name/password, editable).
+- **New pen actions**: `setup_mode`, `say_address` (reads out `oreloj.local` + the IP, for when `.local` doesn't resolve), `pair_speaker` (pairs the nearest speaker in pairing mode). Assign them in the Actions panel like the others.
+- **API**: `/api/net`, `/api/net/setup`, `/api/net/leave`, `/api/wifi/forget`, `/api/bt/pair-nearest`, `/api/bt/forget`, and `/api/now` (the live mirror + "tap pen to assign" in index.html polled it, but it was missing from admin.py).
+- `install-setup-mode.sh` — one `sudo` command per globe; safe to re-run. Removes the old open hotspot.
+
+### Changed
+- `http://oreloj.local` works without `:5000` (port 80, via `net.ipv4.ip_unprivileged_port_start=80`).
+- Public site shows a hint pointing globe owners to `http://oreloj.local` — browsers block the https site from reaching the globe, which is why "globe owner" mode often didn't appear there.
+- Bluetooth scan results are sorted by signal strength and only list devices actually in range.
+
+### Deprecated
+- `oreloj-hotspot.sh` / `.service` — replaced by the watchdog; the installer disables it. Kept for now (it stands down when netwatch is present) so a globe that pulls this update before running the installer keeps a fallback.
+
+---
+
 ## 2026-10-25 — control page works offline, new repo address
 
 ### Fixed

@@ -37,7 +37,9 @@ Two kinds of file, two different ownership rules. Mixing them up causes data los
 | `favourites.json` | Favourite station names, shared between globe.py and admin.py |
 | `globe.service` / `admin.service` | systemd services |
 | `99-globe-hid.rules` | udev rules for HID access without root |
-| `oreloj-hotspot.sh` | iptables + dnsmasq captive portal for Wi-Fi setup |
+| `oreloj-netwatch.py` | Root service that owns the Wi-Fi chip: home Wi-Fi, or setup Wi-Fi (WPA2, captive portal) when lost / on request. State in `/run/oreloj/net.json`; admin.py & globe.py send requests as JSON files in `/run/oreloj/requests/` — never change Wi-Fi with nmcli directly while it runs |
+| `install-setup-mode.sh` | `sudo` one-time installer for netwatch (copies it to `/usr/local/lib/oreloj/` — re-run after changing it), captive DNS, port-80 sysctl, SD-card files |
+| `setup.html` | Phone setup page served at `/setup` |
 
 ## Architecture
 

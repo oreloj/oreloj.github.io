@@ -8,7 +8,7 @@ Run:      python3 ~/globe/admin.py
 Access:   http://oreloj.local:5000
 """
 
-import csv, datetime, io, json, os, re, select, subprocess, threading, time, urllib.request
+import csv, datetime, hashlib, io, json, os, re, secrets, select, subprocess, threading, time, urllib.request
 from pathlib import Path
 from flask import Flask, send_file, send_from_directory, jsonify, request, abort, redirect
 
@@ -46,8 +46,30 @@ app = Flask(__name__)
 
 # ── CORS (allow index.html on GitHub Pages to reach the Pi API) ───────────────
 
+_PORT80_OK = False   # set at startup if we could also listen on port 80
+_OUR_HOSTS = ("localhost", "127.0.0.1", "192.168.4.1")   # + any *.local name
+
+
+def _setup_url() -> str:
+    return f"http://{SETUP_NET_IP}{'' if _PORT80_OK else ':5000'}/setup"
+
+
 @app.before_request
 def _handle_options():
+    addr = request.remote_addr or ""
+    if addr.startswith("192.168.4."):
+        # A phone on the setup Wi-Fi is using the page: tell netwatch not to
+        # interrupt the hotspot for a retry right now.
+        try:
+            NET_ACTIVITY.touch()
+        except Exception:
+            pass
+        # Captive portal: the phone asked for some other website (DNS on the
+        # setup Wi-Fi points every name at us) — send it to the setup page.
+        host = (request.host or "").split(":")[0].lower()
+        if host and host not in _OUR_HOSTS and not host.endswith(".local") \
+                and not request.path.startswith(("/api/", "/vendor/", "/setup")):
+            return redirect(_setup_url(), 302)
     if request.method == "OPTIONS":
         resp = app.make_default_options_response()
         resp.headers["Access-Control-Allow-Origin"]  = "*"
@@ -91,6 +113,61 @@ def _bt_is_paired(mac: str) -> bool:
     the speaker silently drops the bond, so always re-check with 'info'."""
     _, info = _run(["bluetoothctl", "info", mac])
     return bool(re.search(r"Paired:\s*yes", info, re.IGNORECASE))
+
+
+# ── network watchdog (oreloj-netwatch, a root service) ───────────────────────
+# netwatch owns the Wi-Fi chip. We read its state from net.json and hand it
+# requests as small JSON files — never call nmcli to change Wi-Fi ourselves
+# while it is running (two drivers on one wheel = fights).
+
+NET_RUN_DIR   = Path(os.environ.get("ORELOJ_RUN_DIR", "/run/oreloj"))
+NET_STATE     = NET_RUN_DIR / "net.json"
+NET_SCAN      = NET_RUN_DIR / "scan.json"
+NET_REQ_DIR   = NET_RUN_DIR / "requests"
+NET_ACTIVITY  = NET_RUN_DIR / "activity"
+NETWATCH_SRC  = SCRIPT_DIR / "oreloj-netwatch.py"
+NETWATCH_INST = Path("/usr/local/lib/oreloj/oreloj-netwatch.py")
+SETUP_NET_IP  = "192.168.4.1"
+
+
+def _net_state() -> dict | None:
+    """netwatch's published state, or None if it isn't installed/running."""
+    try:
+        data = json.loads(NET_STATE.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    # A Wi-Fi switch can block netwatch for ~2 minutes; older than that = dead.
+    if time.time() - float(data.get("updated_at", 0)) > 180:
+        return None
+    return data
+
+
+def _net_request(action: str, **fields) -> bool:
+    """Queue a request for netwatch. Written as .tmp then renamed, so netwatch
+    never reads a half-written file."""
+    try:
+        name = f"{time.time_ns()}-{secrets.token_hex(3)}"
+        tmp = NET_REQ_DIR / f"{name}.tmp"
+        tmp.write_text(json.dumps({"action": action, **fields}), encoding="utf-8")
+        os.chmod(tmp, 0o660)
+        os.replace(tmp, NET_REQ_DIR / f"{name}.json")
+        return True
+    except Exception:
+        return False
+
+
+def _file_hash(p: Path) -> str | None:
+    try:
+        return hashlib.sha256(p.read_bytes()).hexdigest()
+    except Exception:
+        return None
+
+
+def _netwatch_outdated() -> bool:
+    """True when ~/globe has a newer watchdog than the installed copy (the
+    installer must be re-run; 'update now' alone can't, it needs sudo)."""
+    src, inst = _file_hash(NETWATCH_SRC), _file_hash(NETWATCH_INST)
+    return bool(src and inst and src != inst)
 
 
 # ── PipeWire combine sink (3.5mm + all paired BT speakers) ───────────────────
@@ -231,14 +308,36 @@ def api_status():
             name, ctype = parts[1], parts[2]
             if name in ("lo", ""):
                 continue
-            if name == "hotspot":
+            if name in ("hotspot", "oreloj-setup"):
                 hotspot_mode = True
             elif ctype in ("802-11-wireless", "ethernet"):
                 wifi = name
                 break
 
+    net = _net_state()
+    if net and net.get("mode") in ("setup", "offline"):
+        hotspot_mode = True
     return jsonify({"playing": playing, "bt": bt, "wifi": wifi,
                     "hotspot_mode": hotspot_mode, "build_time": _build_time()})
+
+
+@app.get("/api/now")
+def api_now():
+    """Live globe state for the web UI mirror: what's playing, volume, the
+    last pen tap (used by "tap pen to assign"), and favourites."""
+    try:
+        st = json.loads((SCRIPT_DIR / "state.json").read_text(encoding="utf-8"))
+    except Exception:
+        st = {}
+    return jsonify({
+        "playing":     bool(st.get("playing")),
+        "station":     st.get("station"),
+        "volume":      st.get("volume"),
+        "last_code":   st.get("last_code"),
+        "last_action": st.get("last_action"),
+        "updated_at":  st.get("updated_at"),
+        "favourites":  read_favs(),
+    })
 
 
 # ── API: stations ─────────────────────────────────────────────────────────────
@@ -584,18 +683,22 @@ def api_bt_devices():
     return jsonify(paired)
 
 
-@app.post("/api/bt/scan")
-def api_bt_scan():
-    """10-second BT scan; returns only devices with a resolved friendly name."""
+_MAC_ONLY_RE = re.compile(r'^([0-9A-F]{2}[:-]){5}[0-9A-F]{2}$', re.IGNORECASE)
+_BT_LOCK = threading.Lock()   # one scan/pair at a time (UI and pen can both ask)
+
+
+def _bt_scan(seconds: float = 10) -> dict:
+    """Scan for Bluetooth devices. Returns {MAC: {"name", "rssi"}} — rssi is
+    the signal strength (closer to 0 = nearer), None if never reported."""
     # Matches: [NEW|CHG|DEL] Device AA:BB:CC:DD:EE:FF <rest>
     event_re    = re.compile(r'\[(NEW|CHG|DEL)\]\s+Device\s+([0-9A-F]{2}(?::[0-9A-F]{2}){5})\s*(.*)', re.IGNORECASE)
-    # nameless devices get a default alias = their MAC with ':' OR '-' separators
-    mac_only_re = re.compile(r'^([0-9A-F]{2}[:-]){5}[0-9A-F]{2}$', re.IGNORECASE)
+    rssi_re     = re.compile(r'^RSSI:\s*(?:0x[0-9a-f]+\s*\()?(-?\d+)', re.IGNORECASE)
     # CHG property keys that carry no friendly name — ignore these lines entirely
     _NON_NAME = ("RSSI:", "UUIDs:", "Class:", "Icon:", "Paired:", "Trusted:",
                  "Blocked:", "Connected:", "LegacyPairing:", "ManufacturerData:",
                  "ServiceData:", "AdvertisingFlags:", "TxPower:", "AddressType:")
     discovered = {}  # mac -> name
+    rssi = {}        # mac -> int
 
     proc = subprocess.Popen(
         ["bluetoothctl"],
@@ -605,7 +708,7 @@ def api_bt_scan():
     proc.stdin.write("scan on\n")
     proc.stdin.flush()
 
-    deadline = time.time() + 10
+    deadline = time.time() + seconds
     while time.time() < deadline:
         ready, _, _ = select.select([proc.stdout], [], [], 0.3)
         if ready:
@@ -617,18 +720,21 @@ def api_bt_scan():
                 continue
             event, mac, rest = m.group(1).upper(), m.group(2).upper(), m.group(3).strip()
 
-            if rest.startswith("Name: "):
+            r = rssi_re.match(rest)
+            if r:
+                rssi[mac] = int(r.group(1))
+            elif rest.startswith("Name: "):
                 # Resolved friendly name — best source, always overwrite
                 discovered[mac] = rest[6:].strip()
             elif rest.startswith("Alias: "):
                 # Alias — use only if no real Name yet
-                if mac not in discovered or mac_only_re.match(discovered[mac]):
+                if mac not in discovered or _MAC_ONLY_RE.match(discovered[mac]):
                     discovered[mac] = rest[7:].strip()
             elif event == "NEW" and rest and not any(rest.startswith(k) for k in _NON_NAME):
                 # [NEW] Device MAC FriendlyName — initial appearance
                 if mac not in discovered:
-                    discovered[mac] = rest if not mac_only_re.match(rest) else mac
-            # All other CHG lines (RSSI, UUIDs, Class, etc.) are intentionally ignored
+                    discovered[mac] = rest if not _MAC_ONLY_RE.match(rest) else mac
+            # All other CHG lines (UUIDs, Class, etc.) are intentionally ignored
 
     try:
         proc.stdin.write("scan off\nquit\n")
@@ -643,17 +749,70 @@ def api_bt_scan():
     # it win over anything we picked up live (which may be a bare MAC alias).
     _, known_out = _run(["bluetoothctl", "devices"])
     for d in _parse_bt_lines(known_out):
-        if not mac_only_re.match(d["name"]):
-            discovered[d["mac"].upper()] = d["name"]
+        mac = d["mac"].upper()
+        if not _MAC_ONLY_RE.match(d["name"]) and (mac in discovered or mac in rssi):
+            discovered[mac] = d["name"]
 
+    return {mac: {"name": name, "rssi": rssi.get(mac)}
+            for mac, name in discovered.items()
+            if not _MAC_ONLY_RE.match(name)}  # hide devices whose name never resolved
+
+
+def _bt_is_speaker(mac: str) -> bool:
+    """Does this device say it can play audio (a speaker or headphones)?"""
+    _, info = _run(["bluetoothctl", "info", mac])
+    return bool(re.search(r"Icon:\s*audio-|Audio Sink|0000110b-", info, re.IGNORECASE))
+
+
+def _bt_pair_and_use(mac: str) -> dict:
+    """Pair + trust + add to the audio output + connect."""
+    rc, out = _run(["bluetoothctl", "pair", mac], timeout=20)
+    time.sleep(1)  # let bluez settle before reading the bond state back
+    if not _bt_is_paired(mac):
+        return {"ok": False, "paired": False,
+                "msg": out or "pairing failed — is the speaker in pairing mode?"}
+    _run(["bluetoothctl", "trust", mac])
+    reconfigured = _rebuild_combine_sink()
+    crc, _ = _run(["bluetoothctl", "connect", mac], timeout=15)
+    return {"ok": True, "paired": True, "connected": crc == 0,
+            "audio_reconfigured": reconfigured, "msg": out}
+
+
+@app.post("/api/bt/scan")
+def api_bt_scan():
+    """10-second BT scan; returns only devices with a resolved friendly name."""
+    with _BT_LOCK:
+        found = _bt_scan(10)
     _, paired_out = _run(["bluetoothctl", "devices", "Paired"])
     paired = {d["mac"].upper() for d in _parse_bt_lines(paired_out)}
+    devs = [{"mac": mac, "name": d["name"], "rssi": d["rssi"], "paired": mac in paired}
+            for mac, d in found.items()]
+    devs.sort(key=lambda d: -(d["rssi"] if d["rssi"] is not None else -999))
+    return jsonify(devs)
 
-    return jsonify([
-        {"mac": mac, "name": name, "paired": mac in paired}
-        for mac, name in discovered.items()
-        if not mac_only_re.match(name)  # hide devices whose name never resolved
-    ])
+
+@app.post("/api/bt/pair-nearest")
+def api_bt_pair_nearest():
+    """One-tap speaker setup (pen "pair speaker" spot, or the setup page):
+    find the nearest speaker that is in pairing mode and start using it."""
+    if not _BT_LOCK.acquire(timeout=1):
+        return jsonify({"ok": False, "msg": "busy — a Bluetooth scan is already running"}), 409
+    try:
+        _run(["rfkill", "unblock", "bluetooth"])
+        _run(["bluetoothctl", "power", "on"], timeout=10)
+        found = _bt_scan(12)
+        _, paired_out = _run(["bluetoothctl", "devices", "Paired"])
+        paired = {d["mac"].upper() for d in _parse_bt_lines(paired_out)}
+        cands = sorted(((mac, d) for mac, d in found.items() if mac not in paired),
+                       key=lambda md: -(md[1]["rssi"] if md[1]["rssi"] is not None else -999))
+        for mac, d in cands[:8]:
+            if _bt_is_speaker(mac):
+                res = _bt_pair_and_use(mac)
+                res.update({"mac": mac, "name": d["name"]})
+                return jsonify(res)
+        return jsonify({"ok": False, "msg": "no speaker in pairing mode found"})
+    finally:
+        _BT_LOCK.release()
 
 
 @app.post("/api/bt/connect")
@@ -686,16 +845,18 @@ def api_bt_pair():
     mac = (request.json or {}).get("mac", "").strip()
     if not mac:
         abort(400)
-    rc, out = _run(["bluetoothctl", "pair", mac], timeout=20)
-    time.sleep(1)  # let bluez settle before reading the bond state back
-    if not _bt_is_paired(mac):
-        return jsonify({"ok": False, "paired": False,
-                        "msg": out or "pairing failed — is the speaker in pairing mode?"})
-    _run(["bluetoothctl", "trust", mac])
-    reconfigured = _rebuild_combine_sink()
-    crc, _ = _run(["bluetoothctl", "connect", mac], timeout=15)
-    return jsonify({"ok": True, "paired": True, "connected": crc == 0,
-                    "audio_reconfigured": reconfigured, "msg": out})
+    return jsonify(_bt_pair_and_use(mac))
+
+
+@app.post("/api/bt/forget")
+def api_bt_forget():
+    """Remove a paired speaker (so a new one can take its place)."""
+    mac = (request.json or {}).get("mac", "").strip()
+    if not re.fullmatch(r"([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}", mac):
+        abort(400)
+    rc, out = _run(["bluetoothctl", "remove", mac], timeout=10)
+    _rebuild_combine_sink()
+    return jsonify({"ok": rc == 0, "msg": out})
 
 
 @app.get("/api/bt/power")
@@ -728,8 +889,7 @@ def api_bt_power_set():
 
 # ── API: Wi-Fi ────────────────────────────────────────────────────────────────
 
-@app.get("/api/wifi/networks")
-def api_wifi_networks():
+def _wifi_live_scan() -> list:
     _run(["nmcli", "device", "wifi", "rescan"])
     time.sleep(2)
     _, out = _run(["nmcli", "-t", "-f", "SSID,SIGNAL,SECURITY,ACTIVE",
@@ -741,6 +901,7 @@ def api_wifi_networks():
         if len(parts) < 4:
             continue
         ssid, signal, security, active = (p.strip() for p in parts)
+        ssid = ssid.replace("\\:", ":")
         if ssid and ssid not in seen:
             seen.add(ssid)
             networks.append({
@@ -750,21 +911,89 @@ def api_wifi_networks():
                 "connected": active.lower() == "yes",
             })
     networks.sort(key=lambda x: -x["signal"])
+    return networks
+
+
+@app.get("/api/wifi/networks")
+def api_wifi_networks():
+    net = _net_state()
+    if net and net.get("mode") in ("setup", "offline", "searching", "connecting"):
+        # The Wi-Fi chip is busy being the setup hotspot and can't look around;
+        # use the list netwatch saved just before it opened the hotspot.
+        try:
+            nets = json.loads(NET_SCAN.read_text(encoding="utf-8")).get("networks", [])
+        except Exception:
+            nets = []
+        return jsonify([{**n, "connected": False, "cached": True} for n in nets])
+    networks = _wifi_live_scan()
+    if net:
+        saved = set(net.get("saved") or [])
+        for n in networks:
+            n["saved"] = n["ssid"] in saved
     return jsonify(networks)
 
 
 @app.post("/api/wifi/connect")
 def api_wifi_connect():
     data     = request.json or {}
-    ssid     = data.get("ssid", "").strip()
-    password = data.get("password", "").strip()
-    if not ssid:
+    ssid     = str(data.get("ssid", ""))
+    password = str(data.get("password", ""))
+    hidden   = bool(data.get("hidden"))
+    if not ssid.strip():
         abort(400)
+    if password and not (8 <= len(password) <= 63):
+        return jsonify({"ok": False, "msg": "Wi-Fi passwords are 8 to 63 characters"}), 400
+    if _net_state():
+        # netwatch does the switch (and rolls back if it fails). The answer
+        # comes later — the globe says it out loud, and /api/net shows it.
+        ok = _net_request("connect", ssid=ssid, password=password, hidden=hidden)
+        return jsonify({"ok": ok, "queued": True,
+                        "msg": f"Switching to {ssid} — listen to the globe." if ok
+                               else "could not reach the network watchdog"})
+    # Older install without netwatch: do it directly.
     cmd = ["nmcli", "device", "wifi", "connect", ssid]
     if password:
         cmd += ["password", password]
     rc, out = _run(cmd, timeout=30)
     return jsonify({"ok": rc == 0, "msg": out})
+
+
+@app.get("/api/net")
+def api_net():
+    """Network watchdog state for the UI: online / setup / connecting, the
+    setup Wi-Fi name + password, saved networks and the last few events."""
+    net = _net_state()
+    if not net:
+        return jsonify({"netwatch": False})
+    return jsonify({"netwatch": True, "outdated": _netwatch_outdated(),
+                    "hostname": os.uname().nodename.split(".")[0],
+                    **{k: net.get(k) for k in (
+                        "mode", "reason", "target", "ssid", "ip", "setup_ssid",
+                        "setup_password", "setup_ip", "saved", "events", "session")}})
+
+
+@app.post("/api/net/setup")
+def api_net_setup():
+    """Open the setup Wi-Fi now (same as tapping the pen "setup" spot)."""
+    if not _net_state():
+        return jsonify({"ok": False, "msg": "setup mode isn't installed on this globe yet"}), 503
+    return jsonify({"ok": _net_request("setup")})
+
+
+@app.post("/api/net/leave")
+def api_net_leave():
+    """Close the setup Wi-Fi and go back to a known network if one is around."""
+    if not _net_state():
+        return jsonify({"ok": False}), 503
+    return jsonify({"ok": _net_request("leave")})
+
+
+@app.post("/api/wifi/forget")
+def api_wifi_forget():
+    ssid = str((request.json or {}).get("ssid", ""))
+    if not ssid or not _net_state():
+        abort(400)
+    return jsonify({"ok": _net_request("forget", ssid=ssid)})
 
 
 # ── API: volume ──────────────────────────────────────────────────────────────
@@ -846,15 +1075,11 @@ def api_update():
 
 
 # ── captive portal ───────────────────────────────────────────────────────────
-# When a device joins the Oreloj hotspot, the OS fires a background probe to
-# one of these well-known URLs to test for internet.  We return a redirect
-# instead of the expected response, which triggers the "Sign in to network"
-# popup — automatically opening the admin UI without typing anything.
-#
-# Requires: iptables rule redirecting port 80 → 5000 on wlan0
-# (added by oreloj-hotspot.sh when the hotspot activates).
-
-_CAPTIVE_URL = "http://192.168.4.1:5000/"
+# When a phone joins the setup Wi-Fi, it fires a background probe to one of
+# these well-known URLs to test for internet. We answer with a redirect
+# instead, which pops up the "Sign in to network" sheet showing /setup —
+# no typing needed. (DNS on the setup Wi-Fi points every name at the Pi, and
+# admin.py also listens on port 80 — see install-setup-mode.sh.)
 
 for _path in [
     "/hotspot-detect.html",        # iOS / macOS
@@ -865,11 +1090,18 @@ for _path in [
     "/redirect",                   # Windows (alt)
     "/ncsi.txt",                   # Windows (alt)
     "/success.txt",                # Firefox
+    "/canonical.html",             # Firefox (alt)
 ]:
     app.add_url_rule(
-        _path, f"captive_{_path.strip('/').replace('/', '_')}",
-        lambda: redirect(_CAPTIVE_URL, 302),
+        _path, f"captive_{_path.strip('/').replace('/', '_').replace('.', '_')}",
+        lambda: redirect(_setup_url(), 302),
     )
+
+
+@app.get("/setup")
+def setup_page():
+    """Small, fast phone page: pick a Wi-Fi, pair a speaker."""
+    return send_file(SCRIPT_DIR / "setup.html")
 
 
 # ── Frontend ──────────────────────────────────────────────────────────────────
@@ -891,6 +1123,22 @@ def vendor(filename):
     return send_from_directory(SCRIPT_DIR / "vendor", filename, max_age=86400)
 
 
+def _serve_port_80() -> None:
+    """Also answer on port 80, so http://oreloj.local works without :5000 and
+    phones' captive-portal checks land here. Needs the sysctl from
+    install-setup-mode.sh; without it this quietly does nothing."""
+    global _PORT80_OK
+    try:
+        from werkzeug.serving import make_server
+        srv = make_server("0.0.0.0", 80, app, threaded=True)
+    except Exception as e:
+        print(f"port 80 not available ({e}) — using :5000 only")
+        return
+    _PORT80_OK = True
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+
+
 if __name__ == "__main__":
     print("Oreloj admin — http://oreloj.local:5000")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    _serve_port_80()
+    app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)

@@ -1,0 +1,20 @@
+[Unit]
+Description=Oreloj network watchdog — home Wi-Fi, or the setup Wi-Fi when lost
+# Start once NetworkManager is up. Don't wait for network-online: when there
+# is no Wi-Fi, that never happens — and that's exactly when we're needed.
+After=NetworkManager.service
+Wants=NetworkManager.service
+
+[Service]
+Type=simple
+# Installed by install-setup-mode.sh (it fills in the user name).
+Environment=ORELOJ_USER=oreloj
+ExecStart=/usr/bin/python3 /usr/local/lib/oreloj/oreloj-netwatch.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=oreloj-netwatch
+
+[Install]
+WantedBy=multi-user.target

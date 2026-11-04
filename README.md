@@ -41,7 +41,7 @@ Tapping the same country twice within two seconds is ignored — the debounce pr
 
 **Web admin UI** — a Flask app at `http://oreloj.local:5000` lets you add, edit, and delete stations; toggle favourites; manage Bluetooth speakers; and connect to Wi-Fi. Changes to `stations.csv` automatically restart `globe.py` so they take effect immediately — no manual restart needed.
 
-**Hotspot fallback** — if the globe can't reach a known Wi-Fi network, `oreloj-hotspot.sh` brings up a Wi-Fi access point named `oreloj`. Connect to it, and any device that probes for internet connectivity (iOS, Android, macOS, Windows) gets redirected to the admin UI via a captive portal. From there, use the Wi-Fi tab to connect the globe to a real network.
+**Setup mode** — `oreloj-netwatch.py` (root service) watches the Wi-Fi. If the globe can't find a known network at boot, or loses it for 2 minutes, or the pen taps the "setup" spot, it opens a password-protected Wi-Fi (`Oreloj-1`, `Oreloj-2`…). Phones that join get the `/setup` page automatically (captive portal). Picking a network there is safe: if the password is wrong the globe rolls back and reopens the setup Wi-Fi, and it says every step out loud. A Wi-Fi can also be added from any computer by editing `oreloj-wifi.txt` on the SD card. Install: `sudo bash ~/globe/install-setup-mode.sh`.
 
 **Sync from remote CSV** — the admin UI has a Sync button that fetches a remote `stations.csv` (configure `SYNC_URL` in `admin.py`) and merges any new stations into the local file, skipping duplicates by URL.
 
@@ -80,7 +80,7 @@ For Bluetooth audio setup (phase 2), see the audio section in SETUP.md.
 
 ## Admin UI
 
-Access at `http://oreloj.local:5000` from any device on the same network — or automatically via the captive portal when connected to the `oreloj` hotspot.
+Access at `http://oreloj.local:5000` from any device on the same network — or automatically via the captive portal when connected to the globe's setup Wi-Fi.
 
 **Stations tab** — your full station list, searchable. Add a station with country, city, name, stream URL and an optional favourite flag. Edit or delete any entry inline. Heart icon toggles favourites. The Sync button pulls from a configured remote CSV.
 
@@ -103,8 +103,11 @@ The status bar at the top shows whether a stream is currently playing, which Blu
 | `globe.service` | systemd user service for globe.py |
 | `admin.service` | systemd user service for admin.py |
 | `99-globe-hid.rules` | udev rule to expose the pen as an evdev device |
-| `oreloj-hotspot.sh` | Brings up the Wi-Fi hotspot and captive portal iptables rules |
-| `oreloj-hotspot.service` | systemd service that runs the hotspot script |
+| `oreloj-netwatch.py` | Wi-Fi watchdog: home Wi-Fi, or the password-protected setup Wi-Fi when lost |
+| `oreloj-netwatch.service` | systemd unit for the watchdog (installed by `install-setup-mode.sh`) |
+| `install-setup-mode.sh` | One-time installer: watchdog, captive portal, port 80, SD-card files |
+| `setup.html` | Small phone page at `/setup`: pick Wi-Fi, pair a speaker |
+| `oreloj-hotspot.sh` / `.service` | Legacy open hotspot (pre-setup-mode); stands down when netwatch is installed |
 | `audio_setup.sh` | Configures PipeWire + Bluetooth audio sink |
 | `SETUP.md` | Full setup instructions for a fresh Pi |
 
