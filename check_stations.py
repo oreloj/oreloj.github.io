@@ -29,18 +29,26 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
-UA = "Mozilla/5.0 (compatible; Oreloj-stream-check/2.0; +https://oreloj.github.io)"
-HEADERS = {"User-Agent": UA, "Accept": "*/*", "Icy-MetaData": "0"}
+# First try as a media player (like the globe's mpv). Old SHOUTcast servers send a
+# webpage to anything that looks like a browser. Retry as a browser if refused.
+UA_PLAYER  = "Lavf/60.16.100 (Oreloj stream check)"
+UA_BROWSER = "Mozilla/5.0 (compatible; Oreloj-stream-check/2.0; +https://oreloj.github.io)"
+_ua = threading.local()
 NEED_BYTES = 16 * 1024          # this much audio must arrive for "alive"
 AUDIO_TYPES = ("audio/", "application/ogg", "application/octet-stream",
                "video/mp2t", "application/aac", "video/mp4", "binary/octet-stream")
 
 
 def _ssl_ctx(verify: bool) -> ssl.SSLContext:
-    if not verify:
+    if not verify:                          # lenient: bad certificates, old TLS settings
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
+        try:
+            ctx.set_ciphers("DEFAULT:@SECLEVEL=0")
+            ctx.minimum_version = ssl.TLSVersion.TLSv1
+        except (ssl.SSLError, ValueError, AttributeError):
+            pass
         return ctx
     try:
         import certifi                      # macOS python often lacks system CAs
@@ -65,8 +73,12 @@ class _Result(Exception):
         self.status, self.detail = status, detail
 
 
+def _headers() -> dict:
+    return {"User-Agent": getattr(_ua, "value", UA_PLAYER), "Accept": "*/*", "Icy-MetaData": "0"}
+
+
 def _open(url: str, timeout: float, verify: bool = True):
-    req = urllib.request.Request(url, headers=HEADERS)
+    req = urllib.request.Request(url, headers=_headers())
     return urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx(verify))
 
 
@@ -88,7 +100,7 @@ def _icy_v1(url: str, timeout: float) -> tuple[str, str]:
     if u.scheme == "https":
         sock = _ssl_ctx(False).wrap_socket(sock, server_hostname=u.hostname)
     path = (u.path or "/") + (("?" + u.query) if u.query else "")
-    sock.sendall(f"GET {path} HTTP/1.0\r\nHost: {u.hostname}\r\nUser-Agent: {UA}\r\n"
+    sock.sendall(f"GET {path} HTTP/1.0\r\nHost: {u.hostname}\r\nUser-Agent: {_headers()['User-Agent']}\r\n"
                  f"Icy-MetaData: 0\r\n\r\n".encode())
     deadline, data = time.monotonic() + timeout, b""
     try:
@@ -136,7 +148,7 @@ def _probe_once(url: str, timeout: float, depth: int = 0) -> tuple[str, str]:
             resp = _open(url, timeout)
         except urllib.error.URLError as e:
             if isinstance(e.reason, ssl.SSLError) or "CERTIFICATE" in str(e.reason).upper():
-                verify, note = False, "bad security certificate"
+                verify, note = False, "its security certificate is broken or outdated"
                 resp = _open(url, timeout, verify=False)
             else:
                 raise
@@ -195,17 +207,18 @@ def _probe_once(url: str, timeout: float, depth: int = 0) -> tuple[str, str]:
 
 def probe(url: str, timeout: float = 8.0) -> tuple[str, str]:
     """Return (status, detail). status is 'ok', 'warn' (plays, with a caveat) or 'dead'."""
-    try:
-        status, detail = _probe_once(url, timeout)
-    except Exception as e:                  # never let one weird server crash the run
-        status, detail = "dead", f"error ({type(e).__name__})"
-    if status == "dead" and re.match(r"https?://", url or ""):
-        time.sleep(2)                       # one retry before calling it dead
+    first = None
+    for ua in (UA_PLAYER, UA_BROWSER):      # 2nd try = retry before calling it dead
+        _ua.value = ua
         try:
             status, detail = _probe_once(url, timeout)
-        except Exception as e:
+        except Exception as e:              # never let one weird server crash the run
             status, detail = "dead", f"error ({type(e).__name__})"
-    return status, detail
+        if status != "dead" or not re.match(r"https?://", url or ""):
+            return status, detail
+        first = first or (status, detail)
+        time.sleep(2)
+    return first
 
 
 # ── Where the station lists live ────────────────────────────────────────────
