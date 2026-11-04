@@ -487,6 +487,12 @@ audio { display: none; }
 .sys-dev:last-child { border-bottom: none; }
 .sys-dev-name { flex: 1; font-weight: 700; font-family: 'Syne', sans-serif; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sys-scan-list { max-height: 120px; overflow-y: auto; margin-bottom: 4px; }
+.sys-dead { display: flex; align-items: flex-start; gap: 7px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 10px; cursor: pointer; }
+.sys-dead:last-child { border-bottom: none; }
+.sys-dead-dot { flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--blue); margin-top: 4px; }
+.sys-dead-txt { min-width: 0; flex: 1; }
+.sys-dead-name { font-weight: 700; font-family: 'Syne', sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sys-dead-why { color: var(--muted); font-style: italic; font-size: 9px; }
 .sys-upd-out { font-size: 9px; color: var(--muted); font-style: italic; margin-top: 5px; max-height: 50px; overflow-y: auto; font-family: ui-monospace,monospace; word-break: break-all; display: none; }
 
 /* ── Access tier badges ── */
@@ -647,6 +653,15 @@ audio { display: none; }
             <span class="sys-vol-lbl">volume</span>
             <input type="range" id="sys-vol" class="sys-vol-slider" min="0" max="100" value="80" oninput="setSysVol(this.value)">
             <span class="sys-vol-num" id="sys-vol-num">80</span>
+          </div>
+          <!-- Streams -->
+          <div class="sys-sub-hdr">streams</div>
+          <div class="sys-inner">
+            <div class="sys-conn-info" id="sys-streams-info">not checked yet</div>
+            <div class="sys-scan-row">
+              <button style="font-size:10px;padding:4px 9px;" id="sys-streams-btn" onclick="sysStreamsCheck()">check streams</button>
+            </div>
+            <div class="sys-scan-list" id="sys-streams-list" style="max-height:220px"></div>
           </div>
           <!-- Bluetooth -->
           <div class="sys-sub-hdr">bluetooth</div>
@@ -2309,9 +2324,10 @@ window.addEventListener('DOMContentLoaded',()=>{
   })();
 
   renderList(); loadWorld();
-  syncFromPi();      // best-effort — silently no-ops if Pi is offline
+  const _piSync = syncFromPi();      // best-effort — silently no-ops if Pi is offline
   loadCalibrationFromPi();  // load pen codes from Pi or fall back to PEN_CODE_MAP
-  ghLoadStations();  // merge any stations saved to GitHub repo
+  const _ghSync = ghLoadStations();  // merge any stations saved to GitHub repo
+  Promise.allSettled([_piSync, _ghSync]).then(loadStreamHealth);  // blue dots for dead streams
   startGlobeMirror();  // live-mirror the physical globe once connected to the Pi
 });
 
@@ -4107,6 +4123,7 @@ async function _sysApi(method, path, body) {
 async function sysOnOpen() {
   // Only act when section is now visible (toggleSbSection has already flipped it)
   if (document.getElementById('system-body').style.display === 'none') return;
+  _sysApi('GET', '/api/streams/health').then(_renderStreamCheck);
   const s = await _sysApi('GET', '/api/status');
   if (!s) return;
   document.getElementById('sys-wifi-info').textContent =
@@ -4430,6 +4447,96 @@ async function sysUpdate() {
   } catch(e) {
     btn.disabled = false; btn.textContent = '↑ update';
   }
+}
+
+// ── Stream health ─────────────────────────────────────────────────────────
+// Dead streams are painted blue, like stations that fail when you press play
+// (deadStations). Pressing play on a blue station still retries it.
+//  • On a globe (oreloj.local): its own last "check streams" result.
+//  • On the public site: stream-health.json from the nightly GitHub check —
+//    a station is only painted blue after failing two nights in a row.
+let _healthDead = new Set();
+
+function applyStreamHealth(report, minChecks) {
+  for (const n of _healthDead) deadStations.delete(n);
+  _healthDead = new Set();
+  if (report && Array.isArray(report.stations)) {
+    const byName = {};
+    for (const e of report.stations) {
+      if (String(e.source || '').startsWith('preset')) continue;
+      (byName[e.name] = byName[e.name] || []).push(e);
+    }
+    for (const s of stations) {
+      const url = s.stream || _builtinStreamFix[s.name] || '';
+      const hit = (byName[s.name] || []).find(e => e.url === url);
+      if (url && hit && hit.status === 'dead' && (hit.checks_dead || 1) >= minChecks) {
+        deadStations.add(s.name); _healthDead.add(s.name);
+      }
+    }
+  }
+  renderList(); drawGlobe();
+}
+
+async function loadStreamHealth() {
+  if (PI_BASE === '') {
+    const h = await piGet('/api/streams/health');
+    _renderStreamCheck(h);
+    if (h) applyStreamHealth(h.report, 1);
+  } else if (location.protocol === 'https:') {
+    try {
+      const r = await fetch('stream-health.json?h=' + Math.floor(Date.now() / 3.6e6));
+      if (r.ok) applyStreamHealth(await r.json(), 2);
+    } catch (e) {}
+  }
+}
+
+let _streamPoll = null;
+async function sysStreamsCheck() {
+  const btn = document.getElementById('sys-streams-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> checking…';
+  const ok = await _sysApi('POST', '/api/streams/check');
+  if (!ok) { btn.disabled = false; btn.textContent = 'check streams';
+             document.getElementById('sys-streams-info').textContent = '⚠ could not reach the globe'; return; }
+  clearInterval(_streamPoll);
+  _streamPoll = setInterval(async () => {
+    const h = await _sysApi('GET', '/api/streams/health');
+    if (!h) return;
+    _renderStreamCheck(h);
+    if (!h.running) { clearInterval(_streamPoll); _streamPoll = null; applyStreamHealth(h.report, 1); }
+  }, 1500);
+}
+
+function _renderStreamCheck(h) {
+  const btn  = document.getElementById('sys-streams-btn');
+  const info = document.getElementById('sys-streams-info');
+  const list = document.getElementById('sys-streams-list');
+  if (!btn || !h) return;
+  if (h.running) {
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spin"></span> checking ${h.done || 0}/${h.total || '…'}`;
+    return;
+  }
+  btn.disabled = false; btn.textContent = 'check streams';
+  if (h.error) { info.textContent = '⚠ check failed: ' + h.error; return; }
+  const rep = h.report;
+  if (!rep) { info.textContent = 'not checked yet'; list.innerHTML = ''; return; }
+  const seen = new Set();
+  const dead = rep.stations.filter(e => e.status === 'dead' && !seen.has(e.name + e.source) && seen.add(e.name + e.source));
+  const playing = new Set(rep.stations.filter(e => e.status !== 'dead').map(e => e.url)).size;
+  const when = new Date(rep.checked_at).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  info.textContent = `last check ${when} · ${playing} playing · ` + (dead.length ? `${dead.length} dead` : 'none dead ✓');
+  list.innerHTML = dead.map(e => {
+    const pre = String(e.source).startsWith('preset') ? e.source + ': ' : '';
+    return `<div class="sys-dead" data-name="${_esc(e.name)}" onclick="streamCheckOpen(this.dataset.name)" title="${_esc(e.url)}">
+      <span class="sys-dead-dot"></span>
+      <div class="sys-dead-txt"><div class="sys-dead-name">${_esc(pre + e.name)}</div>
+      <div class="sys-dead-why">${_esc(e.detail)}</div></div></div>`;
+  }).join('');
+}
+
+function streamCheckOpen(name) {
+  const idx = stations.findIndex(s => s.name === name);
+  if (idx >= 0) rotateTo(stations[idx].lng, stations[idx].lat, () => openPopup(idx));
 }
 </script>
 </body>
