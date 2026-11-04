@@ -29,3 +29,6 @@ setup-card.html
 favourites.json
 state.json
 sounds/
+
+# Local SD-card backups (contain Wi-Fi passwords)
+sd-card-backup*/
