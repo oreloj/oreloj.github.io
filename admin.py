@@ -774,18 +774,52 @@ def _bt_scan(seconds: float = 10) -> dict:
     return found
 
 
+def _bt_connected(mac: str) -> bool:
+    _, info = _run(["bluetoothctl", "info", mac])
+    return bool(re.search(r"Connected:\s*yes", info, re.IGNORECASE))
+
+
+def _bt_connect_retry(mac: str, tries: int = 4) -> bool:
+    """Connect and CHECK it — `bluetoothctl connect` can report success while
+    the audio link never comes up (or the audio stack is still restarting)."""
+    for _ in range(tries):
+        _run(["bluetoothctl", "connect", mac], timeout=15)
+        time.sleep(2)
+        if _bt_connected(mac):
+            return True
+        time.sleep(2)
+    return False
+
+
 def _bt_pair_and_use(mac: str) -> dict:
-    """Pair + trust + add to the audio output + connect."""
-    rc, out = _run(["bluetoothctl", "pair", mac], timeout=20)
+    """Pair + trust + connect + add to the audio output.
+
+    Order matters: some speakers (KRK GoAux "K3" on Oreloj 1) drop a fresh
+    pairing if no connection follows within seconds. So connect right away,
+    THEN rebuild the audio output (which restarts the audio stack and drops
+    the link), then reconnect and verify. Only report success once the
+    speaker is really connected."""
+    rc, out = _run(["bluetoothctl", "pair", mac], timeout=25)
     time.sleep(1)  # let bluez settle before reading the bond state back
     if not _bt_is_paired(mac):
         return {"ok": False, "paired": False,
                 "msg": out or "pairing failed — is the speaker in pairing mode?"}
     _run(["bluetoothctl", "trust", mac])
+    _bt_connect_retry(mac, tries=2)                # keep the fresh pairing alive
     reconfigured = _rebuild_combine_sink()
-    crc, _ = _run(["bluetoothctl", "connect", mac], timeout=15)
-    return {"ok": True, "paired": True, "connected": crc == 0,
-            "audio_reconfigured": reconfigured, "msg": out}
+    connected = _bt_connect_retry(mac, tries=4)
+    paired = _bt_is_paired(mac)
+    if connected and paired:
+        return {"ok": True, "paired": True, "connected": True,
+                "audio_reconfigured": reconfigured, "msg": out}
+    if not paired:
+        msg = ("the speaker accepted pairing, then dropped it — switch it off and "
+               "on, put it in pairing mode again and retry")
+    else:
+        msg = ("paired, but the sound link didn't come up yet — switch the speaker "
+               "off and on; the globe reconnects it within 2 minutes")
+    return {"ok": False, "paired": paired, "connected": False,
+            "audio_reconfigured": reconfigured, "msg": msg}
 
 
 @app.post("/api/bt/scan")
@@ -823,11 +857,17 @@ def api_bt_pair_nearest():
         # try the nearest devices that aren't obviously phones/computers.
         unknown = [(mac, d) for mac, d in near if not d["speaker"]
                    and not d["icon"].startswith(("phone", "computer", "input"))][:2]
+        tried = None
         for mac, d in speakers[:3] + unknown:
             res = _bt_pair_and_use(mac)
-            if res.get("ok"):
-                res.update({"mac": mac, "name": d["name"]})
+            res.update({"mac": mac, "name": d["name"]})
+            if res.get("ok") or res.get("paired"):    # it's the speaker, even if not connected yet
                 return jsonify(res)
+            if res.get("msg", "").startswith("the speaker accepted pairing"):
+                tried = tried or res                  # remember the most useful failure
+        if tried:
+            tried["msg"] = f"{tried['name']}: {tried['msg']}"
+            return jsonify(tried)
         heard = ", ".join(d["name"] for _, d in near[:6]) or "nothing"
         return jsonify({"ok": False, "msg": f"no speaker in pairing mode found (heard: {heard})"})
     finally:
