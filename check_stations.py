@@ -22,7 +22,7 @@ Exit code: 0 = all alive, 1 = at least one dead, 2 = input file missing.
 
 from __future__ import annotations
 
-import argparse, csv, json, re, socket, ssl, sys, threading, time
+import argparse, csv, json, re, socket, ssl, sys, threading, time, warnings
 import http.client, urllib.error, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -45,6 +45,7 @@ def _ssl_ctx(verify: bool) -> ssl.SSLContext:
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
         try:
+            warnings.simplefilter("ignore", DeprecationWarning)
             ctx.set_ciphers("DEFAULT:@SECLEVEL=0")
             ctx.minimum_version = ssl.TLSVersion.TLSv1
         except (ssl.SSLError, ValueError, AttributeError):
