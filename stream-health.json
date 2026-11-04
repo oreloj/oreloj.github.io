@@ -1,0 +1,2754 @@
+{
+ "checked_at": "2026-11-04T19:51:10+00:00",
+ "summary": {
+  "ok": 303,
+  "warn": 30,
+  "dead": 8
+ },
+ "stations": [
+  {
+   "name": "NTS Radio",
+   "country": "UK",
+   "url": "https://stream-relay-geo.ntslive.net/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rinse FM",
+   "country": "UK",
+   "url": "https://admin.stream.rinse.fm/proxy/rinse_uk/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Worldwide FM",
+   "country": "UK",
+   "url": "https://worldwide-fm.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Noods Radio",
+   "country": "UK",
+   "url": "https://noods-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Resonance Extra",
+   "country": "UK",
+   "url": "https://stream.resonance.fm/resonance-extra",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "1BTN",
+   "country": "UK",
+   "url": "https://edge.clrmedia.co.uk/obfm_mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Voices Radio",
+   "country": "UK",
+   "url": "https://voicesradio.out.airtime.pro/voicesradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Soho Radio",
+   "country": "UK",
+   "url": "http://sohoradiomusic.doughunt.co.uk:8000/320mp3",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Aaja Music",
+   "country": "UK",
+   "url": "https://aaja-2.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Netil Radio",
+   "country": "UK",
+   "url": "https://netilradio.out.airtime.pro/netilradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Do!! You!!! Radio",
+   "country": "UK",
+   "url": "https://doyouworld.out.airtime.pro/doyouworld_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Subcity Radio",
+   "country": "Scotland",
+   "url": "https://stream.subcity.org/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Dublin Digital Radio",
+   "country": "Ireland",
+   "url": "https://dublin-digital-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "FIP",
+   "country": "France",
+   "url": "https://icecast.radiofrance.fr/fip-midfi.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Pinata Radio",
+   "country": "France",
+   "url": "https://listen.radioking.com/radio/96031/stream/906306",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "LYL Radio",
+   "country": "France",
+   "url": "https://icecast.lyl.live/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RTL3",
+   "country": "France",
+   "url": "https://rtl3.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Le Mellotron",
+   "country": "France",
+   "url": "https://listen.radioking.com/radio/477719/stream/534044",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio DY10",
+   "country": "France",
+   "url": "http://flux.radiody10.com:8000/fallback",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Radio Grenouille",
+   "country": "France",
+   "url": "https://live.radiogrenouille.com:8443/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Kiosk Radio",
+   "country": "Belgium",
+   "url": "https://kioskradiobxl.out.airtime.pro/kioskradiobxl_b",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Centraal",
+   "country": "Belgium",
+   "url": "http://mediaserv30.live-streams.nl:8015/tunein/centraal",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Intergalactic FM",
+   "country": "Netherlands",
+   "url": "http://radio.intergalactic.fm/2",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Cashmere Radio",
+   "country": "Germany",
+   "url": "http://cashmereradio.out.airtime.pro:8000/cashmereradio_b",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "90mil Radio",
+   "country": "Germany",
+   "url": "https://neunzugmilradio.out.airtime.pro/neunzugmilradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio 80000",
+   "country": "Germany",
+   "url": "https://radio80k.out.airtime.pro:8000/radio80k_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Reboot FM",
+   "country": "Germany",
+   "url": "https://stream.reboot.fm/listen/reboot.fm/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Refuge Worldwide",
+   "country": "Germany",
+   "url": "https://streaming.radio.co/s3699c5e49/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rádio Quântica",
+   "country": "Portugal",
+   "url": "https://libretime.radioquantica.com/main.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Raheem",
+   "country": "Italy",
+   "url": "https://radioraheem.out.airtime.pro/radioraheem_b",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "NEU Radio",
+   "country": "Italy",
+   "url": "https://nr9.newradio.it/proxy/ebaruffa?mp=/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Kapitał",
+   "country": "Poland",
+   "url": "https://radiokapitalpl.out.airtime.pro/radiokapitalpl_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "The Lake Radio",
+   "country": "Denmark",
+   "url": "https://thelakeradio.radioca.st/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Retreat Radio",
+   "country": "Sweden",
+   "url": "http://retreatradio.out.airtime.pro:8000/retreatradio_b",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "IDA Radio",
+   "country": "Estonia",
+   "url": "https://cdn05.radio.cloud:8128/AIDA-OMNIA-GAI",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "20ft Radio",
+   "country": "Ukraine",
+   "url": "https://20ft-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Mutant Radio",
+   "country": "Georgia",
+   "url": "https://listen.radioking.com/radio/282820/stream/328621",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Movement Radio",
+   "country": "Greece",
+   "url": "https://movementathens.out.airtime.pro/movementathens_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Alhara",
+   "country": "Palestine",
+   "url": "https://stream.radioalhara.net/ra",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Oroko Radio",
+   "country": "Ghana",
+   "url": "https://oroko-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Triple J",
+   "country": "Australia",
+   "url": "http://abc.streamguys1.com/live/triplejnsw/icecast.audio",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "FBi Radio",
+   "country": "Australia",
+   "url": "https://streamer.fbiradio.com/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Skylab Radio",
+   "country": "Australia",
+   "url": "http://stream.skylab-radio.com:8000/live",
+   "source": "station",
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "RNZ Concert",
+   "country": "New Zealand",
+   "url": "http://radionz-ice.streamguys.com/Concert_aac128",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "The Lot Radio",
+   "country": "USA",
+   "url": "https://livepeercdn.studio/hls/85c28sa2o8wppm58/index.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "KEXP",
+   "country": "USA",
+   "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Dublab",
+   "country": "USA",
+   "url": "http://dublab.out.airtime.pro:8000/dublab_a",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "SOMA FM",
+   "country": "USA",
+   "url": "https://ice1.somafm.com/groovesalad-128-mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Free Brooklyn",
+   "country": "USA",
+   "url": "http://us1.internet-radio.com:8155/live",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "X-Ray FM",
+   "country": "USA",
+   "url": "https://listen.xray.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Newtown Radio",
+   "country": "USA",
+   "url": "https://streaming.radio.co/s0d090ee43/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "8 Ball Radio",
+   "country": "USA",
+   "url": "https://eightball.out.airtime.pro/eightball_b",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Paradise",
+   "country": "USA",
+   "url": "https://stream.radioparadise.com/aac-320",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "CKUT",
+   "country": "Canada",
+   "url": "https://ckut.out.airtime.pro/ckut_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio IPN",
+   "country": "Mexico",
+   "url": "http://201.124.60.85:8000/radio.mp3",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Ibero 909",
+   "country": "Mexico",
+   "url": "https://noasrv.caster.fm:10182/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "El Recreo FM",
+   "country": "Mexico",
+   "url": "https://radio.elrecreo.fm/listen/elrecreo.fm/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rádio Batuta",
+   "country": "Brazil",
+   "url": "https://radioims.out.airtime.pro/radioims_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Vorterix",
+   "country": "Argentina",
+   "url": "https://ice2.edge-apps.net/radio1_high-20057.audio",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bangkok Community Radio",
+   "country": "Thailand",
+   "url": "https://bcr.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rumba",
+   "country": "Ecuador",
+   "url": "https://streamingecuador.net:8078/radiorumbanetwork",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Nasarawa Broadcasting Service",
+   "country": "Nigeria",
+   "url": "https://nbsradio1.radioca.st/;",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Oncativo",
+   "country": "Argentina",
+   "url": "https://01.solumedia.com.ar:9058/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Relativa",
+   "country": "Spain",
+   "url": "https://streamer.radio.co/sd6131729c/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Caso",
+   "country": "Argentina",
+   "url": "https://play.radiocaso.xyz/main",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Mutante Rádio",
+   "country": "Brazil",
+   "url": "https://s30.maxcast.com.br:8190/live?id=536069974467",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Kurruf",
+   "country": "Chile",
+   "url": "https://radio.latina.red/radiokurruf.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Siete",
+   "country": "Paraguay",
+   "url": "https://rss1.siete.com.py:9433/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Deseo",
+   "country": "Bolivia",
+   "url": "https://conectperu.com/8396/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Wayna Tambo",
+   "country": "Bolivia",
+   "url": "https://s2.myradiostream.com/5038/listen.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Filarmonía",
+   "country": "Peru",
+   "url": "https://c22.radioboss.fm:8100/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Veneno",
+   "country": "Brazil",
+   "url": "https://radio.veneno.live/stream/main",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Areito Stéreo",
+   "country": "Colombia",
+   "url": "https://estructuraweb.com.co:9207/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Javeriana Estéreo 91,9",
+   "country": "Colombia",
+   "url": "https://radio06.cehis.net/proxy/javerian?mp=%2Fstream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "La Salsera FM",
+   "country": "Venezuela",
+   "url": "https://stream.zeno.fm/4qbzbrvdmy8uv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rayan FM",
+   "country": "Syria",
+   "url": "https://a13.asurahosting.com/listen/r_fm/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rapar",
+   "country": "Suriname",
+   "url": "https://audio-edge-es6pf.mia.g.radiomast.io/d7e8093b-6a7e-4442-a096-37f259cb7092",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "NTN Radio FM",
+   "country": "Guyana",
+   "url": "https://auds1.intacs.com/ntnradio",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Vox 103.5 FM",
+   "country": "Panama",
+   "url": "https://cast1.my-control-panel.com/proxy/voxlarad/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Osa Radio Online",
+   "country": "Costa Rica",
+   "url": "https://radioscr.digitaltvcr.xyz/listen/osaonline/osaradio",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Maria",
+   "country": "Panama",
+   "url": "https://dreamsiteradiocp2.com/proxy/rmpanama2?mp=/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Cultural De Puriscal",
+   "country": "Costa Rica",
+   "url": "https://stream.zeno.fm/ucos1vhzikbtv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bluefields",
+   "country": "Nicaragua",
+   "url": "https://a10.asurahosting.com:8570/radio.mp3/;",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Nicaragua Dancehall",
+   "country": "Nicaragua",
+   "url": "https://stream.zeno.fm/frfely84cjguv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Camoapa",
+   "country": "Nicaragua",
+   "url": "https://c30.radioboss.fm:18546/radiocamoapa",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Subterraneo Americal",
+   "country": "Honduras",
+   "url": "https://custom-azura1.asurahosting.com/listen/subterraneo_americal_radio/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Gladys Palmora",
+   "country": "Spain",
+   "url": "https://streams.radio.co/s496c4d2e8/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Meow Club 91",
+   "country": "Honduras",
+   "url": "https://stream.zeno.fm/0chh40kgdwzuv?rj-ttl=5&rj-tok=AAABfAK1xvMAyZ0wO9HSPLNGOA",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Arpas",
+   "country": "El Salvador",
+   "url": "https://stream.codigosur.org/arpas.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Santa Cruz",
+   "country": "Guatemala",
+   "url": "https://servidor26.brlogic.com:7014/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Nebaj Stereo FM",
+   "country": "Guatemala",
+   "url": "https://radio.garden/api/ara/content/listen/LNhKzLW1/channel.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Alpha Boys School Radio",
+   "country": "Jamaica",
+   "url": "http://alphaboys-live.streamguys1.com/alphaboys.mp3",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "GT Reggae Radio",
+   "country": "Jamaica",
+   "url": "https://radio.garden/api/ara/content/listen/Sxv8VfCU/channel.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Alter Radio",
+   "country": "Haiti",
+   "url": "https://stream.zeno.fm/s096v26gfrruv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Seybo",
+   "country": "Dominican Republic",
+   "url": "https://radioseibo.dominicos.org:8443/radio.ogg",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bible College Radio",
+   "country": "Belize",
+   "url": "https://radio.garden/api/ara/content/listen/VLzrcKi4/channel.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Restauracion de Vida",
+   "country": "Belize",
+   "url": "https://radio.garden/api/ara/content/listen/qErcbTH3/channel.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Grace Frequency",
+   "country": "Belize",
+   "url": "https://radio.garden/api/ara/content/listen/QFgoybuX/channel.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rebelde",
+   "country": "Cuba",
+   "url": "https://icecast.teveo.cu/zrXXWK9F",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Enciclopedia",
+   "country": "Cuba",
+   "url": "https://icecast.teveo.cu/9Rnrbjzq",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Jolt Radio",
+   "country": "United States",
+   "url": "https://streamer.radio.co/sd8ab6b5aa/listen?nocache=1779377092570",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Mad Radio Miami",
+   "country": "United States",
+   "url": "https://c25.radioboss.fm/stream/193",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "WDET FM",
+   "country": "USA",
+   "url": "https://wdet.cdnstream1.com/4550_256.aac?esPlayer&cb=893951.m4a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Lumpen Radio",
+   "country": "USA",
+   "url": "https://radio.mensajito.mx/lumpenradio",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Nopal",
+   "country": "Mexico",
+   "url": "https://radio.mensajito.mx/nopalA",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "KLPM FM",
+   "country": "Bahamas",
+   "url": "https://s4.radio.co/s440e54fd7/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio FRO",
+   "country": "Austria",
+   "url": "https://stream.fro.at/fro320.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Helsinki",
+   "country": "Austria",
+   "url": "https://live.helsinki.at:8088/live160.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Hong Kong Community Radio",
+   "country": "China",
+   "url": "https://stream.hkcr.live/audio/stream.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Zabrij Radio",
+   "country": "Croatia",
+   "url": "https://zabrij-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "IDA Radio Helsinki",
+   "country": "Finland",
+   "url": "https://broadcast.idaidaida.net:8000/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Lahmacun Radio",
+   "country": "Hungary",
+   "url": "https://streaming.lahmacun.hu/listen/lahmacun_radio/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Tilos Rádió",
+   "country": "Hungary",
+   "url": "https://stream.tilos.hu/tilos",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Paddygrooves Radio",
+   "country": "Indonesia",
+   "url": "https://a12.siar.us/radio/8230/radio.mp3",
+   "source": "station",
+   "status": "dead",
+   "detail": "server error (502)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "Calotropis",
+   "country": "Kenya",
+   "url": "https://radio.calotropis.xyz:8000/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Palanga Street Radio",
+   "country": "Lithuania",
+   "url": "https://stream.palanga.live:8443/palanga128.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RadiOrakel",
+   "country": "Norway",
+   "url": "https://stream.radiorakel.no/fm993.mp3",
+   "source": "station",
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "Black Rhino Radio",
+   "country": "Romania",
+   "url": "https://blackrhinoradio.out.airtime.pro/blackrhinoradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Aparat",
+   "country": "Serbia",
+   "url": "https://stream4.rcast.net/72355/",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Pan African Space Station",
+   "country": "South Africa",
+   "url": "https://pass.out.airtime.pro/pass_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio LoRa",
+   "country": "Switzerland",
+   "url": "https://livestream.lora.ch/lora.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Kanal K",
+   "country": "Switzerland",
+   "url": "https://play.kanalk.ch/kanalk/mp3-192/",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radyo Modyan",
+   "country": "Turkey",
+   "url": "https://istasyon.modyan.com/listen/modyan/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "SAF Radio",
+   "country": "United Arab Emirates",
+   "url": "https://s4.radio.co/s2c42e3ef5/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bvlbancha Liberation Radio",
+   "country": "USA",
+   "url": "http://cast6.asurahosting.com:7236/stream",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Shonan Beach FM",
+   "country": "Japan",
+   "url": "https://shonanbeachfm.out.airtime.pro/shonanbeachfm_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Parea Radio",
+   "country": "Greece",
+   "url": "https://parea-radio-b7474105.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Skovoroda",
+   "country": "Ukraine",
+   "url": "https://stream.radioskovoroda.com:8443/radioskovoroda",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio 28",
+   "country": "Mexico",
+   "url": "https://stream.radio28.net/listen/canal1/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Caribe",
+   "country": "Cuba",
+   "url": "https://icecast.teveo.cu/dXhtHs4P",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Vibz FM",
+   "country": "Antigua and Barbuda",
+   "url": "https://testvibz-silcomwireless.radioca.st/stream.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RadioOne",
+   "country": "Albania",
+   "url": "https://cp1.sednastream.com/proxy/radioone94?mp=/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Jazz FM 106.9 Yerevan Radio",
+   "country": "Armenia",
+   "url": "https://de.auroramedia.am/jazz.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Anti Radio",
+   "country": "Azerbaijan",
+   "url": "https://stream.antiradio.net/radio/8000/mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Sehara",
+   "country": "Bosnia and Herzegovina",
+   "url": "https://cast.name.ba:8000/;",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Y103.3 FM",
+   "country": "Barbados",
+   "url": "http://usa4.fastcast4u.com:5336/;",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Radio JKKNIU",
+   "country": "Bangladesh",
+   "url": "https://stream.zeno.fm/risgdzpf1cxtv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Cotonou 94.3",
+   "country": "Benin",
+   "url": "https://stream.zeno.fm/o9bspgm4y78vv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Kristal FM",
+   "country": "Brunei",
+   "url": "https://play.thestreamtech.com:7038/",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Another Music Project",
+   "country": "Belarus",
+   "url": "https://radio.anothermusicproject.com:8443/idm",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Caboradio",
+   "country": "Cape Verde",
+   "url": "https://listen.radioking.com/radio/281506/stream/327253",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Fabulosa 96.7",
+   "country": "Dominica",
+   "url": "https://bostonstreaminge.net/8006/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Antinea Radio",
+   "country": "Algeria",
+   "url": "https://listen.radioking.com/radio/6640/stream/347",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Ethio FM 107.8",
+   "country": "Ethiopia",
+   "url": "https://stream.zeno.fm/72y045deqeruv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "SumerFm Iraq",
+   "country": "Iraq",
+   "url": "https://l3.itworkscdn.net/itwaudio/9012/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Yarmouk University FM",
+   "country": "Jordan",
+   "url": "https://yufm.yu.edu.jo/broadwave.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Pop Radio 21",
+   "country": "Cambodia",
+   "url": "https://listen.radioking.com/radio/318317/stream/365846",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Voice of Chongro",
+   "country": "North Korea",
+   "url": "https://stream.zeno.fm/oldwnjuma3duv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Lao National Radio 103.7",
+   "country": "Laos",
+   "url": "https://radio.lnr.org.la/fm103",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Liban 96.2FM",
+   "country": "Lebanon",
+   "url": "https://media2.streambrothers.com:8202/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "REV-UP SLU",
+   "country": "Saint Lucia",
+   "url": "https://caribspy.com/proxy/revupslu/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "SLBC Tamil National Service",
+   "country": "Sri Lanka",
+   "url": "https://stream-32.zeno.fm/xekhrn4zetzuv?zs=KXT1gTNYSemcxyslV6-vdA",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "راديو فنون طرابلس - Radio Arts Tripoli",
+   "country": "Libya",
+   "url": "https://stream.zeno.fm/z9wfrdpmgg0uv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Ness Radio",
+   "country": "Morocco",
+   "url": "https://radio.nessradio.net:8212/nessradio-hd",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "IMAGO.FM",
+   "country": "Moldova",
+   "url": "https://radio.imago.fm:8007/_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RNM",
+   "country": "Madagascar",
+   "url": "https://direct.radiomadagasikara.com/listen/rnm/radio.mp3",
+   "source": "station",
+   "status": "dead",
+   "detail": "access refused (403)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "Radio Kledu",
+   "country": "Mali",
+   "url": "https://stream.zeno.fm/f38bxpt3v2quv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "MandalayFM",
+   "country": "Myanmar",
+   "url": "https://edge.mixlr.com/channel/nmtev",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Campus 103.7",
+   "country": "Malta",
+   "url": "https://campusfm.radioca.st/campusfm_live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radioplus Fever",
+   "country": "Mauritius",
+   "url": "https://streamer.radio.co/s3fe39a4a4/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Dhivehi FM",
+   "country": "Maldives",
+   "url": "https://radio.psm.mv/fmair",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Timveni Radio",
+   "country": "Malawi",
+   "url": "https://play.streamafrica.net/timveni",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rádio Cidade - Beira 105.2 FM",
+   "country": "Mozambique",
+   "url": "https://node.stream-africa.com:8443/RadioCidadeBeira",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
+  },
+  {
+   "name": "Kosmos 94.1",
+   "country": "Namibia",
+   "url": "https://edge.iono.fm/xice/88_high.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Kantipur FM",
+   "country": "Nepal",
+   "url": "https://radio-broadcast.ekantipur.com/stream",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
+  },
+  {
+   "name": "Hala FM",
+   "country": "Oman",
+   "url": "https://listen-halafm.sharp-stream.com/halafmlow.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "FM 101 Sargodha",
+   "country": "Pakistan",
+   "url": "https://whmsonic.radio.gov.pk:8040/relay",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rwanda",
+   "country": "Rwanda",
+   "url": "https://listen.rba.co.rw:8008/rwanda/",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Dabanga Radio",
+   "country": "Sudan",
+   "url": "https://stream.dabangasudan.org/",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Or FM 89.6 Orkadiéré",
+   "country": "Senegal",
+   "url": "https://stream.zeno.fm/gy7fpc2am1duv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "96.3 Favour FM Juba",
+   "country": "South Sudan",
+   "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Tchad",
+   "country": "Chad",
+   "url": "https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio?fbclid=IwAR32Ir_eHaV-HSrh46OVT_VeTZt5KoNggoq8qzeSiAeZTJNBKKUtsSNUtcY",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Victoire 96.3 Lomé",
+   "country": "Togo",
+   "url": "https://stream.zeno.fm/vkhv6gl43g5tv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Tunisie Culturelle",
+   "country": "Tunisia",
+   "url": "http://rtstream.tanitweb.com/culturelle",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "TAMBRIN",
+   "country": "Trinidad and Tobago",
+   "url": "https://ice42.securenetsystems.net/TAMBRIN",
+   "source": "station",
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "世新廣播電台-2",
+   "country": "Taiwan",
+   "url": "https://stream.ginnet.cloud/live0115lo-89xv/_definst_/am729/playlist.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Radio One Stereo",
+   "country": "Tanzania",
+   "url": "https://radioonetanzania.radioca.st/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Uganda DJs",
+   "country": "Uganda",
+   "url": "https://stream.zeno.fm/muzrp86994zuv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio O'zbegim Taronasi",
+   "country": "Uzbekistan",
+   "url": "https://fm101.uz:9943/fm101_low.aac",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Vaticana Italia",
+   "country": "Vatican City",
+   "url": "https://radio.vaticannews.va/stream-it",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Sweet Radio SVG",
+   "country": "Saint Vincent and the Grenadines",
+   "url": "https://streaming.radio.co/sdf4651481/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Hà Nội Community Radio",
+   "country": "Vietnam",
+   "url": "https://ha-noi-community-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Sana’a Radio راديو صنعاء",
+   "country": "Yemen",
+   "url": "https://dc5.serverse.com/proxy/pbmhbvxs/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Hot 102.7FM",
+   "country": "Zambia",
+   "url": "https://edge.iono.fm/xice/57_medium.aac?ref=https%3A%2F%2Fhot1027.co.za%2F&adToken=",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Star FM 89.7",
+   "country": "Zimbabwe",
+   "url": "https://edge.iono.fm/xice/159_medium.aac",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Horizon FM",
+   "country": "Burkina Faso",
+   "url": "https://stream.zeno.fm/0945crn4bf9uv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "onlineDJradio",
+   "country": "Bulgaria",
+   "url": "https://play.onlinedjradio.com:7000/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Heaven FM",
+   "country": "Burundi",
+   "url": "https://stream.zeno.fm/eequgfw72hhvv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Ndeke Luka",
+   "country": "Central African Republic",
+   "url": "https://stream.radiondekeluka.org/ndekeluka",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Equinoxe Radio",
+   "country": "Cameroon",
+   "url": "https://s6.citrus3.com/stream/radioequinoxe",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio 1 Praha",
+   "country": "Czechia",
+   "url": "https://icecast2.play.cz/radio1.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Eritrean Music Radio",
+   "country": "Eritrea",
+   "url": "https://linuxfreelancer.com:8443/test.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Star FM 101.9",
+   "country": "Grenada",
+   "url": "https://starchild.radioca.st/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rádio Voz da Guiné",
+   "country": "Guinea-Bissau",
+   "url": "https://stream.zeno.fm/iwioelqe6qwtv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RadioSimorgh",
+   "country": "Iran",
+   "url": "https://stream.zeno.fm/9svfnobkrxrvv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rondó",
+   "country": "Iceland",
+   "url": "https://ruv-radio-live.akamaized.net/streymi/rondo/rondo.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Radio Tumar FM",
+   "country": "Kyrgyzstan",
+   "url": "https://radio.tumar.fm:8005/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Kiribati",
+   "country": "Kiribati",
+   "url": "https://streamer5.rightclickitservices.com:19790/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "VON Radio",
+   "country": "Saint Kitts and Nevis",
+   "url": "http://vonradio.streamon.fm:8000/vonradio-24k.aac",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "GugakFM",
+   "country": "South Korea",
+   "url": "https://mgugaklive.nowcdn.co.kr/gugakradio/gugakradio.stream/chunklist_w1653570079.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Radio 100,7",
+   "country": "Luxembourg",
+   "url": "https://100komma7.cast.addradio.de/100komma7/live/mp3/128/stream.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "XO.FM",
+   "country": "Latvia",
+   "url": "https://live.xo.fm/xofm128",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Elgen Nutag",
+   "country": "Mongolia",
+   "url": "https://a6.asurahosting.com:7210/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Garkuwa",
+   "country": "Niger",
+   "url": "https://stream.zeno.fm/x0a1r1qu1nhvv",
+   "source": "station",
+   "status": "dead",
+   "detail": "access refused (401)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "UpBeat Radio",
+   "country": "Palau",
+   "url": "https://live.upbeat.pw/",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Ultra",
+   "country": "Russia",
+   "url": "https://nashe1.hostingradio.ru/ultra-192.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "SBC Paradise FM",
+   "country": "Seychelles",
+   "url": "https://streaming.fabrik.fm/paradise-fm/echocast/audio/index.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Radio Študent",
+   "country": "Slovenia",
+   "url": "http://kruljo.radiostudent.si:8000/ehiq",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Choice FM 93.3",
+   "country": "Sierra Leone",
+   "url": "https://stream.zeno.fm/ct0gvk9149puv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "USMARADIO",
+   "country": "San Marino",
+   "url": "https://usmaradio.out.airtime.pro/usmaradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Kanal 103",
+   "country": "North Macedonia",
+   "url": "https://radiostream.neotel.mk/kanal103",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Babel",
+   "country": "Uruguay",
+   "url": "https://radios.iwstreaming.uy/8030/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Femme Pawa FM",
+   "country": "Vanuatu",
+   "url": "https://radio.vbtc.vu/femmefm",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio FM",
+   "country": "Slovakia",
+   "url": "https://icecast.stv.livebox.sk/fm_128.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "95bFM",
+   "country": "New Zealand",
+   "url": "https://streams.95bfm.com/stream112",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "BFF.fm",
+   "country": "USA",
+   "url": "https://ais-sa2.cdnstream1.com/2053_128.mp3?cache=f4984947e1bf2e50",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Barn Radio",
+   "country": "USA",
+   "url": "https://s2.radio.co/s04214ea9a/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bentonville Community Radio (KOBV 103.3)",
+   "country": "USA",
+   "url": "http://s2.stationplaylist.com:7058/listen.aac",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Club QFM Sitges Radio",
+   "country": "Spain",
+   "url": "https://s68.radiolize.com/radio/8030/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Clyde Built Radio",
+   "country": "Scotland",
+   "url": "https://clydebuiltradio.out.airtime.pro/clydebuiltradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Comala Radio",
+   "country": "France",
+   "url": "http://www.radioking.com/play/supag",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Corax",
+   "country": "Germany",
+   "url": "http://116.203.154.83/corax_192.mp3",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Drift Radio",
+   "country": "Denmark",
+   "url": "https://drift.radio/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Echobox Radio",
+   "country": "Netherlands",
+   "url": "https://origin.streamnerd.nl/echobox/echobox/icecast.audio",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Fango Radio",
+   "country": "Italy",
+   "url": "https://pantano.ovh:8444/pantano",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
+  },
+  {
+   "name": "Fresh Air Radio KFAI",
+   "country": "USA",
+   "url": "https://kfai.broadcasttool.stream/kfai-1",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Full Beans Radio",
+   "country": "Germany",
+   "url": "https://azura.fullbeansradio.com/listen/klo_radio_/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Future Intel",
+   "country": "Netherlands",
+   "url": "http://future.stream.laut.fm/future?t302=2026-01-01_11-01-04&uuid=727e2896-ccb2-4fe6-9208-06df2e359255",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Good Times Bad Times",
+   "country": "Netherlands",
+   "url": "https://radio.goodtimesbadtimes.club/radio/8000/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Gässjer FM",
+   "country": "Germany",
+   "url": "https://smalltownradio.de:8000/gaessjerfm.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Infrared.FM",
+   "country": "UK",
+   "url": "https://carol.epichosts.co.uk:8232/live.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "KDRT",
+   "country": "USA",
+   "url": "http://davismedia.org:8000/kdrt",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Kaas FM",
+   "country": "Netherlands",
+   "url": "https://kaas-fm.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "KUAA",
+   "country": "USA",
+   "url": "https://stream.xmission.com/kuaa",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "KUCR",
+   "country": "USA",
+   "url": "http://138.23.75.92:8001/",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Kindred",
+   "country": "UK",
+   "url": "https://kindred.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Kitchen Radio",
+   "country": "UK",
+   "url": "https://kitchen-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "LACE",
+   "country": "France",
+   "url": "https://lace-radio-5fed5746.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Love Will Save The Day FM",
+   "country": "UK",
+   "url": "https://lovewillsavetheday.out.airtime.pro/lovewillsavetheday_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Mad Radio",
+   "country": "Colombia",
+   "url": "https://das-edge15-live365-dal02.cdnstream.com/a28293",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Margate Radio",
+   "country": "UK",
+   "url": "https://margate-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Mouthfull Radio",
+   "country": "New Zealand",
+   "url": "https://mouthfull-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Narr Radio",
+   "country": "UK",
+   "url": "https://narr-f63a1220.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Operator",
+   "country": "Netherlands",
+   "url": "https://origin.streamnerd.nl/operator/operator/icecast.audio",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Open Source Radio",
+   "country": "Netherlands",
+   "url": "https://play.streamnerd.nl/osr/osr/playlist.m3u8",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Pender Radio",
+   "country": "Canada",
+   "url": "https://penderradio.out.airtime.pro/penderradio_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RDU",
+   "country": "New Zealand",
+   "url": "https://rdu985fm-gecko.radioca.st/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "ROUGH Radio",
+   "country": "Italy",
+   "url": "https://rough-radio-9a2b1da0.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Buena Vida",
+   "country": "Scotland",
+   "url": "https://s4.radio.co/s69b281ac0/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Béguin",
+   "country": "France",
+   "url": "https://stream.radiobeguin.com/listen/radio_b%C3%A9guin/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Carme",
+   "country": "Italy",
+   "url": "https://live.radiocarme.net/live.mp3",
+   "source": "station",
+   "status": "dead",
+   "detail": "server error (502)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "Radio Fantasia",
+   "country": "Germany",
+   "url": "https://sp.oyotunstream.com:10943/stream?icy=http",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Galère",
+   "country": "France",
+   "url": "http://www.radiogalere.org:8080/galere.mp3",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Radio Ingrid",
+   "country": "Poland",
+   "url": "https://radio-ingrid.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Panik",
+   "country": "Belgium",
+   "url": "https://streaming.domainepublic.net/radiopanik.ogg",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Panini",
+   "country": "Denmark",
+   "url": "https://radi-panini.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rea",
+   "country": "Argentina",
+   "url": "https://server-26.stream-server.nl:8522/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio X Frankfurt",
+   "country": "Germany",
+   "url": "https://stream.radiox.de:8443/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Zinzine",
+   "country": "France",
+   "url": "http://91.121.65.189:8000/3",
+   "source": "station",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Resonance FM",
+   "country": "UK",
+   "url": "https://stream.resonance.fm/resonance",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "SIBLING RADIO",
+   "country": "UK",
+   "url": "https://sibling-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Sauna Radio",
+   "country": "Sweden",
+   "url": "https://stream.saunaradio.com/listen.m3u",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Sister Midnight FM",
+   "country": "UK",
+   "url": "https://sister-midnight-fm.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Steam Radio",
+   "country": "UK",
+   "url": "https://steam-radio.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Subtle Radio",
+   "country": "UK",
+   "url": "https://subtle-radio-dd2656d9.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Sunderland Music City Radio",
+   "country": "UK",
+   "url": "https://stream.radio.co/s573d55715/listen",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "TBC RADIO",
+   "country": "New Zealand",
+   "url": "https://stream.tbc.radio:8000/radio.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "THE BOAT POD",
+   "country": "UK",
+   "url": "https://theboatpod.out.airtime.pro/theboatpod_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Tsugi Radio",
+   "country": "France",
+   "url": "https://listen.radioking.com/radio/1906/stream/6029",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Urgent.fm",
+   "country": "Belgium",
+   "url": "https://urgentstream.radiostudio.be/live",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "ehfm",
+   "country": "Scotland",
+   "url": "https://ehfm.out.airtime.pro/ehfm_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "maracutaia.fm",
+   "country": "Brazil",
+   "url": "https://maracutaiafm.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "radio.syg.ma",
+   "country": "Germany",
+   "url": "https://radio.syg.ma/audio.ogg",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Banda Larga Turin",
+   "country": "Italy",
+   "url": "https://rblmedia-a4a44e62.radiocult.fm/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Reform Radio",
+   "country": "UK",
+   "url": "https://testform.out.airtime.pro/testform_a",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RadioActive.FM | 88.6FM",
+   "country": "New Zealand",
+   "url": "https://radio123-gecko.radioca.st/radioactivefm",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Lusophonica",
+   "country": "Portugal",
+   "url": "https://stream.radiojar.com/dxkmh6hv1f8uv",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rinse France",
+   "country": "France",
+   "url": "https://radio10.pro-fhi.net/radio/9041/stream",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Vaigai FM",
+   "country": "India",
+   "url": "https://cast1.my-control-panel.com/proxy/geethan3/stream",
+   "source": "station",
+   "status": "dead",
+   "detail": "server error (502)",
+   "dead_since": "2026-11-04T19:51:10+00:00",
+   "checks_dead": 1
+  },
+  {
+   "name": "Radio Nova",
+   "country": "France",
+   "url": "https://novazz.ice.infomaniak.ch/novazz-128.mp3",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "FM La Tribu 88.5 Buenos Aires",
+   "country": "Argentina",
+   "url": "https://icecast.zeclogiccloud.com.de/fmlatribu",
+   "source": "station",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "NTS Radio",
+   "country": "UK",
+   "url": "https://stream-relay-geo.ntslive.net/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rinse FM",
+   "country": "UK",
+   "url": "https://admin.stream.rinse.fm/proxy/rinse_uk/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Worldwide FM",
+   "country": "UK",
+   "url": "https://worldwide-fm.radiocult.fm/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Resonance Extra",
+   "country": "UK",
+   "url": "https://stream.resonance.fm/resonance-extra",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "FIP",
+   "country": "France",
+   "url": "https://icecast.radiofrance.fr/fip-midfi.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Nova",
+   "country": "France",
+   "url": "https://novazz.ice.infomaniak.ch/novazz-128.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "LYL Radio",
+   "country": "France",
+   "url": "https://icecast.lyl.live/live",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "RTL3",
+   "country": "France",
+   "url": "https://rtl3.radiocult.fm/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Meuh",
+   "country": "France",
+   "url": "https://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Cinemix",
+   "country": "France",
+   "url": "https://kathy.torontocast.com:1825/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "90mil Radio",
+   "country": "Germany",
+   "url": "https://neunzugmilradio.out.airtime.pro/neunzugmilradio_a",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Corax",
+   "country": "Germany",
+   "url": "https://streaming.fueralle.org/corax_192.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "20ft Radio",
+   "country": "Ukraine",
+   "url": "https://20ft-radio.radiocult.fm/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Movement Radio",
+   "country": "Greece",
+   "url": "https://movementathens.out.airtime.pro/movementathens_a",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Alhara",
+   "country": "Palestine",
+   "url": "https://stream.radioalhara.net/ra",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "KEXP",
+   "country": "USA",
+   "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "SOMA FM",
+   "country": "USA",
+   "url": "https://ice1.somafm.com/groovesalad-128-mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Paradise",
+   "country": "USA",
+   "url": "https://stream.radioparadise.com/aac-320",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio IPN",
+   "country": "Mexico",
+   "url": "http://201.124.60.85:8000/radio.mp3",
+   "source": "website",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "Ibero 909",
+   "country": "Mexico",
+   "url": "https://noasrv.caster.fm:10182/live",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "El Recreo FM",
+   "country": "Mexico",
+   "url": "https://radio.elrecreo.fm/listen/elrecreo.fm/radio.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bangkok Community Radio",
+   "country": "Thailand",
+   "url": "https://bcr.radiocult.fm/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rumba",
+   "country": "Ecuador",
+   "url": "https://streamingecuador.net:8078/radiorumbanetwork",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "FM La Tribu 88.5 Buenos Aires",
+   "country": "Argentina",
+   "url": "https://icecast.zeclogiccloud.com.de/fmlatribu",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Nasarawa Broadcasting Service",
+   "country": "Nigeria",
+   "url": "https://nbsradio1.radioca.st/;",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Oncativo",
+   "country": "Argentina",
+   "url": "https://01.solumedia.com.ar:9058/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Relativa",
+   "country": "Spain",
+   "url": "https://streamer.radio.co/sd6131729c/listen",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Caso",
+   "country": "Argentina",
+   "url": "https://play.radiocaso.xyz/main",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Mutante Rádio",
+   "country": "Brazil",
+   "url": "https://s30.maxcast.com.br:8190/live?id=536069974467",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Kurruf",
+   "country": "Chile",
+   "url": "https://radio.latina.red/radiokurruf.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Siete",
+   "country": "Paraguay",
+   "url": "https://rss1.siete.com.py:9433/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Deseo",
+   "country": "Bolivia",
+   "url": "https://conectperu.com/8396/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Wayna Tambo",
+   "country": "Bolivia",
+   "url": "https://s2.myradiostream.com/5038/listen.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Filarmonía",
+   "country": "Peru",
+   "url": "https://c22.radioboss.fm:8100/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Veneno",
+   "country": "Brazil",
+   "url": "https://radio.veneno.live/stream/main",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Areito Stéreo",
+   "country": "Colombia",
+   "url": "https://estructuraweb.com.co:9207/live",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Javeriana Estéreo 91,9",
+   "country": "Colombia",
+   "url": "https://radio06.cehis.net/proxy/javerian?mp=%2Fstream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "La Salsera FM",
+   "country": "Venezuela",
+   "url": "https://stream.zeno.fm/4qbzbrvdmy8uv",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Rayan FM",
+   "country": "Syria",
+   "url": "https://a13.asurahosting.com/listen/r_fm/radio.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Rapar",
+   "country": "Suriname",
+   "url": "https://audio-edge-es6pf.mia.g.radiomast.io/d7e8093b-6a7e-4442-a096-37f259cb7092",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "NTN Radio FM",
+   "country": "Guyana",
+   "url": "https://auds1.intacs.com/ntnradio",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Vox 103.5 FM",
+   "country": "Panama",
+   "url": "https://cast1.my-control-panel.com/proxy/voxlarad/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Osa Radio Online",
+   "country": "Costa Rica",
+   "url": "https://radioscr.digitaltvcr.xyz/listen/osaonline/osaradio",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Maria",
+   "country": "Panama",
+   "url": "https://dreamsiteradiocp2.com/proxy/rmpanama2?mp=/stream",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Cultural De Puriscal",
+   "country": "Costa Rica",
+   "url": "https://stream.zeno.fm/ucos1vhzikbtv",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Bluefields",
+   "country": "Nicaragua",
+   "url": "https://a10.asurahosting.com:8570/radio.mp3/;",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Nicaragua Dancehall",
+   "country": "Nicaragua",
+   "url": "https://stream.zeno.fm/frfely84cjguv",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Camoapa",
+   "country": "Nicaragua",
+   "url": "https://c30.radioboss.fm:18546/radiocamoapa",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Subterraneo Americal",
+   "country": "Honduras",
+   "url": "https://custom-azura1.asurahosting.com/listen/subterraneo_americal_radio/radio.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio 3 RNE",
+   "country": "Spain",
+   "url": "https://rtvelivestream.rtve.es/rtvesec/rne/rne_r3_main.m3u8",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio (HLS)"
+  },
+  {
+   "name": "Radio Gladys Palmora",
+   "country": "Spain",
+   "url": "https://streams.radio.co/s496c4d2e8/listen",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Meow Club 91",
+   "country": "Honduras",
+   "url": "https://stream.zeno.fm/0chh40kgdwzuv?rj-ttl=5&rj-tok=AAABfAK1xvMAyZ0wO9HSPLNGOA",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Arpas",
+   "country": "El Salvador",
+   "url": "https://stream.codigosur.org/arpas.mp3",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Santa Cruz",
+   "country": "Guatemala",
+   "url": "https://servidor26.brlogic.com:7014/live",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Nebaj Stereo FM",
+   "country": "Guatemala",
+   "url": "https://radio.garden/api/ara/content/listen/LNhKzLW1/channel.mp3?1778841744730",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Alpha Boys School Radio",
+   "country": "Jamaica",
+   "url": "http://alphaboys-live.streamguys1.com/alphaboys.mp3",
+   "source": "website",
+   "status": "warn",
+   "detail": "plays on the globe; browsers block http:// on the website"
+  },
+  {
+   "name": "GT Reggae Radio",
+   "country": "Jamaica",
+   "url": "https://radio.garden/api/ara/content/listen/Sxv8VfCU/channel.mp3?1778842941158",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Caribe",
+   "country": "Cuba",
+   "url": "https://icecast.teveo.cu/dXhtHs4P",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Alter Radio",
+   "country": "Haiti",
+   "url": "https://stream.zeno.fm/s096v26gfrruv",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  },
+  {
+   "name": "Radio Seybo",
+   "country": "Dominican Republic",
+   "url": "https://radioseibo.dominicos.org:8443/radio.ogg",
+   "source": "website",
+   "status": "ok",
+   "detail": "audio"
+  }
+ ]
+}
