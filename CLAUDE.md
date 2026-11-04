@@ -40,6 +40,8 @@ Two kinds of file, two different ownership rules. Mixing them up causes data los
 | `oreloj-netwatch.py` | Root service that owns the Wi-Fi chip: home Wi-Fi, or setup Wi-Fi (WPA2, captive portal) when lost / on request. State in `/run/oreloj/net.json`; admin.py & globe.py send requests as JSON files in `/run/oreloj/requests/` — never change Wi-Fi with nmcli directly while it runs |
 | `install-setup-mode.sh` | `sudo` one-time installer for netwatch (copies it to `/usr/local/lib/oreloj/` — re-run after changing it), captive DNS, port-80 sysctl, SD-card files |
 | `setup.html` | Phone setup page served at `/setup` |
+| `voice/<VOICE_ID>.tar.gz` | Pre-recorded phrase library (Piper `en_GB-alan-medium`). Re-make with `python3 tools/render_voice.py --model <voice>.onnx` after changing spoken texts, stations or calibration — keys hash voice+speed+text, so changing `VOICE_ID`/`VOICE_SPEED` in globe.py needs a re-render. Never include secrets (public). |
+| `install-voice.sh` | Optional, on the Pi: installs Piper + the voice model so new phrases are recorded on-device (cached in `voice-cache/`) |
 
 ## Architecture
 

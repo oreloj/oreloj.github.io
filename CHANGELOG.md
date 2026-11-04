@@ -5,6 +5,16 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-04 (part 3) — a natural voice
+
+### Added
+- **New voice** — Piper `en_GB-alan-medium` (calm British male, slowed 12 %), picked by ear from five samples. Replaces espeak for everything the globe says: countries/regions, station names, presets, "No station found", favourites, the setup/Wi-Fi messages.
+- **Pre-recorded phrase library** `voice/en_GB-alan-medium.tar.gz` (544 phrases, 4.4 MB, Opus) made by `tools/render_voice.py` from globe.py's own `speak("…")` texts + calibration.csv + stations.csv + presets. globe.py unpacks it at startup when it changes → instant playback, no work for the Pi 3.
+- **New phrases** (new station, Wi-Fi name, setup password…) are recorded on the globe with Piper the first time and kept in `voice-cache/` — after `bash ~/globe/install-voice.sh` (optional, no sudo, ~150 MB download). Without it those few phrases fall back to espeak.
+- The setup Wi-Fi password is never pre-recorded (the pack is public).
+
+---
+
 ## 2026-11-04 (part 2) — setup mode fixes from the first real run (Oreloj 1)
 
 ### Fixed

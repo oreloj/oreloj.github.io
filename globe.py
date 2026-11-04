@@ -492,8 +492,107 @@ def _mpv_set_volume(vol: int) -> None:
 
 
 # ── TTS ───────────────────────────────────────────────────────────────────────
+# The globe's voice: Piper "en_GB-alan-medium" (calm British male), slowed a
+# little. Like a radio jingle library: most phrases are recorded in advance
+# (voice/<VOICE_ID>/, made by tools/render_voice.py); anything new is recorded
+# on the globe the first time (voice-cache/) and kept; espeak is the backup.
+VOICE_ID        = "en_GB-alan-medium"
+VOICE_SPEED     = 1.12                    # Piper length_scale: >1 = slower, calmer
+VOICE_PACK_DIR  = SCRIPT_DIR / "voice" / VOICE_ID
+VOICE_CACHE_DIR = SCRIPT_DIR / "voice-cache" / VOICE_ID
+VOICE_MODEL     = SCRIPT_DIR / "voice-model" / f"{VOICE_ID}.onnx"
+
+
+def voice_key(text: str) -> str:
+    """File name for a phrase. MUST match tools/render_voice.py."""
+    import hashlib
+    norm = " ".join(text.split())
+    return hashlib.sha1(f"{VOICE_ID}|{VOICE_SPEED}|{norm}".encode("utf-8")).hexdigest()[:16]
+
+
+def _ensure_voice_pack() -> None:
+    """Unpack voice/<VOICE_ID>.tar.gz (the recorded phrase library) if it is
+    new or changed. One file to copy/update instead of hundreds."""
+    import shutil, tarfile
+    pack = SCRIPT_DIR / "voice" / f"{VOICE_ID}.tar.gz"
+    if not pack.exists():
+        return
+    st = pack.stat()
+    stamp_text = f"{st.st_size}:{int(st.st_mtime)}"
+    stamp = VOICE_PACK_DIR / ".pack"
+    try:
+        if stamp.read_text() == stamp_text:
+            return
+    except OSError:
+        pass
+    try:
+        tmp = VOICE_PACK_DIR.with_name(VOICE_PACK_DIR.name + ".new")
+        shutil.rmtree(tmp, ignore_errors=True)
+        tmp.mkdir(parents=True)
+        with tarfile.open(pack, "r:gz") as tar:
+            for m in tar.getmembers():
+                name = Path(m.name).name          # flat files only, no paths
+                if m.isfile() and (name.endswith(".ogg") or name == "manifest.json"):
+                    data = tar.extractfile(m).read()
+                    (tmp / name).write_bytes(data)
+        (tmp / ".pack").write_text(stamp_text)
+        shutil.rmtree(VOICE_PACK_DIR, ignore_errors=True)
+        os.replace(tmp, VOICE_PACK_DIR)
+        log.info(f"Voice pack unpacked: {sum(1 for _ in VOICE_PACK_DIR.glob('*.ogg'))} phrases")
+    except Exception as e:
+        log.warning(f"Could not unpack voice pack: {e}")
+
+
+def _voice_file(text: str) -> Path | None:
+    k = voice_key(text)
+    for d in (VOICE_PACK_DIR, VOICE_CACHE_DIR):
+        for ext in (".ogg", ".wav"):
+            p = d / f"{k}{ext}"
+            if p.exists():
+                return p
+    return None
+
+
+def _voice_record(text: str) -> Path | None:
+    """Record a new phrase with Piper on the globe (a few seconds on a Pi 3),
+    keep it for next time. None if Piper or the voice model isn't installed."""
+    if not VOICE_MODEL.exists():
+        return None
+    try:
+        VOICE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        out = VOICE_CACHE_DIR / f"{voice_key(text)}.wav"
+        tmp = out.with_suffix(".tmp.wav")
+        t0 = time.monotonic()
+        r = subprocess.run(
+            [sys.executable, "-m", "piper", "-m", str(VOICE_MODEL),
+             "--length-scale", str(VOICE_SPEED), "-f", str(tmp), "--", " ".join(text.split())],
+            stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=60)
+        if r.returncode != 0 or not tmp.exists() or tmp.stat().st_size < 1000:
+            log.warning(f"Piper failed: {(r.stderr or '')[-200:]}")
+            tmp.unlink(missing_ok=True)
+            return None
+        os.replace(tmp, out)
+        log.info(f"Voice: recorded new phrase in {time.monotonic() - t0:.1f}s — {text!r}")
+        return out
+    except Exception as e:
+        log.warning(f"Piper error: {e}")
+        return None
+
+
 def _tts(text: str) -> None:
-    """Run the platform TTS command (blocking). No volume handling."""
+    """Say something (blocking). Recorded phrase → Piper → espeak/say."""
+    if not text or not text.strip():
+        return
+    f = _voice_file(text) or _voice_record(text)
+    if f is not None:
+        try:
+            r = subprocess.run(["mpv", "--no-video", "--really-quiet", str(f)],
+                               stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL, timeout=30)
+            if r.returncode == 0:
+                return
+        except Exception:
+            pass
     try:
         cmd = ["say", text] if OS == 'Darwin' else ["espeak-ng", "-v", "en", "-s", "140", text]
         subprocess.run(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -545,7 +644,7 @@ def _net_request(action: str, **fields) -> bool:
 
 
 def _say_name(name: str) -> str:
-    """'Oreloj-1' → 'Oreloj 1' so espeak doesn't say 'minus'."""
+    """'Oreloj-1' → 'Oreloj 1' so the voice doesn't say 'minus'."""
     return name.replace("-", " ").replace("_", " ").strip()
 
 
@@ -1000,6 +1099,7 @@ def main() -> None:
     curated = load_stations(STATIONS_CSV)
     load_actions()
     load_calibration()
+    _ensure_voice_pack()
     _ensure_chimes()
     _kill_stray_players()
 

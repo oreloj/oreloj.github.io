@@ -32,3 +32,8 @@ sounds/
 
 # Local SD-card backups (contain Wi-Fi passwords)
 sd-card-backup*/
+
+# Voice: unpacked phrase library, phrases recorded on the globe, Piper model
+voice/*/
+voice-cache/
+voice-model/
