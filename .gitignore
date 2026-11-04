@@ -38,3 +38,4 @@ voice/*/
 voice-cache/
 voice-model/
 dead_stations.json
+stream_health.json

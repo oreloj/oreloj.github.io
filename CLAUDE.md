@@ -41,6 +41,7 @@ Two kinds of file, two different ownership rules. Mixing them up causes data los
 | `install-setup-mode.sh` | `sudo` one-time installer for netwatch (copies it to `/usr/local/lib/oreloj/` — re-run after changing it), captive DNS, port-80 sysctl, SD-card files |
 | `setup.html` | Phone setup page served at `/setup` |
 | `voice/<VOICE_ID>.tar.gz` | Pre-recorded phrase library (Piper `en_GB-alan-medium`). Re-make with `python3 tools/render_voice.py --model <voice>.onnx` after changing spoken texts, stations or calibration — keys hash voice+speed+text, so changing `VOICE_ID`/`VOICE_SPEED` in globe.py needs a re-render. Never include secrets (public). |
+| `check_stations.py` | The one stream checker (stdlib only). Used by hand (`python3 check_stations.py`), by the control page's **check streams** button (`/api/streams/check` → `stream_health.json`), and nightly by `.github/workflows/stream-check.yml` (→ `stream-health.json` on gh-pages + "Dead streams" issue via `tools/stream_issue.py`). Dead stations show blue (`deadStations` in index.html). |
 | `install-voice.sh` | Optional, on the Pi: installs Piper + the voice model so new phrases are recorded on-device (cached in `voice-cache/`) |
 
 ## Architecture

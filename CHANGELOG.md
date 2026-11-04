@@ -5,6 +5,19 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-04 (part 5) — stream audit + "check streams"
+
+### Fixed
+- **Stream audit**: tested all 321 stream URLs (Oreloj 1, stations.csv, BUILT_IN). Repaired 27 stations whose stream had moved (radiocult slugs, Airtime Pro shutdowns, radiojar/zeno 404s, BUILT_INs with no stream) and the two presets pointing at them. Veneno's BUILT_IN stream was an unrelated station.
+- **Removed** stations with no working stream anywhere: Drama Radio (café video, not radio), Estéreo Centro + Vibra FM (radio.garden-only), Radio Habana Cuba, Dublab BCN, Let Him Cook, Red Light Radio (closed). On Oreloj 1 also Boxout FM, Pound & Yam, Seoul Community Radio, Inter FM 897, The Lot Radio (video-only; kept on the website, where hls.js plays it).
+
+### Added
+- **`check_stations.py` rewritten** as the one shared checker: stdlib only (no pip), real audio check (16 KB must arrive), HLS / .m3u / .pls / old SHOUTcast "ICY" servers, lenient retry for broken certificates, player-then-browser user agent, one retry before "dead". Flags (!) streams that play on the globe but not on the https website. `--builtin index.html`, `--json`, `--previous`.
+- **"check streams" button** (control page → system → streams): `POST /api/streams/check` runs the checker on the globe over its stations + presets (~30 s); `GET /api/streams/health` gives progress + last report (`stream_health.json`, runtime, git-ignored). Dead stations are listed (click → opens the station) and painted blue on the map and in the list.
+- **Nightly GitHub check** (`.github/workflows/stream-check.yml`, free on a public repo): publishes `stream-health.json` to gh-pages; the public site paints stations blue after 2 failed nights in a row; `tools/stream_issue.py` keeps a "Dead streams" issue open/updated/closed (GitHub emails on changes).
+
+---
+
 ## 2026-11-04 (part 4) — dead stations no longer stop a country from playing
 
 ### Fixed

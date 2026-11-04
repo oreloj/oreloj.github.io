@@ -429,6 +429,65 @@ def api_favs_post():
     return jsonify({"favourites": favs, "added": added})
 
 
+# ── API: stream check ("check streams" button) ────────────────────────────────
+# Runs check_stations.py's checker in the background over this globe's own
+# stations + presets, and keeps the last report in stream_health.json.
+
+HEALTH_PATH = SCRIPT_DIR / "stream_health.json"
+_CHECK      = {"running": False, "done": 0, "total": 0, "error": None}
+_CHECK_LOCK = threading.Lock()
+
+
+def _run_stream_check() -> None:
+    try:
+        import sys
+        if str(SCRIPT_DIR) not in sys.path:
+            sys.path.insert(0, str(SCRIPT_DIR))
+        import check_stations as sc
+        entries = [{"name": r.get("Radio Station", ""), "country": r.get("Country", ""),
+                    "url": (r.get("URL Link") or "").strip(), "source": "station"}
+                   for r in read_csv()]
+        for p in read_actions().get("presets", []):
+            if (p.get("url") or "").strip():
+                entries.append({"name": p.get("name") or f"Preset {p.get('slot')}", "country": "",
+                                "url": p["url"].strip(), "source": f"preset {p.get('slot')}"})
+        try:
+            previous = json.loads(HEALTH_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            previous = None
+
+        def progress(done, total):
+            _CHECK["done"], _CHECK["total"] = done, total
+
+        report = sc.run(entries, workers=8, timeout=8, progress=progress, previous=previous)
+        tmp = Path(str(HEALTH_PATH) + ".tmp")
+        tmp.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+        os.replace(tmp, HEALTH_PATH)
+    except Exception as e:
+        _CHECK["error"] = f"{type(e).__name__}: {e}"
+    finally:
+        _CHECK["running"] = False
+
+
+@app.post("/api/streams/check")
+def api_streams_check():
+    """Start a check of every stream (≈30 s). Poll GET /api/streams/health for progress."""
+    with _CHECK_LOCK:
+        if not _CHECK["running"]:
+            _CHECK.update(running=True, done=0, total=0, error=None)
+            threading.Thread(target=_run_stream_check, daemon=True).start()
+    return jsonify({"ok": True, "running": True})
+
+
+@app.get("/api/streams/health")
+def api_streams_health():
+    try:
+        report = json.loads(HEALTH_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        report = None
+    return jsonify({**_CHECK, "report": report})
+
+
 # ── Actions JSON helpers ──────────────────────────────────────────────────────
 
 def read_actions() -> dict:

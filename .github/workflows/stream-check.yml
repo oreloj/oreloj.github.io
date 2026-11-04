@@ -1,0 +1,60 @@
+# Nightly check that every station on https://oreloj.github.io/ still plays.
+# Free: GitHub Actions costs nothing for public repositories.
+#
+#  1. runs check_stations.py over stations.csv + index.html's BUILT_IN list
+#  2. publishes stream-health.json on gh-pages → the website paints stations
+#     that failed two nights in a row blue
+#  3. keeps the "Dead streams" issue up to date (GitHub emails you on changes)
+#
+# Run it by hand: GitHub → Actions → "Nightly stream check" → Run workflow.
+name: Nightly stream check
+
+on:
+  schedule:
+    - cron: "17 2 * * *"        # every night at 02:17 UTC (03:17 / 04:17 in Paris)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+
+concurrency:
+  group: stream-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get last night's results
+        run: |
+          git fetch --depth 1 origin gh-pages
+          git show FETCH_HEAD:stream-health.json > previous.json 2>/dev/null || echo '{}' > previous.json
+
+      - name: Check every stream
+        run: |
+          python3 check_stations.py stations.csv --builtin index.html --no-presets \
+            --previous previous.json --json stream-health.json || true
+
+      - name: Publish results to the website (gh-pages)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git worktree add /tmp/pages FETCH_HEAD
+          cp stream-health.json /tmp/pages/stream-health.json
+          cd /tmp/pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stream-health.json
+          git commit -q -m "stream check $(date -u +%F)"
+          git push origin HEAD:gh-pages
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" > /dev/null || true
+
+      - name: Update the "Dead streams" issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/stream_issue.py stream-health.json
