@@ -37,3 +37,4 @@ sd-card-backup*/
 voice/*/
 voice-cache/
 voice-model/
+dead_stations.json

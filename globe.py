@@ -353,6 +353,94 @@ def resolve_stream(iso_list: list[str], curated: dict[str, list[dict]],
     return url, None
 
 
+# ── Dead-station memory + fallback list ───────────────────────────────────────
+# Like a radio presenter with a running order: if a station doesn't come on
+# air, move straight to the next one instead of announcing silence. Stations
+# that failed recently go to the back of the queue for a while (streams often
+# come back, so they're never dropped for good).
+DEAD_PATH  = SCRIPT_DIR / "dead_stations.json"
+DEAD_HOURS = 6
+API_PICK   = "radio-browser:"       # placeholder candidate, resolved only if reached
+_dead: dict[str, float] = {}
+_dead_lock = threading.Lock()
+
+
+def _load_dead() -> None:
+    try:
+        _dead.update(json.loads(DEAD_PATH.read_text(encoding="utf-8")))
+    except Exception:
+        pass
+
+
+def _save_dead() -> None:
+    try:
+        tmp = Path(str(DEAD_PATH) + ".tmp")
+        tmp.write_text(json.dumps(_dead, indent=1), encoding="utf-8")
+        tmp.replace(DEAD_PATH)
+    except Exception as e:
+        log.debug(f"Could not save dead stations: {e}")
+
+
+def _is_dead(url: str) -> bool:
+    t = _dead.get(url)
+    return bool(t) and time.time() - t < DEAD_HOURS * 3600
+
+
+def _mark_dead(url: str) -> None:
+    with _dead_lock:
+        _dead[url] = time.time()
+        _save_dead()
+
+
+def _mark_alive(url: str) -> None:
+    with _dead_lock:
+        if _dead.pop(url, None) is not None:
+            _save_dead()
+
+
+def station_candidates(iso_list: list[str], curated: dict[str, list[dict]],
+                       exclude: str | None = None) -> list[tuple[str, str | None]]:
+    """Running order for a country tap: favourites, then the other stations
+    (each group shuffled), recently-dead ones after those, the station that's
+    already playing (re-tap) after that, and Radio Browser as a last resort."""
+    fresh, dead, current = [], [], []
+    for iso in iso_list:
+        pool = [s for s in curated.get(iso, []) if s.get("url")]
+        favs = [s for s in pool if s.get("favourite")]
+        rest = [s for s in pool if not s.get("favourite")]
+        random.shuffle(favs)
+        random.shuffle(rest)
+        for st in favs + rest:
+            item = (st["url"], st["name"])
+            if exclude and st["name"] == exclude:
+                current.append(item)
+            elif _is_dead(st["url"]):
+                dead.append(item)
+            else:
+                fresh.append(item)
+    out, seen = [], set()
+    for url, name in fresh + dead + current + [(API_PICK + iso_list[0], None)]:
+        if url not in seen:
+            seen.add(url)
+            out.append((url, name))
+    return out
+
+
+def play_candidates(cands: list[tuple[str, str | None]], announce: bool = False) -> bool:
+    """Start the first playable candidate; the rest become its fallbacks.
+    False if nothing at all could be started."""
+    cands = list(cands)
+    while cands:
+        url, name = cands.pop(0)
+        if url.startswith(API_PICK):
+            url, name = get_stream_from_api(url[len(API_PICK):]), None
+            if not url:
+                continue
+        play(url, name, fallbacks=cands, announce=announce)
+        return True
+    return False
+
+
 _mpv: subprocess.Popen | None = None
 _noise: subprocess.Popen | None = None  # looping FM-static while a stream loads
 _current_station: str | None = None  # name of currently playing station
@@ -410,7 +498,8 @@ def _mpv_get(prop: str):
     return None
 
 
-def _watch_stream_start(proc: subprocess.Popen) -> None:
+def _watch_stream_start(proc: subprocess.Popen, url: str, name: str | None,
+                        fallbacks: list, announce: bool) -> None:
     """Hold the tuning noise until audio actually flows, then cut it.
     If the player dies — or never produces audio by the deadline (webpage
     URL, dead host, 404) — announce it: a silent failure reads as 'the
@@ -422,6 +511,9 @@ def _watch_stream_start(proc: subprocess.Popen) -> None:
             return
         if proc.poll() is None and (_mpv_get("time-pos") or 0) > 0:
             _stop_noise()                       # audio is flowing
+            _mark_alive(url)
+            if announce and name:
+                speak(name)                     # a fallback came on air: say which one
             return
         if proc.poll() is not None:
             break                               # player died before producing audio
@@ -431,6 +523,14 @@ def _watch_stream_start(proc: subprocess.Popen) -> None:
     # Dead, or still silent at the deadline — either way this station failed.
     if proc.poll() is None:
         proc.terminate()
+    _mark_dead(url)
+    if fallbacks:
+        with _play_lock:
+            if _mpv is not proc:                # a newer tap took over meanwhile
+                return
+            log.warning(f"  ✗  {name or url} is off air — trying the next station")
+            if play_candidates(fallbacks, announce=announce):
+                return
     _stop_noise()
     _current_station = None
     _current_url = None
@@ -438,16 +538,25 @@ def _watch_stream_start(proc: subprocess.Popen) -> None:
     speak("This station seems to be off air")
 
 
-def play(url: str, name: str | None = None) -> None:
+_play_lock = threading.RLock()   # the pen and a fallback can both start a stream
+
+
+def play(url: str, name: str | None = None, fallbacks: list | None = None,
+         announce: bool = False) -> None:
+    """Start a stream. `fallbacks` are tried in order if it doesn't come on
+    air; with `announce`, a fallback that does says its station name."""
     global _mpv, _current_station, _current_url
-    _start_noise()   # idempotent — every play path gets the tuning static
-    if _mpv and _mpv.poll() is None:
-        _mpv.terminate(); _mpv.wait()
-    _mpv = subprocess.Popen(MPV_CMD + [url], stdin=subprocess.DEVNULL)
-    _current_station = name
-    _current_url = url
-    _write_state()
-    threading.Thread(target=_watch_stream_start, args=(_mpv,), daemon=True).start()
+    with _play_lock:
+        _start_noise()   # idempotent — every play path gets the tuning static
+        if _mpv and _mpv.poll() is None:
+            _mpv.terminate(); _mpv.wait()
+        _mpv = subprocess.Popen(MPV_CMD + [url], stdin=subprocess.DEVNULL)
+        _current_station = name
+        _current_url = url
+        _write_state()
+        threading.Thread(target=_watch_stream_start,
+                         args=(_mpv, url, name, list(fallbacks or []), announce),
+                         daemon=True).start()
 
 def stop() -> None:
     global _mpv, _current_station, _current_url
@@ -958,9 +1067,12 @@ def dispatch_action(action: str, curated: dict[str, list[dict]]) -> None:
         if not all_stations:
             speak("no stations available")
             return
-        station = random.choice(all_stations)
+        random.shuffle(all_stations)
+        all_stations.sort(key=lambda s: _is_dead(s["url"]))      # recently dead last
+        station = all_stations[0]
         log.info(f"Discover pick: {station['name']}")
-        play(station["url"], station.get("name"))
+        play(station["url"], station.get("name"),
+             fallbacks=[(s["url"], s["name"]) for s in all_stations[1:4]], announce=True)
         speak(station.get("name") or "discover")
 
     elif action == "random_love":
@@ -972,9 +1084,12 @@ def dispatch_action(action: str, curated: dict[str, list[dict]]) -> None:
         if not fav_stations:
             speak("no favourites yet")
             return
-        station = random.choice(fav_stations)
+        random.shuffle(fav_stations)
+        fav_stations.sort(key=lambda s: _is_dead(s["url"]))      # recently dead last
+        station = fav_stations[0]
         log.info(f"Random love pick: {station['name']}")
-        play(station["url"], station.get("name"))
+        play(station["url"], station.get("name"),
+             fallbacks=[(s["url"], s["name"]) for s in fav_stations[1:4]], announce=True)
         speak(station.get("name") or "favourite")
 
     elif action.startswith("preset_"):
@@ -1099,6 +1214,7 @@ def main() -> None:
     curated = load_stations(STATIONS_CSV)
     load_actions()
     load_calibration()
+    _load_dead()
     _ensure_voice_pack()
     _ensure_chimes()
     _kill_stray_players()
@@ -1164,13 +1280,13 @@ def main() -> None:
         if not retap:
             speak(_entries_to_tts(entries))
 
-        url, name = resolve_stream(iso_list, curated,
+        cands = station_candidates(iso_list, curated,
                                    exclude=_current_station if retap else None)
-        if url:
-            if retap and name and name == _current_station:
-                _stop_noise()   # only one station here — leave it playing
-            else:
-                play(url, name)
+        if retap and cands and cands[0][1] == _current_station:
+            _stop_noise()       # only one station here — leave it playing
+        elif play_candidates(cands):
+            log.info(f"  ♪  {cands[0][1] or 'Radio Browser'}"
+                     f"{f'  (+{len(cands) - 1} fallback)' if len(cands) > 1 else ''}")
         else:
             _stop_noise()
             log.warning(f"No stream for {label}")

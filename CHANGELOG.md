@@ -5,6 +5,19 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-04 (part 4) — dead stations no longer stop a country from playing
+
+### Fixed
+- **Tapping Mexico often gave "off air"** — El Recreo FM's stream answers 503 (dead), and it's one of Mexico's two favourites, which are always tried first. Any dead stream made the globe give up, even with other working stations for that country.
+
+### Changed (`globe.py`)
+- **Fallback running order**: a country tap now tries favourites (shuffled), then the country's other stations, then Radio Browser — moving on silently (the tuning static keeps playing) when a stream dies or stays silent for 12 s. "This station seems to be off air" only if everything fails.
+- **Dead-station memory** (`dead_stations.json`, runtime, git-ignored): a station that failed goes to the back of the queue for 6 hours, so later taps don't wait on it. It counts as alive again as soon as it plays.
+- **Discover / random love** skip recently dead stations and fall back too; if a replacement comes on air, the globe says its name.
+- A new tap during a fallback always wins (play lock).
+
+---
+
 ## 2026-11-04 (part 3) — a natural voice
 
 ### Added
