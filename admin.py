@@ -685,21 +685,40 @@ def api_bt_devices():
 
 _MAC_ONLY_RE = re.compile(r'^([0-9A-F]{2}[:-]){5}[0-9A-F]{2}$', re.IGNORECASE)
 _BT_LOCK = threading.Lock()   # one scan/pair at a time (UI and pen can both ask)
+_BT_LAST_SCAN: dict = {}      # what the last scan saw — for troubleshooting
+
+
+def _bt_info(mac: str) -> dict:
+    """Parse `bluetoothctl info MAC`: Name, Alias, Icon, Paired, RSSI (int),
+    and whether it advertises an audio sink (= it's a speaker/headphones)."""
+    _, info = _run(["bluetoothctl", "info", mac])
+    d = {}
+    for line in info.splitlines():
+        line = line.strip()
+        if ":" not in line:
+            continue
+        k, v = (x.strip() for x in line.split(":", 1))
+        if k in ("Name", "Alias", "Icon", "Paired", "Connected") and k not in d:
+            d[k] = v
+        elif k == "RSSI":                      # "-60" or "0xffffffc4 (-60)"
+            m = re.search(r"(-?\d+)\)?$", v)
+            if m:
+                d["RSSI"] = int(m.group(1))
+        elif k == "UUID" and ("Audio Sink" in v or "0000110b-" in v.lower()):
+            d["audio_sink"] = True
+    return d
 
 
 def _bt_scan(seconds: float = 10) -> dict:
-    """Scan for Bluetooth devices. Returns {MAC: {"name", "rssi"}} — rssi is
-    the signal strength (closer to 0 = nearer), None if never reported."""
-    # Matches: [NEW|CHG|DEL] Device AA:BB:CC:DD:EE:FF <rest>
-    event_re    = re.compile(r'\[(NEW|CHG|DEL)\]\s+Device\s+([0-9A-F]{2}(?::[0-9A-F]{2}){5})\s*(.*)', re.IGNORECASE)
-    rssi_re     = re.compile(r'^RSSI:\s*(?:0x[0-9a-f]+\s*\()?(-?\d+)', re.IGNORECASE)
-    # CHG property keys that carry no friendly name — ignore these lines entirely
-    _NON_NAME = ("RSSI:", "UUIDs:", "Class:", "Icon:", "Paired:", "Trusted:",
-                 "Blocked:", "Connected:", "LegacyPairing:", "ManufacturerData:",
-                 "ServiceData:", "AdvertisingFlags:", "TxPower:", "AddressType:")
-    discovered = {}  # mac -> name
-    rssi = {}        # mac -> int
+    """Look for Bluetooth devices for `seconds`.
+    Returns {MAC: {"name", "rssi", "icon", "speaker"}} — rssi is the signal
+    strength (closer to 0 = nearer); None = remembered by the Pi but not heard
+    during this scan.
 
+    The ground truth is `bluetoothctl info`, asked WHILE discovery is still
+    running (BlueZ drops a device's RSSI when discovery stops). The live event
+    output is only a bonus: on Oreloj 1 it stayed silent when piped, and a
+    scan that trusted it found nothing at all (2026-11-04)."""
     proc = subprocess.Popen(
         ["bluetoothctl"],
         stdin=subprocess.PIPE, stdout=subprocess.PIPE,
@@ -708,33 +727,39 @@ def _bt_scan(seconds: float = 10) -> dict:
     proc.stdin.write("scan on\n")
     proc.stdin.flush()
 
+    heard = set()   # MACs that showed up in the live output
+    event_re = re.compile(r'\[(?:NEW|CHG)\]\s+Device\s+([0-9A-F]{2}(?::[0-9A-F]{2}){5})', re.IGNORECASE)
     deadline = time.time() + seconds
     while time.time() < deadline:
+        # Keep draining the output so bluetoothctl never blocks on a full pipe.
         ready, _, _ = select.select([proc.stdout], [], [], 0.3)
         if ready:
             line = proc.stdout.readline()
             if not line:
                 break
             m = event_re.search(line)
-            if not m:
-                continue
-            event, mac, rest = m.group(1).upper(), m.group(2).upper(), m.group(3).strip()
+            if m:
+                heard.add(m.group(1).upper())
 
-            r = rssi_re.match(rest)
-            if r:
-                rssi[mac] = int(r.group(1))
-            elif rest.startswith("Name: "):
-                # Resolved friendly name — best source, always overwrite
-                discovered[mac] = rest[6:].strip()
-            elif rest.startswith("Alias: "):
-                # Alias — use only if no real Name yet
-                if mac not in discovered or _MAC_ONLY_RE.match(discovered[mac]):
-                    discovered[mac] = rest[7:].strip()
-            elif event == "NEW" and rest and not any(rest.startswith(k) for k in _NON_NAME):
-                # [NEW] Device MAC FriendlyName — initial appearance
-                if mac not in discovered:
-                    discovered[mac] = rest if not _MAC_ONLY_RE.match(rest) else mac
-            # All other CHG lines (UUIDs, Class, etc.) are intentionally ignored
+    # Diagnostics: did discovery really start? (readable via /api/bt/power)
+    _, show = _run(["bluetoothctl", "show"])
+    _BT_LAST_SCAN.update({"at": time.time(), "heard_live": len(heard),
+                          "discovering": bool(re.search(r"Discovering:\s*yes", show, re.I))})
+
+    found = {}
+    _, known_out = _run(["bluetoothctl", "devices"])
+    for d in _parse_bt_lines(known_out)[:60]:
+        mac = d["mac"].upper()
+        info = _bt_info(mac)
+        name = info.get("Name") or info.get("Alias") or d["name"]
+        if _MAC_ONLY_RE.match(name or ""):
+            continue                               # no friendly name — hide
+        rssi = info.get("RSSI")
+        if rssi is None and mac in heard:
+            rssi = -100                            # heard, strength unknown
+        icon = info.get("Icon", "")
+        found[mac] = {"name": name, "rssi": rssi, "icon": icon,
+                      "speaker": icon.startswith("audio-") or bool(info.get("audio_sink"))}
 
     try:
         proc.stdin.write("scan off\nquit\n")
@@ -742,26 +767,11 @@ def _bt_scan(seconds: float = 10) -> dict:
         proc.wait(timeout=2)
     except Exception:
         proc.kill()
-
-    # bluetoothctl only emits a Name in scan events the FIRST time it sees a
-    # device this session; already-cached devices yield only RSSI [CHG] noise.
-    # So merge the persistent device list — it carries resolved names — and let
-    # it win over anything we picked up live (which may be a bare MAC alias).
-    _, known_out = _run(["bluetoothctl", "devices"])
-    for d in _parse_bt_lines(known_out):
-        mac = d["mac"].upper()
-        if not _MAC_ONLY_RE.match(d["name"]) and (mac in discovered or mac in rssi):
-            discovered[mac] = d["name"]
-
-    return {mac: {"name": name, "rssi": rssi.get(mac)}
-            for mac, name in discovered.items()
-            if not _MAC_ONLY_RE.match(name)}  # hide devices whose name never resolved
-
-
-def _bt_is_speaker(mac: str) -> bool:
-    """Does this device say it can play audio (a speaker or headphones)?"""
-    _, info = _run(["bluetoothctl", "info", mac])
-    return bool(re.search(r"Icon:\s*audio-|Audio Sink|0000110b-", info, re.IGNORECASE))
+    _BT_LAST_SCAN.update({"named": len(found),
+                          "in_range": sum(1 for f in found.values() if f["rssi"] is not None)})
+    print(f"bt scan: {len(found)} named device(s), "
+          f"{sum(1 for f in found.values() if f['rssi'] is not None)} in range", flush=True)
+    return found
 
 
 def _bt_pair_and_use(mac: str) -> dict:
@@ -785,8 +795,10 @@ def api_bt_scan():
         found = _bt_scan(10)
     _, paired_out = _run(["bluetoothctl", "devices", "Paired"])
     paired = {d["mac"].upper() for d in _parse_bt_lines(paired_out)}
-    devs = [{"mac": mac, "name": d["name"], "rssi": d["rssi"], "paired": mac in paired}
+    devs = [{"mac": mac, "name": d["name"], "rssi": d["rssi"], "paired": mac in paired,
+             "speaker": d["speaker"], "in_range": d["rssi"] is not None}
             for mac, d in found.items()]
+    # Nearest first; devices the Pi only remembers (not heard now) at the end.
     devs.sort(key=lambda d: -(d["rssi"] if d["rssi"] is not None else -999))
     return jsonify(devs)
 
@@ -803,14 +815,21 @@ def api_bt_pair_nearest():
         found = _bt_scan(12)
         _, paired_out = _run(["bluetoothctl", "devices", "Paired"])
         paired = {d["mac"].upper() for d in _parse_bt_lines(paired_out)}
-        cands = sorted(((mac, d) for mac, d in found.items() if mac not in paired),
-                       key=lambda md: -(md[1]["rssi"] if md[1]["rssi"] is not None else -999))
-        for mac, d in cands[:8]:
-            if _bt_is_speaker(mac):
-                res = _bt_pair_and_use(mac)
+        near = sorted(((mac, d) for mac, d in found.items()
+                       if mac not in paired and d["rssi"] is not None),
+                      key=lambda md: -md[1]["rssi"])
+        speakers = [(mac, d) for mac, d in near if d["speaker"]]
+        # Some speakers don't say what they are until paired: as a last resort
+        # try the nearest devices that aren't obviously phones/computers.
+        unknown = [(mac, d) for mac, d in near if not d["speaker"]
+                   and not d["icon"].startswith(("phone", "computer", "input"))][:2]
+        for mac, d in speakers[:3] + unknown:
+            res = _bt_pair_and_use(mac)
+            if res.get("ok"):
                 res.update({"mac": mac, "name": d["name"]})
                 return jsonify(res)
-        return jsonify({"ok": False, "msg": "no speaker in pairing mode found"})
+        heard = ", ".join(d["name"] for _, d in near[:6]) or "nothing"
+        return jsonify({"ok": False, "msg": f"no speaker in pairing mode found (heard: {heard})"})
     finally:
         _BT_LOCK.release()
 
@@ -862,7 +881,8 @@ def api_bt_forget():
 @app.get("/api/bt/power")
 def api_bt_power_get():
     _, out = _run(["bluetoothctl", "show"])
-    return jsonify({"powered": bool(re.search(r"Powered:\s*yes", out, re.IGNORECASE))})
+    return jsonify({"powered": bool(re.search(r"Powered:\s*yes", out, re.IGNORECASE)),
+                    "last_scan": _BT_LAST_SCAN})
 
 
 @app.post("/api/bt/power")

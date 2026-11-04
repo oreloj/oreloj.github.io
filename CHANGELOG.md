@@ -14,6 +14,7 @@ Format: [date] — what changed and why.
 - **Refresh in setup mode** now really looks again: it closes the setup Wi-Fi for ~20 s, scans, and reopens it (new `/api/wifi/rescan`). Asks for a second tap first, since the phone drops off.
 - Reopening the phone page after a failed try shows what went wrong ("Last try: couldn't join … The password seems wrong.").
 - `install-setup-mode.sh` also restarts system-level `admin`/`globe` services on older globes.
+- **Bluetooth scan found nothing** (Oreloj 1, K3 speaker in pairing mode): today's scan only trusted `bluetoothctl`'s live output, which stayed empty there. It now asks `bluetoothctl info` for every device while discovery is still running (signal strength = in range), and also lists remembered devices like before, so it never shows less than the old scan. Pair nearest speaker also tries nearby devices that don't announce themselves as audio (some speakers only do after pairing), and says what it heard if it fails. `/api/bt/power` reports what the last scan saw.
 
 ---
 
