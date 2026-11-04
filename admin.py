@@ -988,6 +988,15 @@ def api_net_leave():
     return jsonify({"ok": _net_request("leave")})
 
 
+@app.post("/api/wifi/rescan")
+def api_wifi_rescan():
+    """Look for networks again. In setup mode this closes the setup Wi-Fi for
+    ~20 s (the chip can't look around while it IS that network)."""
+    if not _net_state():
+        return jsonify({"ok": False}), 503
+    return jsonify({"ok": _net_request("rescan")})
+
+
 @app.post("/api/wifi/forget")
 def api_wifi_forget():
     ssid = str((request.json or {}).get("ssid", ""))

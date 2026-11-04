@@ -310,10 +310,25 @@ def saved_wifi() -> list:
     return res
 
 
+def _wifi_list(rescan: str) -> tuple:
+    return nm("-t", "-f", "SSID,SIGNAL,SECURITY", "device", "wifi", "list",
+              "ifname", IFACE, "--rescan", rescan, timeout=30)
+
+
 def scan_networks() -> list:
-    """Live scan (only meaningful while NOT hosting the setup hotspot)."""
-    rc, out = nm("-t", "-f", "SSID,SIGNAL,SECURITY", "device", "wifi", "list",
-                 "ifname", IFACE, "--rescan", "yes", timeout=30)
+    """Live scan (only meaningful while NOT hosting the setup hotspot).
+    Right after boot, or right after the chip stops being the setup hotspot,
+    NetworkManager often answers with an empty list (the radio isn't ready, or
+    it refuses a rescan that soon). So: ask again a few times before
+    believing there's really nothing around."""
+    rc, out = _wifi_list("yes")
+    for _ in range(3):
+        if rc == 0 and any(split_terse(l)[0] for l in out.splitlines()):
+            break
+        nap(2)
+        nm("device", "wifi", "rescan", "ifname", IFACE, timeout=15)
+        nap(4)
+        rc, out = _wifi_list("no")
     best = {}
     if rc == 0:
         for line in out.splitlines():
@@ -375,6 +390,7 @@ class Watch:
         self.saved_at = 0.0
         self.scan = []
         self.announce_online = False
+        self.last_connect = None
 
     # events ------------------------------------------------------------------
     def emit(self, etype: str, **kw) -> None:
@@ -552,7 +568,7 @@ class Watch:
             return
         nm("connection", "delete", TRY_CON)
         why = classify_failure(out)
-        if ssid not in visible and why != "wrong_password":
+        if visible and ssid not in visible and why != "wrong_password":
             why = "not_found"          # mistyped name, or too far away
         log(f"could not join {ssid!r}: {why} ({out[-160:]})")
         self.emit("connect_failed", ssid=ssid, why=why)
@@ -575,6 +591,7 @@ class Watch:
             files = sorted(REQ_DIR.glob("*.json"))
         except OSError:
             return
+        reqs = []
         for f in files:
             try:
                 req = json.loads(f.read_text(encoding="utf-8"))
@@ -585,10 +602,29 @@ class Watch:
             except OSError:
                 pass
             if isinstance(req, dict):
-                try:
-                    self.handle(req)
-                except Exception as e:
-                    log(f"request failed: {e}")
+                try:     # request files are named <time_ns>-<tag>.json
+                    req["_sent"] = int(f.name.split("-")[0]) / 1e9
+                except ValueError:
+                    req["_sent"] = time.time()
+                reqs.append(req)
+        # A double-tapped "Join" queues two connects: only the last one counts.
+        last_connect = max((i for i, r in enumerate(reqs) if r.get("action") == "connect"),
+                           default=-1)
+        for i, req in enumerate(reqs):
+            if req.get("action") == "connect":
+                if i != last_connect:
+                    log("skipping an older queued connect request")
+                    continue
+                key = (req.get("ssid"), req.get("password"))
+                prev = self.last_connect
+                if prev and prev[0] == key and req["_sent"] - prev[1] < 5:
+                    log("skipping an identical repeat connect request (double tap)")
+                    continue
+                self.last_connect = (key, req["_sent"])
+            try:
+                self.handle(req)
+            except Exception as e:
+                log(f"request failed: {e}")
 
     def handle(self, req: dict) -> None:
         action = str(req.get("action", ""))
@@ -623,6 +659,15 @@ class Watch:
             if self.mode == "online":
                 self.do_scan()
                 self.write_state()
+            elif self.mode in ("setup", "offline"):
+                # The chip can't look around while it IS the setup Wi-Fi: close
+                # it for ~20 s, look, reopen it. Phones rejoin by themselves.
+                reason = self.reason or "no_wifi"
+                self.leave_setup()
+                self.mode = "searching"
+                self.write_state()
+                self.do_scan()
+                self.enter_setup(reason, quiet=True)
         else:
             log(f"unknown request {action!r}")
 

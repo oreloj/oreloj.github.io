@@ -79,7 +79,7 @@ input:focus { border-color: var(--text); }
     <h2>Wi-Fi</h2>
     <div class="card" id="wifi-list"><div class="empty"><span class="spin"></span> looking…</div></div>
     <div class="btns" style="margin-top:8px">
-      <button class="btn small" id="rescan-btn" onclick="loadWifi(true)">Refresh</button>
+      <button class="btn small" id="rescan-btn" onclick="refreshWifi(this)">Refresh</button>
       <button class="btn small" onclick="showOther()">Other network…</button>
     </div>
     <div class="card" id="other" style="margin-top:8px" hidden>
@@ -126,7 +126,10 @@ input:focus { border-color: var(--text); }
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const onSetupWifi = location.hostname === '192.168.4.1';
-let net = null, lastEventSeen = 0, waitingFor = null, enterArmed = false;
+let net = null, lastEventSeen = 0, waitingFor = null, enterArmed = false, connecting = false, firstLoad = true;
+const FAIL_TEXT = ev => ({ wrong_password: 'The password seems wrong.',
+  not_found: `No network called “${ev.ssid}” was found nearby.`,
+  invalid: 'That name or password doesn’t look right.' }[ev.why] || 'It did not work.');
 
 async function api(method, path, body, ms = 8000) {
   const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), ms);
@@ -171,6 +174,14 @@ async function loadNet() {
     $('si-pw').textContent = n.setup_password || '';
   }
   renderSaved(n.saved || []);
+  // Just opened the page (e.g. rejoined the setup Wi-Fi after a failed try):
+  // say what happened last time.
+  if (firstLoad) {
+    firstLoad = false;
+    const last = (n.events || []).filter(e => !e.quiet && e.type !== 'setup').slice(-1)[0];
+    if (last && last.type === 'connect_failed' && Date.now() / 1000 - last.at < 900)
+      showResult(false, `Last try: couldn't join ${last.ssid}.`, FAIL_TEXT(last) + ' Try again below.');
+  }
   // Report the outcome of a Wi-Fi change while we can still reach the globe.
   for (const ev of n.events || []) {
     if (ev.id <= lastEventSeen) continue;
@@ -178,9 +189,8 @@ async function loadNet() {
     if (!waitingFor) continue;
     if (ev.type === 'connected' && ev.ssid === waitingFor) showResult(true, `Connected to ${ev.ssid}.`, 'All good. You can close this page.');
     if (ev.type === 'connect_failed' && ev.ssid === waitingFor) {
-      const why = { wrong_password: 'The password seems wrong.', not_found: `No network called “${ev.ssid}” was found nearby.` }[ev.why] || 'It did not work.';
-      showResult(false, `Couldn't join ${ev.ssid}.`, why + ' Try again below.');
-      waitingFor = null;
+      showResult(false, `Couldn't join ${ev.ssid}.`, FAIL_TEXT(ev) + ' Try again below.');
+      waitingFor = null; connecting = false; setJoinButtons(false);
     }
   }
 }
@@ -193,7 +203,7 @@ async function loadWifi(manual) {
   const r = await api('GET', '/api/wifi/networks', null, 20000);
   networks = Array.isArray(r) ? r : [];
   if (!networks.length) {
-    list.innerHTML = '<div class="empty">No networks found. Use “Other network…” to type the name.</div>';
+    list.innerHTML = '<div class="empty">No networks found yet. Tap “Refresh” to look again, or type the name with “Other network…”.</div>';
     return;
   }
   list.innerHTML = networks.slice(0, 15).map((n, i) => `
@@ -208,7 +218,39 @@ async function loadWifi(manual) {
       <label class="check"><input type="checkbox" onchange="const p=$('pw-${i}'); if(p) p.type=this.checked?'text':'password'"> show password</label>
       <button class="btn primary" onclick="join(${i})">Join ${esc(n.ssid)}</button>
     </div>`).join('') +
-    (networks[0]?.cached ? '<div class="note">List made just before setup mode started. “Refresh” can’t look again while your phone is connected to the globe.</div>' : '');
+    (networks[0]?.cached ? '<div class="note">List made when setup mode started. Network missing? Tap “Refresh”, or type it with “Other network…”.</div>' : '');
+}
+
+let refreshArmed = false;
+async function refreshWifi(btn) {
+  const inSetup = net && (net.mode === 'setup' || net.mode === 'offline');
+  if (!inSetup) { loadWifi(true); return; }
+  // The globe's single Wi-Fi chip can't look around while it IS Oreloj-N.
+  if (!refreshArmed) {
+    refreshArmed = true;
+    btn.textContent = 'Tap again: Oreloj Wi-Fi closes ~20 s';
+    setTimeout(() => { refreshArmed = false; btn.textContent = 'Refresh'; }, 6000);
+    return;
+  }
+  refreshArmed = false; btn.textContent = 'Refresh'; btn.disabled = true;
+  await api('POST', '/api/wifi/rescan');
+  showResult(null, 'Looking around…',
+    `${esc(net.setup_ssid || 'The setup Wi-Fi')} closes for about 20 seconds while the globe looks for networks.
+     If your phone jumps to another Wi-Fi, rejoin ${esc(net.setup_ssid || 'it')} — this page then shows the new list.`);
+  // Keep trying until the phone is back on the setup Wi-Fi and the new list arrives.
+  const started = Date.now();
+  const poll = async () => {
+    await loadWifi(false);
+    if (networks.length || Date.now() - started > 120000) {
+      btn.disabled = false; $('result').hidden = true; return;
+    }
+    setTimeout(poll, 5000);
+  };
+  setTimeout(poll, 20000);
+}
+
+function setJoinButtons(disabled) {
+  document.querySelectorAll('.join .btn.primary').forEach(b => { b.disabled = disabled; });
 }
 
 function openJoin(i) {
@@ -230,12 +272,18 @@ function joinOther() {
 }
 
 async function connect(ssid, password, hidden) {
+  if (connecting) return;                    // ignore a double tap
   if (password && (password.length < 8 || password.length > 63)) {
     showResult(false, 'That password is too short.', 'Wi-Fi passwords are 8 to 63 characters.');
     return;
   }
+  connecting = true; setJoinButtons(true);
   const r = await api('POST', '/api/wifi/connect', { ssid, password, hidden });
-  if (!r || !r.ok) { showResult(false, `Couldn't start joining ${ssid}.`, (r && r.msg) || 'The globe did not answer.'); return; }
+  if (!r || !r.ok) {
+    connecting = false; setJoinButtons(false);
+    showResult(false, `Couldn't start joining ${ssid}.`, (r && r.msg) || 'The globe did not answer.');
+    return;
+  }
   if (!r.queued) { showResult(true, `Connected to ${ssid}.`, ''); return; }
   waitingFor = ssid;
   const back = onSetupWifi

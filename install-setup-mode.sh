@@ -69,6 +69,8 @@ step "Restarting the globe and its web page"
 sudo -u "$ORELOJ_USER" XDG_RUNTIME_DIR="/run/user/$ORELOJ_UID" \
     systemctl --user restart admin.service globe.service 2>/dev/null || \
     echo "  (could not restart admin/globe — reboot once to be sure)"
+# Some older globes run them as system services instead — restart those too.
+systemctl try-restart admin.service globe.service 2>/dev/null || true
 
 NAME="$(echo "$SETUP_INFO" | sed -n 's/^setup_wifi_name=//p')"
 PASS="$(echo "$SETUP_INFO" | sed -n 's/^setup_wifi_password=//p')"

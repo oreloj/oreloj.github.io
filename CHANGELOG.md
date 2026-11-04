@@ -5,6 +5,18 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-04 (part 2) — setup mode fixes from the first real run (Oreloj 1)
+
+### Fixed
+- **Empty network list in setup mode** (`oreloj-netwatch.py`) — right after boot, or right after the chip stops being the setup hotspot, NetworkManager answered the scan with nothing. The scan now asks again (up to 3×) before believing it. Seen on Oreloj 1: the phone page listed no networks at all.
+- **"Not found" reported for a network that was there** — only claimed when the scan actually saw other networks.
+- **Double-tapped Join** started two attempts back to back. The page now disables Join while a try is running, and the watchdog ignores an identical repeat sent within 5 s (and, if several are queued, only runs the latest).
+- **Refresh in setup mode** now really looks again: it closes the setup Wi-Fi for ~20 s, scans, and reopens it (new `/api/wifi/rescan`). Asks for a second tap first, since the phone drops off.
+- Reopening the phone page after a failed try shows what went wrong ("Last try: couldn't join … The password seems wrong.").
+- `install-setup-mode.sh` also restarts system-level `admin`/`globe` services on older globes.
+
+---
+
 ## 2026-11-04 — setup mode: change Wi-Fi or speaker from a phone, any time
 
 ### Added
