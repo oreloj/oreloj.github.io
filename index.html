@@ -563,6 +563,11 @@ audio { display: none; }
         <button onclick="sysUpdate()">update now</button>
       </div>
       <div id="list"></div>
+      <div id="pi-hint" style="display:none;padding:10px 12px;font-size:10px;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);">
+        Have an Oreloj globe? Its settings (Wi-Fi, speaker, zones) open at
+        <a href="http://oreloj.local" style="color:var(--text);">http://oreloj.local</a>
+        — from a device on the same Wi-Fi. Browsers block this public page from talking to the globe directly.
+      </div>
 
       <!-- ── Zones section ── -->
       <div id="zones-section">
@@ -666,6 +671,16 @@ audio { display: none; }
               <span id="sys-wifi-status" style="font-size:10px;color:var(--muted);"></span>
             </div>
             <div class="sys-scan-list" id="sys-wifi-list"></div>
+            <div id="sys-net-extra" style="display:none;margin-top:8px;font-size:10px;color:var(--muted);line-height:1.5;">
+              <div id="sys-net-setup"></div>
+              <div id="sys-net-outdated" style="display:none;color:var(--red);margin-top:4px;">
+                The Wi-Fi watchdog is out of date — run once on the globe:<br><code>sudo bash ~/globe/install-setup-mode.sh</code>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                <a href="/setup" style="font-size:10px;color:var(--text);">phone setup page ↗</a>
+                <button style="font-size:10px;padding:3px 8px;" id="sys-net-setup-btn" onclick="sysNetSetup(this)">open setup Wi-Fi</button>
+              </div>
+            </div>
           </div>
           <!-- Update -->
           <div class="sys-inner" style="border-top:1px solid var(--border);padding-top:8px;">
@@ -818,6 +833,9 @@ audio { display: none; }
         <button class="zm-act" data-action="preset_4">④ preset 4</button>
         <button class="zm-act" data-action="preset_5">⑤ preset 5</button>
         <button class="zm-act" data-action="preset_6">⑥ preset 6</button>
+        <button class="zm-act" data-action="setup_mode">⚙ setup mode</button>
+        <button class="zm-act" data-action="say_address">? say address</button>
+        <button class="zm-act" data-action="pair_speaker">⌁ pair speaker</button>
       </div>
     </div>
     <div style="margin-bottom:10px">
@@ -876,6 +894,11 @@ audio { display: none; }
       <button class="assign-action-btn" id="action-btn-preset_4" onclick="selectAction('preset_4')">④ preset 4</button>
       <button class="assign-action-btn" id="action-btn-preset_5" onclick="selectAction('preset_5')">⑤ preset 5</button>
       <button class="assign-action-btn" id="action-btn-preset_6" onclick="selectAction('preset_6')">⑥ preset 6</button>
+    </div>
+    <div class="assign-action-row">
+      <button class="assign-action-btn" id="action-btn-setup_mode" onclick="selectAction('setup_mode')">⚙ setup</button>
+      <button class="assign-action-btn" id="action-btn-say_address" onclick="selectAction('say_address')">? address</button>
+      <button class="assign-action-btn" id="action-btn-pair_speaker" onclick="selectAction('pair_speaker')">⌁ speaker</button>
     </div>
     <div class="assign-actions">
       <button id="assign-clear" onclick="clearAssign()" title="Remove your override (revert to built-in)">Reset</button>
@@ -970,6 +993,11 @@ function applyTier(tier) {
 
 // Apply tier 1 immediately — hides gated sidebar sections before first paint.
 applyTier(1);
+// On the public (https) site the browser won't let us reach http://oreloj.local,
+// so point globe owners at it instead of silently failing.
+if (location.protocol === 'https:') setTimeout(() => {
+  if (accessTier < 2) { const h = document.getElementById('pi-hint'); if (h) h.style.display = ''; }
+}, 3000);
 
 // Compute a SHA-256 hex hash of a PIN string (SubtleCrypto, with btoa fallback).
 async function _hashPin(pin) {
@@ -3556,6 +3584,9 @@ const KNOWN_ACTIONS = [
   { id: 'preset_4',         label: '④ Preset 4' },
   { id: 'preset_5',         label: '⑤ Preset 5' },
   { id: 'preset_6',         label: '⑥ Preset 6' },
+  { id: 'setup_mode',       label: '⚙ Setup mode (Wi-Fi)' },
+  { id: 'say_address',      label: '? Say address' },
+  { id: 'pair_speaker',     label: '⌁ Pair speaker' },
 ];
 
 let _actionLearnActive = null;  // action id currently in learn mode
@@ -4083,7 +4114,8 @@ async function sysOnOpen() {
   const s = await _sysApi('GET', '/api/status');
   if (!s) return;
   document.getElementById('sys-wifi-info').textContent =
-    s.hotspot_mode ? 'hotspot active' : (s.wifi ? '● ' + s.wifi : '— not connected');
+    s.hotspot_mode ? 'setup Wi-Fi active' : (s.wifi ? '● ' + s.wifi : '— not connected');
+  sysNetLoad();
   const btNames = (s.bt || []).map(d => d.name).join(', ');
   document.getElementById('sys-bt-info').textContent = btNames ? '● ' + btNames : '— none connected';
   sysBtLoadPower();
@@ -4310,11 +4342,47 @@ async function sysWifiConnect(btn) {
   btn.disabled = true; btn.textContent = '…';
   const r = await _sysApi('POST', '/api/wifi/connect', {ssid, password: pw});
   if (r?.ok) {
-    document.getElementById('sys-wifi-info').textContent = '● ' + ssid;
+    document.getElementById('sys-wifi-info').textContent = r.queued
+      ? `switching to ${ssid}… listen to the globe. If it moves network, reopen this page from there.`
+      : '● ' + ssid;
     if (row) row.style.display = 'none';
   } else {
     btn.disabled = false; btn.textContent = 'Go';
+    if (r?.msg) document.getElementById('sys-wifi-status').textContent = r.msg;
   }
+}
+
+// Setup mode (oreloj-netwatch) — show the setup Wi-Fi + a way to open it
+async function sysNetLoad() {
+  const n = await _sysApi('GET', '/api/net');
+  const box = document.getElementById('sys-net-extra');
+  if (!n) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  const btns = box.querySelector('div[style*="flex"]');
+  if (!n.netwatch) {
+    document.getElementById('sys-net-setup').innerHTML =
+      'Setup mode isn’t installed on this globe yet — run once on the globe:<br><code>sudo bash ~/globe/install-setup-mode.sh</code>';
+    document.getElementById('sys-net-outdated').style.display = 'none';
+    btns.style.display = 'none';
+    return;
+  }
+  btns.style.display = 'flex';
+  document.getElementById('sys-net-setup').innerHTML =
+    `setup Wi-Fi: <span style="color:var(--text)">${_esc(n.setup_ssid || '')}</span>` +
+    ` · password <span style="color:var(--text)">${_esc(n.setup_password || '')}</span>`;
+  document.getElementById('sys-net-outdated').style.display = n.outdated ? '' : 'none';
+  document.getElementById('sys-net-setup-btn').style.display = n.mode === 'online' ? '' : 'none';
+}
+
+async function sysNetSetup(btn) {
+  if (btn.dataset.armed !== '1') {
+    btn.dataset.armed = '1';
+    btn.textContent = 'sure? globe leaves this Wi-Fi';
+    return;
+  }
+  btn.disabled = true;
+  await _sysApi('POST', '/api/net/setup');
+  btn.textContent = 'opening… join it on your phone';
 }
 
 // Update
