@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-04T19:51:10+00:00",
+ "checked_at": "2026-11-05T09:36:40+00:00",
  "summary": {
-  "ok": 303,
+  "ok": 298,
   "warn": 30,
-  "dead": 8
+  "dead": 13
  },
  "stations": [
   {
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "RNZ Concert",
@@ -565,8 +565,10 @@
    "country": "Bolivia",
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "access refused (401)",
+   "dead_since": "2026-11-05T09:36:40+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Filarmonía",
@@ -725,8 +727,10 @@
    "country": "Guatemala",
    "url": "https://servidor26.brlogic.com:7014/live",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-05T09:36:40+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Nebaj Stereo FM",
@@ -920,7 +924,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Calotropis",
@@ -946,7 +950,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Black Rhino Radio",
@@ -1260,7 +1264,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Kledu",
@@ -1379,8 +1383,10 @@
    "country": "South Sudan",
    "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "stream stalls (no audio arriving)",
+   "dead_since": "2026-11-05T09:36:40+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Tchad",
@@ -1411,10 +1417,8 @@
    "country": "Trinidad and Tobago",
    "url": "https://ice42.securenetsystems.net/TAMBRIN",
    "source": "station",
-   "status": "dead",
-   "detail": "no answer (timeout)",
-   "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "世新廣播電台-2",
@@ -1597,8 +1601,10 @@
    "country": "Kiribati",
    "url": "https://streamer5.rightclickitservices.com:19790/stream",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "server no longer exists",
+   "dead_since": "2026-11-05T09:36:40+00:00",
+   "checks_dead": 1
   },
   {
    "name": "VON Radio",
@@ -1648,7 +1654,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "UpBeat Radio",
@@ -2026,7 +2032,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Fantasia",
@@ -2252,7 +2258,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Nova",
@@ -2531,8 +2537,10 @@
    "country": "Bolivia",
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "access refused (401)",
+   "dead_since": "2026-11-05T09:36:40+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Filarmonía",
@@ -2699,8 +2707,10 @@
    "country": "Guatemala",
    "url": "https://servidor26.brlogic.com:7014/live",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-05T09:36:40+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Nebaj Stereo FM",
