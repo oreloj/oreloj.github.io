@@ -1,5 +1,5 @@
 {
- "checked_at": "2026-11-07T08:54:04+00:00",
+ "checked_at": "2026-11-08T09:06:58+00:00",
  "summary": {
   "ok": 298,
   "warn": 27,
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "RNZ Concert",
@@ -448,7 +448,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Ibero 909",
@@ -570,7 +570,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "Radio Filarmonía",
@@ -724,7 +724,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Santa Cruz",
@@ -734,7 +734,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "Nebaj Stereo FM",
@@ -928,7 +928,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Calotropis",
@@ -954,7 +954,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Black Rhino Radio",
@@ -1268,7 +1268,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Radio Kledu",
@@ -1387,10 +1387,8 @@
    "country": "South Sudan",
    "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
    "source": "station",
-   "status": "dead",
-   "detail": "stream stalls (no audio arriving)",
-   "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Tchad",
@@ -1656,7 +1654,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "UpBeat Radio",
@@ -1807,8 +1805,10 @@
    "country": "Denmark",
    "url": "https://drift.radio/listen",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-08T09:06:58+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Echobox Radio",
@@ -2034,7 +2034,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Radio Fantasia",
@@ -2260,7 +2260,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Radio Nova",
@@ -2430,7 +2430,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Ibero 909",
@@ -2544,7 +2544,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "Radio Filarmonía",
@@ -2706,7 +2706,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Santa Cruz",
@@ -2716,7 +2716,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "Nebaj Stereo FM",
