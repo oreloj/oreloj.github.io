@@ -39,3 +39,7 @@ voice-cache/
 voice-model/
 dead_stations.json
 stream_health.json
+
+# This globe's own data (stations, pen spots, presets, favourites, backups).
+# Updates never touch it — see oreloj_data.py.
+data/

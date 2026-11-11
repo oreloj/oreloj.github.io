@@ -98,7 +98,8 @@ The status bar at the top shows whether a stream is currently playing, which Blu
 |------|---------|
 | `globe.py` | Main script — reads pen codes, looks up countries, plays streams |
 | `admin.py` | Flask web UI — station management, Bluetooth, Wi-Fi |
-| `stations.csv` | Curated station list with country, city, URL and favourite flag |
+| `oreloj_data.py` | Keeps each globe's own data in `data/`, safe from updates |
+| `stations.csv` | Curated station list with country, city, URL and favourite flag (shared default; a globe's own copy is `data/stations.csv`) |
 | `actions.json` | Maps pen codes to actions (stop, favourite_toggle) |
 | `globe.service` | systemd user service for globe.py |
 | `admin.service` | systemd user service for admin.py |

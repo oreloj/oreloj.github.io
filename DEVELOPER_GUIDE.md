@@ -22,7 +22,9 @@ There are two kinds of file, with **opposite** ownership:
 | **Code & docs** | `index.html`, `globe.py`, `admin.py`, the guides | The **repo** (GitHub) | Edit the file, then deploy out to the Pi + GitHub |
 | **Runtime data** | `stations.csv`, `actions.json`, `calibration.csv`, favourites | The **Pi** (you edit it live in the admin UI) | Change it in the admin UI, then **Push to GitHub** |
 
-⚠️ **Never copy a data file from the repo onto the Pi** — the Pi's version is the real one (it has the stations you added, zones you calibrated, presets you set). Overwriting it erases that work. Always go the other way: edit on the device, push to GitHub.
+On the Pi, the runtime data lives in its own folder, **`~/globe/data/`**. Think of `~/globe` as a recipe book that is replaced by a new edition at every update, and `data/` as the cook's own notebook beside it: updates swap the book and never open the notebook. The data files you see directly in the repo are just the shared starting point for a new globe.
+
+⚠️ **Never copy a data file from the repo into the Pi's `data/` folder** — the Pi's version is the real one (it has the stations you added, zones you calibrated, presets you set). Overwriting it erases that work. Always go the other way: edit on the device, push to GitHub.
 
 ---
 
@@ -125,5 +127,5 @@ When in doubt about what a tap is doing, the live logs show each pen code, the c
 | New station doesn't show up | If you edited the repo's `stations.csv` instead of the admin UI, the Pi never got it. Add it in the admin UI instead. |
 | A "ghost" station appears | A bad data row. The website now auto-cleans malformed entries on load — reload the page. Check `stations.csv` for a broken row. |
 | Admin page won't load | `systemctl --user restart admin.service`, then check `curl http://oreloj.local:5000/`. |
-| Changes I made on the globe vanished after a deploy | Something overwrote the Pi's data files from the repo. Restore from a `*.bak-*` backup on the Pi, and only ever sync data **upward** (Push to GitHub). |
+| Changes I made on the globe vanished after a deploy | Something overwrote the Pi's data files from the repo. Restore from `~/globe/data/backups/` (or an older `*.bak-*` file) on the Pi, and only ever sync data **upward** (Push to GitHub). |
 | Pen not detected | Re-plug the USB. Check it's seen: `python3 -c "import evdev; print([d.name for d in map(evdev.InputDevice, evdev.list_devices())])"` |

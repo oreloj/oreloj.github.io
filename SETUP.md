@@ -94,9 +94,13 @@ The repo is public — clone it straight onto the Pi (no token needed):
 git clone https://github.com/oreloj/oreloj.github.io.git ~/globe
 ```
 
-Because `~/globe` is a git clone, the admin UI's **update** feature
-(`git pull` + service restart) works out of the box — future updates
-don't need scp at all.
+Because `~/globe` is a git clone, the admin UI's **update** feature works
+out of the box — future updates don't need scp at all.
+
+The first time the globe starts, it copies the station list, pen map and
+presets into **`~/globe/data/`**. That folder is the globe's own notebook:
+everything you change in the control page is saved there, and updates never
+touch it.
 
 Install the pen's udev rule:
 
@@ -256,18 +260,43 @@ systemctl --user restart globe
 
 | File | Behaviour |
 |---|---|
-| `stations.csv` | Shared via GitHub. Every globe pulls the same list; the website's "Push to GitHub" merges the remote first, so globes don't clobber each other. |
-| `actions.json`, `calibration.csv` | Same for identical globe models. On-device edits (admin UI) stay local until pushed. |
+Each globe keeps its own copy of everything in `~/globe/data/`. The files of
+the same name directly in `~/globe/` are the shared starting point from GitHub.
+
+| File (in `data/`) | Behaviour |
+|---|---|
+| `stations.csv` | Starts as the shared list. When the shared list changes on GitHub (a repaired stream, a new station, a removed one), each globe takes that change on its next update — except for stations its owner changed, added or deleted themselves: those stay as the owner left them. The website's "Push to GitHub" sends a globe's list up to the shared one. |
+| `actions.json`, `calibration.csv` | **Per-globe.** Never overwritten or merged by an update. |
 | `favourites.json` | **Per-globe, never synced.** Each globe keeps its own favourites. |
+| `config.json` | Optional per-globe settings, e.g. a different pen: `{"pen_vid": "0x0c45", "pen_pid": "0x7700"}` |
+| `backups/` | Automatic safety copies (the station list before each merge; any code edits found on the globe before an update). |
+
+To back up a globe, copy its `data/` folder — that's all of it.
 
 ### Updating a globe later
 
-Preferred: the update banner in the globe's own web UI (runs `git pull` and
-restarts services). Or by hand:
+Preferred: the update banner in the globe's own web UI. Or by hand, from a
+Terminal window on your Mac:
 
 ```bash
-ssh oreloj@oreloj2.local "cd ~/globe && git pull origin main && systemctl --user restart globe admin"
+ssh oreloj@oreloj2.local "python3 ~/globe/oreloj_data.py update && systemctl --user restart globe admin"
 ```
+
+### One-time: a globe installed before November 2026
+
+Older globes kept their data mixed in with the software, which made updates
+fail ("Your local changes would be overwritten"). Run this **once** per old
+globe, from a Terminal window on your Mac (change the name to `oreloj.local`
+or `oreloj2.local`). It also works on a globe whose `~/globe` was copied by
+hand and isn't a git clone:
+
+```bash
+ssh oreloj@oreloj2.local "curl -fsSL https://raw.githubusercontent.com/oreloj/oreloj.github.io/main/oreloj_data.py -o /tmp/oreloj_data.py && python3 /tmp/oreloj_data.py rescue ~/globe && systemctl --user restart globe admin"
+```
+
+It moves the globe's data into `data/`, saves any code edits it finds as a
+patch in `data/backups/`, updates the software, and tells you what it did.
+If anything can't be done cleanly it stops and changes nothing.
 
 ---
 

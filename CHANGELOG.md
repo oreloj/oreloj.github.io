@@ -5,6 +5,27 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-11 — a globe's data lives in `data/`; updates can no longer be blocked or lose it
+
+### Why
+`stations.csv`, `actions.json` and `calibration.csv` were both tracked in git **and** edited live on each globe. As soon as GitHub changed one of them too (the 4 Nov stream repairs did), `git pull` — the "update now" button — refused with *"Your local changes would be overwritten"*. Reproduced with a globe at `4b81560` + owner edits.
+
+### Added
+- **`oreloj_data.py`** (stdlib only). Each globe's data now lives in `~/globe/data/` (git-ignored): `stations.csv`, `actions.json`, `calibration.csv`, `favourites.json`, optional `config.json`, `backups/`. First start copies the existing files there (on an older globe those *are* its live data) and puts the tracked copies back to GitHub's version. The root files are now only the shared defaults.
+- **Safe update**: `/api/update` now calls `oreloj_data.safe_update()` — fetch, save any code edits found on the globe as `data/backups/local-changes-*.patch`, fast-forward only, undo on failure. Answers 200 with the reason when it can't update, so the page shows it (it used to show nothing).
+- **Shared station list still reaches every globe**: changes to the root `stations.csv` are merged into `data/stations.csv` station by station — repaired streams, additions and removals apply unless the owner changed/added/deleted that station. The previous list is kept in `data/backups/`.
+- **Per-globe pen IDs**: `data/config.json` `{"pen_vid", "pen_pid"}` overrides the SONiX default; IDs found edited into an old `globe.py` are moved there automatically during the update.
+- **`rescue`** for globes installed before this change, and for a `~/globe` that isn't a git clone (turns it into one, data kept byte-for-byte) — one command in SETUP.md §8.
+- **Tests** (`tests/test_data.py`, 11 cases, no globe needed): `python3 -m unittest discover tests`.
+
+### Changed
+- `globe.py`, `admin.py` take all data paths from `oreloj_data`; `check_stations.py` checks `data/stations.csv` by default when it exists.
+
+### Not changed
+- `index.html` (so nothing to deploy to gh-pages), the control page API, "Push to GitHub".
+
+---
+
 ## 2026-11-04 (part 5) — stream audit + "check streams"
 
 ### Fixed

@@ -20,8 +20,11 @@ Two kinds of file, two different ownership rules. Mixing them up causes data los
 
 - **Code & docs** (`index.html`, `globe.py`, `admin.py`, `*.service`, `CLAUDE.md`, `CHANGELOG.md`) — **the repo is the source of truth.** Edit in the repo, deploy repo→Pi + GitHub. Clean one-way push.
 - **Runtime data** (`stations.csv`, `actions.json`, `calibration.csv`, `favourites.json`) — **the Pi is the source of truth.** These are edited *live on the device* via the admin UI at `oreloj.local:5000` (add stations, calibrate zones, set the 6 presets, assign pen codes). The repo's copies are usually STALE.
+  - **Where it lives (since Nov 2026):** on each globe, in **`~/globe/data/`** (git-ignored — updates and `git pull` never touch it). The files of the same name at the repo root are only the **shared defaults** a new globe starts from. All paths come from `oreloj_data.py`; never hard-code `SCRIPT_DIR / "stations.csv"` again. `data/config.json` holds per-globe settings (pen USB IDs), `data/backups/` automatic safety copies.
+  - **Shared station list:** changes to the root `stations.csv` on GitHub are merged into each globe's `data/stations.csv` on update (`oreloj_data.sync_defaults`): additions, removals and repaired fields apply only where the globe's owner didn't change that station. `actions.json` and `calibration.csv` are per-globe and never merged.
+  - **Updating:** `/api/update` = `oreloj_data.safe_update()` (fetch, save any local code edits as a patch in `data/backups/`, fast-forward, merge the shared station list; undoes itself on failure). An install from before `data/`, or a folder that isn't a git clone: run `python3 oreloj_data.py rescue ~/globe` once.
   - **Preferred way to change data:** do it in the admin UI, then use its **"Push to GitHub"** to sync (these are the "update stations via website" commits).
-  - **If you must change data programmatically:** NEVER `scp` the repo copy onto the Pi — it silently wipes on-device stations/zones/presets/codes. **Reconcile instead:** pull the Pi's copy, apply only your specific change, verify on-device data survives, push the result to both Pi and GitHub. See the `oreloj-deploy` skill.
+  - **If you must change data programmatically:** NEVER `scp` a repo data file into the Pi's `data/` folder — it silently wipes on-device stations/zones/presets/codes. **Reconcile instead:** pull the Pi's copy, apply only your specific change, verify on-device data survives, push the result to both Pi and GitHub. See the `oreloj-deploy` skill.
 - **Deploy/restart:** both `globe.service` and `admin.service` are user systemd units (`systemctl --user restart <unit>`). Never `pkill` admin — it kills the managed service and (with `Restart=on-failure`) systemd won't bring it back.
 - **Avoid drift at the root:** `index.html` also hardcodes a `BUILT_IN` station array that duplicates `stations.csv` — a known smell that spawns phantom stations. If touching station data heavily, prefer consolidating to one canonical source.
 
@@ -32,7 +35,8 @@ Two kinds of file, two different ownership rules. Mixing them up causes data los
 | `index.html` | Single-file app (~3200 lines): public website AND Pi admin UI in one |
 | `globe.py` | Pi main process: reads pen HID events, resolves country codes, plays via mpv, TTS via espeak-ng |
 | `admin.py` | Flask on port 5000: serves index.html + REST API (stations, BT, Wi-Fi, zones, presets, volume, update) |
-| `stations.csv` | Canonical station list on Pi |
+| `oreloj_data.py` | Where a globe's data lives (`data/`), first-run copy, safe update, shared-station merge, `rescue` for old installs. Stdlib only. Tests: `python3 -m unittest discover tests` |
+| `stations.csv` | Shared default station list (root). Each globe's live list is `data/stations.csv` |
 | `actions.json` | Zone registry: pen code → action, with label/description/position + 6 preset slots |
 | `favourites.json` | Favourite station names, shared between globe.py and admin.py |
 | `globe.service` / `admin.service` | systemd services |

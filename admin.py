@@ -21,10 +21,14 @@ def _build_time() -> str:
         return datetime.datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%SZ')
     except Exception:
         return "unknown"
-STATIONS_CSV     = SCRIPT_DIR / "stations.csv"
-FAVS_PATH        = SCRIPT_DIR / "favourites.json"
-ACTIONS_FILE     = SCRIPT_DIR / "actions.json"
-CALIBRATION_CSV  = SCRIPT_DIR / "calibration.csv"
+# This globe's own data lives in data/ — updates never touch it (see oreloj_data.py).
+import sys
+sys.path.insert(0, str(SCRIPT_DIR))
+import oreloj_data
+STATIONS_CSV     = oreloj_data.STATIONS_CSV
+FAVS_PATH        = oreloj_data.FAVS_PATH
+ACTIONS_FILE     = oreloj_data.ACTIONS_FILE
+CALIBRATION_CSV  = oreloj_data.CALIBRATION_CSV
 CAL_FIELDS       = ["code", "country_iso", "country_name", "region", "lat", "lng"]
 CSV_FIELDS   = ["Continent", "Country", "City", "Radio Station",
                  "Description", "Website", "URL Link", "Favourite", "Lat", "Lng"]
@@ -1173,15 +1177,20 @@ def api_sync():
 
 @app.post("/api/update")
 def api_update():
-    """Run `git pull origin main` on ~/globe and restart services if anything changed."""
-    globe_dir = str(Path.home() / "globe")
-    rc, out = _run(["git", "-C", globe_dir, "pull", "origin", "main"], timeout=30)
-    if rc != 0:
-        return jsonify({"ok": False, "updated": False, "msg": out, "restart": False}), 500
+    """Update the software from GitHub, then restart. The globe's own data
+    (data/) is never touched; fixes to the shared station list are merged in
+    (see oreloj_data.safe_update). Always answers 200 so the page can show why
+    an update didn't happen."""
+    try:
+        res = oreloj_data.safe_update(SCRIPT_DIR)
+    except Exception as e:
+        return jsonify({"ok": False, "updated": False, "restart": False,
+                        "msg": f"update failed: {type(e).__name__}: {e}"})
+    if not res.get("ok"):
+        return jsonify({**res, "restart": False})
 
-    updated = "Already up to date." not in out
-    if updated:
-        env = {**os.environ, "XDG_RUNTIME_DIR": f"/run/user/{os.getuid()}"}
+    env = {**os.environ, "XDG_RUNTIME_DIR": f"/run/user/{os.getuid()}"}
+    if res.get("updated"):
         # Restart globe immediately, then restart admin after a short delay
         # (admin restart kills this very response, so we detach it).
         try:
@@ -1195,11 +1204,12 @@ def api_update():
                 env=env,
             )
         except Exception as e:
-            return jsonify({"ok": True, "updated": True, "msg": out,
-                            "restart": False, "warn": str(e)})
-        return jsonify({"ok": True, "updated": True, "msg": out, "restart": True})
+            return jsonify({**res, "restart": False, "warn": str(e)})
+        return jsonify({**res, "restart": True})
 
-    return jsonify({"ok": True, "updated": False, "msg": out, "restart": False})
+    if res.get("changed_data"):
+        _notify_globe()          # same software, but the station list moved on
+    return jsonify({**res, "restart": False})
 
 
 # ── captive portal ───────────────────────────────────────────────────────────
@@ -1268,5 +1278,14 @@ def _serve_port_80() -> None:
 
 if __name__ == "__main__":
     print("Oreloj admin — http://oreloj.local:5000")
+    try:
+        _d = oreloj_data.startup(SCRIPT_DIR)
+        if _d["seeded"]:
+            print(f"data folder: copied {', '.join(_d['seeded'])} into {oreloj_data.DATA_DIR}")
+        if _d["stations"] and not _d["stations"].get("skipped"):
+            print(f"data folder: shared station list merged in — {_d['stations']}")
+            _notify_globe()
+    except Exception as _e:
+        print(f"data folder check failed ({type(_e).__name__}: {_e}) — carrying on")
     _serve_port_80()
     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)

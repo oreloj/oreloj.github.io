@@ -292,7 +292,10 @@ def run(entries: list[dict], workers: int = 12, timeout: float = 8.0,
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("csv", nargs="?", default="stations.csv", type=Path)
+    # On a globe, its own list lives in data/ (see oreloj_data.py).
+    own = Path(__file__).parent / "data" / "stations.csv"
+    ap.add_argument("csv", nargs="?", type=Path,
+                    default=own if own.exists() else Path("stations.csv"))
     ap.add_argument("--builtin", type=Path, help="also check index.html's BUILT_IN streams")
     ap.add_argument("--presets", type=Path, help="also check preset URLs in actions.json "
                     "(default: actions.json next to the CSV, if present)")

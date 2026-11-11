@@ -29,9 +29,12 @@ _tap_queue: queue.Queue = queue.Queue()
 _seq:   list[str] = []
 _seq_t: float     = 0.0
 SCRIPT_DIR   = Path(__file__).parent
-STATIONS_CSV = SCRIPT_DIR / "stations.csv"
-FAVS_PATH    = SCRIPT_DIR / "favourites.json"
-ACTIONS_FILE = SCRIPT_DIR / "actions.json"
+# This globe's own data lives in data/ — updates never touch it (see oreloj_data.py).
+sys.path.insert(0, str(SCRIPT_DIR))
+import oreloj_data
+STATIONS_CSV = oreloj_data.STATIONS_CSV
+FAVS_PATH    = oreloj_data.FAVS_PATH
+ACTIONS_FILE = oreloj_data.ACTIONS_FILE
 STATE_PATH   = SCRIPT_DIR / "state.json"
 SOUNDS_DIR   = SCRIPT_DIR / "sounds"
 CHIME_LIKE   = SOUNDS_DIR / "like.wav"
@@ -58,7 +61,7 @@ log = logging.getLogger("globe")
 # Each entry: [country_name, ISO_code, region_or_None, lat_or_None, lng_or_None]
 CODE_MAP: dict[str, list[list]] = {}
 
-CALIBRATION_CSV_PATH = SCRIPT_DIR / "calibration.csv"
+CALIBRATION_CSV_PATH = oreloj_data.CALIBRATION_CSV
 
 
 def load_calibration() -> None:
@@ -209,7 +212,9 @@ def _on_press(key) -> None:
         _handle_keycode(vk)
 
 
-PEN_VID, PEN_PID = 0x0c45, 0x7700
+# The Horizon globe's SONiX pen. A globe with a different pen says so in
+# data/config.json: {"pen_vid": "0x....", "pen_pid": "0x...."}
+PEN_VID, PEN_PID = oreloj_data.pen_ids(default=(0x0c45, 0x7700))
 
 def _evdev_reader() -> None:
     import evdev
@@ -1211,6 +1216,9 @@ def main() -> None:
     signal.signal(signal.SIGTERM, shutdown)
     signal.signal(signal.SIGINT, shutdown)
 
+    seeded = oreloj_data.ensure()
+    if seeded:
+        log.info(f"First run with a data folder — copied {', '.join(seeded)} into {oreloj_data.DATA_DIR}")
     curated = load_stations(STATIONS_CSV)
     load_actions()
     load_calibration()
