@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-11T09:32:50+00:00",
+ "checked_at": "2026-11-12T09:55:57+00:00",
  "summary": {
-  "ok": 300,
+  "ok": 298,
   "warn": 27,
-  "dead": 14
+  "dead": 16
  },
  "stations": [
   {
@@ -270,7 +270,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-11T09:32:50+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Retreat Radio",
@@ -352,7 +352,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "RNZ Concert",
@@ -450,7 +450,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 5
+   "checks_dead": 6
   },
   {
    "name": "Ibero 909",
@@ -572,7 +572,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 7
+   "checks_dead": 8
   },
   {
    "name": "Radio Filarmonía",
@@ -635,8 +635,10 @@
    "country": "Guyana",
    "url": "https://auds1.intacs.com/ntnradio",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-12T09:55:57+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Vox 103.5 FM",
@@ -734,7 +736,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 7
+   "checks_dead": 8
   },
   {
    "name": "Nebaj Stereo FM",
@@ -928,7 +930,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Calotropis",
@@ -951,8 +953,10 @@
    "country": "Norway",
    "url": "https://stream.radiorakel.no/fm993.mp3",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-12T09:55:57+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Black Rhino Radio",
@@ -1266,7 +1270,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Radio Kledu",
@@ -1385,8 +1389,10 @@
    "country": "South Sudan",
    "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "stream stalls (no audio arriving)",
+   "dead_since": "2026-11-12T09:55:57+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Tchad",
@@ -1652,7 +1658,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "UpBeat Radio",
@@ -2027,10 +2033,8 @@
    "country": "Italy",
    "url": "https://live.radiocarme.net/live.mp3",
    "source": "station",
-   "status": "dead",
-   "detail": "server error (502)",
-   "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 8
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Fantasia",
@@ -2061,10 +2065,8 @@
    "country": "Belgium",
    "url": "https://streaming.domainepublic.net/radiopanik.ogg",
    "source": "station",
-   "status": "dead",
-   "detail": "no answer (timeout)",
-   "dead_since": "2026-11-11T09:32:50+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Panini",
@@ -2258,7 +2260,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Radio Nova",
@@ -2428,7 +2430,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 5
+   "checks_dead": 6
   },
   {
    "name": "Ibero 909",
@@ -2542,7 +2544,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 7
+   "checks_dead": 8
   },
   {
    "name": "Radio Filarmonía",
@@ -2605,8 +2607,10 @@
    "country": "Guyana",
    "url": "https://auds1.intacs.com/ntnradio",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-12T09:55:57+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Vox 103.5 FM",
@@ -2712,7 +2716,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 7
+   "checks_dead": 8
   },
   {
    "name": "Nebaj Stereo FM",
