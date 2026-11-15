@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-14T09:04:17+00:00",
+ "checked_at": "2026-11-15T09:34:11+00:00",
  "summary": {
-  "ok": 294,
-  "warn": 29,
-  "dead": 18
+  "ok": 298,
+  "warn": 26,
+  "dead": 17
  },
  "stations": [
   {
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "RNZ Concert",
@@ -448,7 +448,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Ibero 909",
@@ -458,7 +458,7 @@
    "status": "dead",
    "detail": "server unreachable",
    "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "El Recreo FM",
@@ -548,7 +548,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 2
+   "checks_dead": 3
   },
   {
    "name": "Radio Siete",
@@ -571,10 +571,8 @@
    "country": "Bolivia",
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "station",
-   "status": "dead",
-   "detail": "access refused (401)",
-   "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 10
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Filarmonía",
@@ -597,8 +595,8 @@
    "country": "Colombia",
    "url": "https://estructuraweb.com.co:9207/live",
    "source": "station",
-   "status": "warn",
-   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Javeriana Estéreo 91,9",
@@ -728,7 +726,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Santa Cruz",
@@ -738,7 +736,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 10
+   "checks_dead": 11
   },
   {
    "name": "Nebaj Stereo FM",
@@ -932,7 +930,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "Calotropis",
@@ -955,8 +953,10 @@
    "country": "Norway",
    "url": "https://stream.radiorakel.no/fm993.mp3",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-15T09:34:11+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Black Rhino Radio",
@@ -1270,7 +1270,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "Radio Kledu",
@@ -1421,10 +1421,8 @@
    "country": "Trinidad and Tobago",
    "url": "https://ice42.securenetsystems.net/TAMBRIN",
    "source": "station",
-   "status": "dead",
-   "detail": "no answer (timeout)",
-   "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio (old SHOUTcast server)"
   },
   {
    "name": "世新廣播電台-2",
@@ -1658,7 +1656,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "UpBeat Radio",
@@ -1825,8 +1823,10 @@
    "country": "Italy",
    "url": "https://pantano.ovh:8444/pantano",
    "source": "station",
-   "status": "warn",
-   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
+   "status": "dead",
+   "detail": "server unreachable",
+   "dead_since": "2026-11-15T09:34:11+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Fresh Air Radio KFAI",
@@ -2260,7 +2260,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "Radio Nova",
@@ -2430,7 +2430,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Ibero 909",
@@ -2440,7 +2440,7 @@
    "status": "dead",
    "detail": "server unreachable",
    "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "El Recreo FM",
@@ -2522,7 +2522,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 2
+   "checks_dead": 3
   },
   {
    "name": "Radio Siete",
@@ -2545,10 +2545,8 @@
    "country": "Bolivia",
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "website",
-   "status": "dead",
-   "detail": "access refused (401)",
-   "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 10
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Filarmonía",
@@ -2571,8 +2569,8 @@
    "country": "Colombia",
    "url": "https://estructuraweb.com.co:9207/live",
    "source": "website",
-   "status": "warn",
-   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Javeriana Estéreo 91,9",
@@ -2710,7 +2708,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Santa Cruz",
@@ -2720,7 +2718,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 10
+   "checks_dead": 11
   },
   {
    "name": "Nebaj Stereo FM",
