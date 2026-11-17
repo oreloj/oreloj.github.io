@@ -45,21 +45,26 @@ if (orelojSun.mode() === 'night') document.documentElement.classList.add('night'
 <style>
 :root {
   /* Day = "faithful" look of the physical globe: white plastic, blue ocean */
-  --bg: #f6f7f8;
-  --surface: #ffffff;
-  --surface2: #eef1f4;
-  --border: #d5dbe1;
-  --line: #e8ecf0;
+  --bg: #ebe8e1;
+  --surface: #f4f2ed;
+  --surface2: #e5e1d8;
+  --border: #d2cdc2;
+  --line: #e1ddd4;
+  --outline: #16212b;
+  --b-yellow: #f3d34a;
+  --b-pink: #f2a7b8;
+  --b-blue: #9fcbee;
+  --b-green: #8cc75a;
   --accent: #16212b;
   --red: #d42b2b;
   --red-dim: rgba(212,43,43,0.12);
-  --active-bg: #fdeeee;
+  --active-bg: #f5e2dd;
   --blue: #2b6dd4;
   --text: #16212b;
   --on-text: #ffffff;
-  --muted: #7d8893;
-  --pop-bg: #ffffff;
-  --shadow: rgba(22,33,43,0.14);
+  --muted: #857f75;
+  --pop-bg: #f4f2ed;
+  --shadow: rgba(40,34,24,0.16);
 }
 :root.night {
   /* Night = the globe with the lights off */
@@ -68,6 +73,7 @@ if (orelojSun.mode() === 'night') document.documentElement.classList.add('night'
   --surface2: #1a2b3d;
   --border: #24384c;
   --line: #142334;
+  --outline: #3a4f66;
   --accent: #e8eef4;
   --red-dim: rgba(212,43,43,0.18);
   --active-bg: #2a1620;
@@ -584,6 +590,51 @@ audio { display: none; }
   cursor: pointer;
   white-space: nowrap;
 }
+/* ── Toy look (direction A): chunky outlines, pastel keys, Chewy labels ── */
+#player {
+  background: var(--surface); border: 2px solid var(--outline); border-bottom-width: 4px;
+  border-radius: 24px; padding: 3px 8px 3px 4px;
+}
+#pbtn { width: 34px; height: 34px; background: var(--red); border: 2px solid var(--outline); }
+#pbtn svg { width: 11px; height: 11px; fill: #fff; }
+.pn { font-family: 'Chewy', 'Syne', sans-serif; font-weight: 400; font-size: 18px; letter-spacing: .3px; line-height: 1.1; }
+.vw svg#voldial { width: 46px; height: 46px; fill: none; display: block; cursor: pointer; touch-action: none; border-radius: 50%; }
+#voldial:focus { outline: none; }
+#voldial:focus-visible { outline: 2px dashed var(--red); outline-offset: 1px; }
+#vol { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+#discoverbtn, #lovebtn, #themebtn, #addbtn, #exportbtn, #mobile-add {
+  font-family: 'Chewy', 'Space Mono', sans-serif; font-size: 15px; letter-spacing: .4px; line-height: 1;
+  color: #16212b; border: 2px solid var(--outline); border-bottom-width: 4px; border-radius: 99px;
+  padding: 6px 13px 5px; transition: transform .08s;
+}
+#discoverbtn { background: var(--b-yellow); }
+#lovebtn     { background: var(--b-pink); }
+#themebtn    { background: var(--b-blue); }
+#addbtn, #mobile-add { background: var(--b-green); box-shadow: none; }
+#exportbtn   { background: var(--surface); color: var(--text); }
+#discoverbtn:hover, #lovebtn:hover, #themebtn:hover, #addbtn:hover, #exportbtn:hover, #mobile-add:hover {
+  color: #16212b; border-color: var(--outline); transform: translateY(-1px);
+}
+#exportbtn:hover { color: var(--text); }
+#discoverbtn:active, #lovebtn:active, #themebtn:active, #addbtn:active, #exportbtn:active, #mobile-add:active { transform: translateY(2px); }
+:root.night #discoverbtn { background: transparent; color: var(--b-yellow); border-color: var(--b-yellow); }
+:root.night #lovebtn     { background: transparent; color: var(--b-pink);   border-color: var(--b-pink); }
+:root.night #themebtn    { background: transparent; color: var(--b-blue);   border-color: var(--b-blue); }
+:root.night #addbtn, :root.night #mobile-add { background: transparent; color: var(--b-green); border-color: var(--b-green); }
+:root.night #exportbtn   { background: transparent; color: var(--text); }
+#pen-pill {
+  font-family: 'Chewy', 'Space Mono', sans-serif; font-size: 13px; letter-spacing: .5px;
+  border: 2px solid var(--border); border-radius: 99px; padding: 5px 11px;
+}
+#toggle-sidebar {
+  background: var(--surface); color: var(--text); border: 2px solid var(--outline);
+  border-bottom-width: 4px; border-radius: 12px; padding: 6px 10px 5px;
+}
+@media (max-width: 550px) {
+  .blabel { display: none; }
+  #discoverbtn, #lovebtn, #themebtn, #exportbtn { padding: 6px 10px 5px; }
+  #player { padding: 3px 8px 3px 4px; }
+}
 </style>
 </head>
 <body>
@@ -603,16 +654,16 @@ audio { display: none; }
     </div>
     <div class="eq" id="eq"><div class="eb"></div><div class="eb"></div><div class="eb"></div></div>
     <div class="vw">
-      <svg viewBox="0 0 14 12"><path d="M0 4h3l4-4v12l-4-4H0zM10 2a6 6 0 010 8M8 3.5a3.5 3.5 0 010 5"/></svg>
-      <input type="range" id="vol" min="0" max="1" step=".01" value=".8" oninput="onVolume(this.value)">
+      <svg id="voldial" viewBox="0 0 72 72" role="slider" tabindex="0" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" title="Volume — tap a ray (a star at night), scroll, or tap the sun to mute"></svg>
+      <input type="range" id="vol" min="0" max="1" step=".01" value=".8" oninput="onVolume(this.value)" tabindex="-1" aria-hidden="true">
     </div>
   </div>
   <div id="pen-pill" title="SmartGlobe pen ready — tap a country">
     <span class="pen-dot"></span><span>pen</span>
   </div>
-  <button id="discoverbtn" onclick="playDiscover()" title="Discover a random station">⚄ discover</button>
-  <button id="lovebtn" onclick="playRandomLove()" title="Play a random favourite station">♥ random love</button>
-  <button id="exportbtn" onclick="openExport()" title="Export pen mappings + radio stations">⤓ data</button>
+  <button id="discoverbtn" onclick="playDiscover()" title="Discover a random station">⚄<span class="blabel"> discover</span></button>
+  <button id="lovebtn" onclick="playRandomLove()" title="Play a random favourite station">♥<span class="blabel"> random love</span></button>
+  <button id="exportbtn" onclick="openExport()" title="Export pen mappings + radio stations">⤓<span class="blabel"> data</span></button>
   <button id="themebtn" onclick="toggleTheme()" title="Follows sunrise and sunset where you are. Tap to switch until the next sunrise or sunset."><span class="ticon">☾</span><span class="tlabel"> night</span></button>
   <button id="addbtn" onclick="openModal()">+ add radio</button>
 </div>
@@ -1652,6 +1703,7 @@ function stopStatic(fadeMs = 350) {
 
 function onVolume(v) {
   audio.volume = parseFloat(v);
+  drawVolDial();
   // also reflect in noise if currently active
   if (_noiseGain) {
     try {
@@ -1862,6 +1914,7 @@ const GLOBE_THEMES = {
 function isNight() { return document.documentElement.classList.contains('night'); }
 function globeTheme() { return GLOBE_THEMES[isNight() ? 'night' : 'day']; }
 function syncThemeBtn() {
+  if (typeof drawVolDial === 'function') drawVolDial();
   const b = document.getElementById('themebtn'); if (!b) return;
   b.querySelector('.ticon').textContent = isNight() ? '☀' : '☾';
   b.querySelector('.tlabel').textContent = isNight() ? ' day' : ' night';
@@ -1902,6 +1955,78 @@ try { localStorage.removeItem('oreloj_theme'); } catch (e) {}  // old manual-onl
 syncThemeBtn();
 locateForTheme();
 setInterval(applyTheme, 5 * 60 * 1000);                  // flip at sunrise / sunset while open
+
+// ── Volume ray dial ──────────────────────────────────────────────────────
+// 10 rays round a sun (stars round a moon at night). Tap a ray, drag round,
+// scroll, or use arrow keys; tap the sun/moon to mute and back. The hidden
+// #vol range stays the value everything else reads.
+var VD = { c: 36, rays: 10, start: Math.PI * 0.75, span: Math.PI * 1.5, lastOn: 0.8 };
+function volValue() { return parseFloat(document.getElementById('vol').value) || 0; }
+function setVol(v) {
+  v = Math.max(0, Math.min(1, Math.round(v * 10) / 10));
+  if (v > 0) VD.lastOn = v;
+  document.getElementById('vol').value = v; onVolume(v);
+}
+function rayAngle(i) { return VD.start + i * VD.span / (VD.rays - 1); }
+function drawVolDial() {
+  const svg = document.getElementById('voldial'); if (!svg || !VD) return;
+  const night = document.documentElement.classList.contains('night');
+  const v = volValue(), lit = Math.round(v * 10), C = VD.c;
+  const ink = '#16212b';
+  let h = '';
+  for (let i = 0; i < VD.rays; i++) {
+    const a = rayAngle(i), on = i < lit, cos = Math.cos(a), sin = Math.sin(a);
+    if (night) {
+      const cx = C + cos * 27, cy = C + sin * 27, r = on ? 4.8 : 3.2;
+      const pts = [...Array(10)].map((_, k) => { const rr = k % 2 ? r * 0.45 : r, aa = -Math.PI / 2 + k * Math.PI / 5;
+        return (cx + Math.cos(aa) * rr).toFixed(1) + ',' + (cy + Math.sin(aa) * rr).toFixed(1); }).join(' ');
+      h += `<polygon points="${pts}" fill="${on ? '#f3d34a' : '#2f4b5e'}" stroke="${on ? '#0b1622' : 'none'}" stroke-width="1"/>`;
+    } else {
+      const r2 = on ? 32 : 28;
+      h += `<line x1="${(C + cos * 20).toFixed(1)}" y1="${(C + sin * 20).toFixed(1)}" x2="${(C + cos * r2).toFixed(1)}" y2="${(C + sin * r2).toFixed(1)}" stroke="${on ? ink : '#cbc5b8'}" stroke-width="4" stroke-linecap="round"/>`;
+    }
+  }
+  if (night) {
+    // moon fills from new to full as the volume goes up
+    h += `<clipPath id="vdmoon"><circle cx="${C}" cy="${C}" r="13"/></clipPath>
+      <g clip-path="url(#vdmoon)"><circle cx="${C}" cy="${C}" r="13" fill="#f1ead2"/>
+      <circle cx="${(C + v * 13 * 2.1).toFixed(1)}" cy="${C}" r="13" fill="#3a4d68"/></g>
+      <circle cx="${C}" cy="${C}" r="13" fill="none" stroke="#5d7396" stroke-width="2"/>`;
+  } else {
+    h += `<circle cx="${C}" cy="${C}" r="13" fill="${v > 0 ? '#f3d34a' : '#e5e1d8'}" stroke="${ink}" stroke-width="2.2"/>`;
+  }
+  svg.innerHTML = h;
+  svg.setAttribute('aria-valuenow', Math.round(v * 100));
+}
+(function initVolDial() {
+  const svg = document.getElementById('voldial'); if (!svg) return;
+  let dragging = false, moved = false;
+  const point = e => { const r = svg.getBoundingClientRect();
+    return [(e.clientX - r.left) * 72 / r.width - VD.c, (e.clientY - r.top) * 72 / r.height - VD.c]; };
+  const fromAngle = (dx, dy) => {
+    let t = (Math.atan2(dy, dx) - VD.start) % (2 * Math.PI); if (t < 0) t += 2 * Math.PI;
+    t /= VD.span;
+    if (t > 1) return t < 1 + (0.5 / 1.5) / 2 ? 1 : 0;      // in the gap at the bottom: snap to nearest end
+    return (Math.round(t * (VD.rays - 1)) + 1) / 10;
+  };
+  svg.addEventListener('pointerdown', e => {
+    const [dx, dy] = point(e); moved = false;
+    if (Math.hypot(dx, dy) < 15) return;                      // centre: handled on click (mute)
+    dragging = true; svg.setPointerCapture(e.pointerId); setVol(fromAngle(dx, dy));
+  });
+  svg.addEventListener('pointermove', e => { if (!dragging) return; moved = true; const [dx, dy] = point(e); setVol(fromAngle(dx, dy)); });
+  svg.addEventListener('pointerup', () => { dragging = false; });
+  svg.addEventListener('click', e => {
+    const [dx, dy] = point(e);
+    if (Math.hypot(dx, dy) < 15) setVol(volValue() > 0 ? 0 : VD.lastOn);
+  });
+  svg.addEventListener('wheel', e => { e.preventDefault(); setVol(volValue() + (e.deltaY < 0 ? 0.1 : -0.1)); }, { passive: false });
+  svg.addEventListener('keydown', e => {
+    const step = { ArrowUp: .1, ArrowRight: .1, ArrowDown: -.1, ArrowLeft: -.1 }[e.key];
+    if (step) { e.preventDefault(); setVol(volValue() + step); }
+  });
+  drawVolDial();
+})();
 
 function drawGlobe() {
   if (!proj) return;
