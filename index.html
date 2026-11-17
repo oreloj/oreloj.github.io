@@ -639,6 +639,11 @@ audio { display: none; }
   border-bottom-width: 4px; border-radius: 12px; padding: 6px 10px 5px;
 }
 @media (max-width: 550px) {
+  /* phones: logo + keys on the first row, the player gets its own full-width row */
+  #header { flex-wrap: wrap; row-gap: 8px; }
+  #player { order: 10; flex: 1 1 100%; max-width: none; }
+  .pm { display: block; }
+  #discoverbtn { margin-left: auto; }
   .blabel { display: none; }
   #discoverbtn, #lovebtn, #themebtn, #exportbtn { padding: 6px 10px 5px; }
   #player { padding: 3px 8px 3px 4px; }
@@ -895,6 +900,31 @@ audio { display: none; }
 }
 #pi-hint { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 12px !important; }
 #version-tag { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 10px; text-transform: none; letter-spacing: .2px; }
+/* ── Globe-owner lists: zones + presets ── */
+.zone-row, .preset-row { padding: 7px 10px 7px 12px; border-bottom: 1.5px dashed var(--line); gap: 7px; font-family: 'Fredoka', sans-serif; }
+.zone-dot { width: 9px; height: 9px; border: 1.5px solid var(--outline); }
+.zone-dot.volume, .zone-action.volume       { background: var(--b-blue); }
+.zone-dot.preset, .zone-action.preset       { background: #f4a54a; }
+.zone-dot.favourite, .zone-action.favourite { background: var(--b-pink); }
+.zone-dot.discover, .zone-action.discover   { background: var(--b-green); }
+.zone-dot.stop, .zone-action.stop           { background: var(--off); }
+.zone-action {
+  font-family: 'Chewy', sans-serif; font-size: 12px; font-style: normal; letter-spacing: .2px; color: #16212b;
+  border: 1.5px solid var(--outline); border-radius: 99px; padding: 1px 7px 0;
+}
+:root.night .zone-action { border-color: #0b1622; }
+.zone-code, .tbd-badge { font-family: 'Fredoka', sans-serif; font-weight: 500; font-style: normal; font-size: 11px; color: var(--muted); }
+.tbd-badge { border: 1.5px dashed var(--off); border-radius: 99px; padding: 0 7px; }
+.zone-edit-btn, .preset-edit-btn { color: var(--muted); font-size: 12px; }
+.zone-edit-btn:hover, .preset-edit-btn:hover { color: var(--text); }
+.preset-slot {
+  width: 24px; height: 24px; min-width: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--b-yellow); color: #16212b; border: 2px solid var(--outline); font-size: 14px;
+}
+:root.night .preset-slot { border-color: #0b1622; }
+.preset-empty { color: var(--muted); font-family: 'Fredoka', sans-serif; font-style: normal; }
+.sys-vol-num { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 12px; }
+.sys-dev, .sys-dead { border-bottom: 1.5px dashed var(--line); font-family: 'Fredoka', sans-serif; }
 </style>
 </head>
 <body>
@@ -2812,6 +2842,17 @@ function deleteCurrentEdit() {
 
 document.getElementById('modal-overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('modal-overlay')) closeModal(); });
 window.addEventListener('resize',()=>{ resize(); drawGlobe(); });
+// Re-measure whenever the globe's area changes size (side panel sliding in or
+// out, header wrapping on phones) — not only on window resize.
+if (window.ResizeObserver) {
+  let _roW = 0, _roH = 0;
+  new ResizeObserver(entries => {
+    const r = entries[0].contentRect;
+    if (Math.abs(r.width - _roW) < 1 && Math.abs(r.height - _roH) < 1) return;
+    _roW = r.width; _roH = r.height;
+    if (canvas) { resize(); drawGlobe(); }
+  }).observe(document.getElementById('globe-wrap'));
+}
 
 async function syncFromPi() {
   // Fetch Pi favourites — merge into localStorage set (union, Pi wins additions)
