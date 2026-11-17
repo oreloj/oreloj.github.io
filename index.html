@@ -55,6 +55,9 @@ if (orelojSun.mode() === 'night') document.documentElement.classList.add('night'
   --b-pink: #f2a7b8;
   --b-blue: #9fcbee;
   --b-green: #8cc75a;
+  --card: #fbfaf7;
+  --card-act: #f8e7a1;
+  --off: #cbc5b8;
   --accent: #16212b;
   --red: #d42b2b;
   --red-dim: rgba(212,43,43,0.12);
@@ -74,6 +77,9 @@ if (orelojSun.mode() === 'night') document.documentElement.classList.add('night'
   --border: #24384c;
   --line: #142334;
   --outline: #3a4f66;
+  --card: #142334;
+  --card-act: #3a3418;
+  --off: #3a4f66;
   --accent: #e8eef4;
   --red-dim: rgba(212,43,43,0.18);
   --active-bg: #2a1620;
@@ -299,10 +305,8 @@ body {
 }
 .si:hover { background: var(--surface2); }
 .si.active { background: var(--active-bg); border-left: 2px solid var(--red); }
-.si.faved .sd { background: var(--red) !important; opacity: 1 !important; }
 .si.dead .sd { background: var(--blue) !important; opacity: 1 !important; }
 .sd { width: 6px; height: 6px; border-radius: 50%; background: #888; flex-shrink: 0; opacity: .7; }
-.si.active .sd { background: var(--red) !important; opacity: 1; }
 .sinfo { flex: 1; min-width: 0; }
 .sn { font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sl { font-size: 10px; color: var(--muted); margin-top: 1px; font-style: italic; }
@@ -635,6 +639,70 @@ audio { display: none; }
   #discoverbtn, #lovebtn, #themebtn, #exportbtn { padding: 6px 10px 5px; }
   #player { padding: 3px 8px 3px 4px; }
 }
+/* ── Side panel (toy cards) ── */
+#sw { padding: 10px 10px 4px; border-bottom: none; position: relative; z-index: 5; }
+#search-wrap {
+  display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 4px 0 10px;
+  border: 1.5px solid var(--border); border-radius: 99px; background: var(--card); transition: border-color .15s;
+}
+#search-wrap:hover, #search-wrap:focus-within { border-color: var(--outline); }
+.sicon { width: 13px; height: 13px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+#search {
+  flex: 1; min-width: 0; width: auto; border: none; background: transparent; padding: 0; outline: none;
+  font-family: 'Fredoka', 'Space Mono', sans-serif; font-weight: 500; font-size: 13px; font-style: normal; color: var(--text);
+}
+#search:focus { border: none; }
+#filter-toggle {
+  width: 22px; height: 22px; border-radius: 50%; border: none; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0;
+}
+#filter-toggle svg { width: 14px; height: 14px; fill: none; stroke: var(--muted); stroke-width: 1.5; }
+#filter-toggle.on { background: var(--b-yellow); }
+#filter-toggle.on svg { stroke: #16212b; }
+#chips {
+  position: absolute; left: 0; right: 0; top: 100%; display: flex; flex-wrap: wrap; gap: 5px;
+  padding: 2px 10px 10px; background: var(--surface); border-bottom: 1.5px solid var(--border);
+  opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s;
+}
+#sw:hover #chips, #sw:focus-within #chips, #chips.open { opacity: 1; transform: none; pointer-events: auto; }
+#chips.filtered { position: static; opacity: 1; transform: none; pointer-events: auto; border-bottom: none; padding: 8px 0 2px; background: transparent; }
+.chip {
+  font-family: 'Chewy', sans-serif; font-size: 13px; line-height: 1; letter-spacing: .3px; color: #16212b; cursor: pointer;
+  padding: 3px 9px 2px; border-radius: 99px; border: 2px solid var(--outline); border-bottom-width: 4px; background: var(--chip);
+}
+.chip.on { border-bottom-width: 2px; transform: translateY(2px); }
+:root.night .chip { background: transparent; color: var(--chip); border-color: var(--chip); }
+:root.night .chip[style*="var(--card)"] { color: var(--text); border-color: var(--outline); }
+:root.night .chip.on { background: var(--chip); color: #0b1622; }
+:root.night .chip.on[style*="var(--card)"] { background: var(--outline); color: var(--text); }
+#list { padding-bottom: 10px; }
+.sc { font-family: 'Chewy', sans-serif; font-size: 14px; letter-spacing: .2px; text-transform: none; color: var(--muted); padding: 6px 12px 0; }
+.fav-sep, .all-sep { font-family: 'Chewy', sans-serif; font-size: 15px; letter-spacing: .2px; text-transform: none; padding: 8px 12px 0; }
+.fav-sep { color: var(--red); }
+.all-sep { color: var(--text); }
+.si {
+  margin: 6px 10px; padding: 7px 8px 7px 10px; gap: 8px;
+  background: var(--card); border: 2px solid var(--outline); border-bottom-width: 4px; border-radius: 14px;
+  transition: transform .08s, background .1s;
+}
+.si:hover { background: var(--card); transform: translateY(-1px); }
+.si.active { background: var(--card-act); border: 2px solid var(--outline); border-bottom-width: 4px; }
+:root.night .si.active { border-color: var(--b-yellow); }
+.si.pi-playing { box-shadow: inset 4px 0 0 #3ecf6e; }
+.sd { width: 10px; height: 10px; opacity: 1; border: 1.5px solid var(--outline); }
+.si.dead .sd { background: var(--blue) !important; }
+.sn { font-family: 'Chewy', 'Syne', sans-serif; font-weight: 400; font-size: 15px; letter-spacing: .2px; line-height: 1.15; }
+.sl { font-family: 'Fredoka', 'Space Mono', sans-serif; font-weight: 500; font-size: 12px; font-style: normal; margin-top: 1px; line-height: 1.3; }
+.si .edit-icon { opacity: 0; }
+.si:hover .edit-icon { opacity: .6; }
+@media (hover: none) { .si .edit-icon { opacity: .5; } }
+.si .fheart {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; padding: 0; opacity: 1;
+  display: flex; align-items: center; justify-content: center; font-size: 11px;
+  color: var(--off); border: 2px dashed var(--off);
+}
+.si .fheart:hover { color: var(--red); border-color: var(--red); }
+.si .fheart.on { background: #f2a7b8; color: var(--red); border: 2px solid var(--outline); }
 </style>
 </head>
 <body>
@@ -671,7 +739,14 @@ audio { display: none; }
 
 <div id="main">
   <div id="sidebar">
-    <div id="sw"><input type="text" id="search" placeholder="search stations…" oninput="renderList()"></div>
+    <div id="sw">
+      <div id="search-wrap">
+        <svg class="sicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+        <input type="text" id="search" placeholder="search stations…" oninput="renderList()">
+        <button id="filter-toggle" onclick="toggleChips()" title="Filter by continent" aria-label="Filter by continent"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c2 2 2 10 0 12M8 2c-2 2-2 10 0 12"/></svg></button>
+      </div>
+      <div id="chips"></div>
+    </div>
     <div id="sidebar-scroll">
       <div id="update-banner">
         <span>▲ update available</span>
@@ -1794,7 +1869,7 @@ function updatePopupBtn() {
 function renderList() {
   const q = document.getElementById('search').value.toLowerCase();
   const all = stations.map((s,i)=>({...s,_i:i})).filter(s=>
-    !q || s.name.toLowerCase().includes(q) || s.city.toLowerCase().includes(q) || s.country.toLowerCase().includes(q)
+    (!q || s.name.toLowerCase().includes(q) || s.city.toLowerCase().includes(q) || s.country.toLowerCase().includes(q)) && chipMatch(s)
   );
   const favList = all.filter(s=>favs.has(s.name));
   const rest = all.filter(s=>!favs.has(s.name));
@@ -1807,16 +1882,61 @@ function renderList() {
     // Edit icon now shown for ALL stations (built-ins editable via overrides, deletable via hide flag)
     const editIcon = `<button class="icon-btn edit-icon" onclick="openModalEdit('${safeName}');event.stopPropagation()" title="Edit / delete">✎</button>`;
     return `<div class="si ${isAct?'active':''} ${isPi?'pi-playing':''} ${isFav?'faved':''} ${isDead?'dead':''}" onclick="sidebarClick(${s._i})">
-      <div class="sd"></div>
+      <div class="sd" style="background:${stationDotColour(s)}"></div>
       <div class="sinfo"><div class="sn">${s.name}</div><div class="sl">${s.city}, ${s.country}</div></div>
       ${editIcon}
       <button class="icon-btn fheart ${isFav?'on':''}" onclick="toggleFav('${safeName}');event.stopPropagation()" title="${isFav?'Remove':'Favourite'}">♥</button>
     </div>`;
   };
-  const favSec = favList.length ? `<div class="fav-sep">♥ favourites</div>${favList.map(mkItem).join('')}` : '';
+  renderChips();
+  const favSec = favList.length && chipFilter !== '♥'
+    ? `<div class="fav-sep">♥ favourites</div>${favList.map(mkItem).join('')}${rest.length ? '<div class="all-sep">all stations</div>' : ''}`
+    : favList.map(mkItem).join('');
   document.getElementById('list').innerHTML =
-    `<div class="sc">${all.length} stations</div>${favSec}${rest.map(mkItem).join('')}`;
+    `<div class="sc">${all.length} stations</div>${favSec}${rest.map(mkItem).join('')}` +
+    (all.length ? '' : '<div class="sc">no stations here yet</div>');
 }
+
+// ── Continent chips + country dots ────────────────────────────────────────
+// Chips slide out when the mouse is over the search (or the globe button is
+// tapped on a phone) and stay out while a filter is on.
+let chipFilter = 'All';
+const CHIP_COLOURS = { '♥': '#f2a7b8', All: '', Europe: '#f3d34a', Africa: '#8cc75a', Americas: '#f4a54a', Asia: '#9fcbee', Oceania: '#f2a7b8' };
+function stationContinent(s) {
+  try {
+    const c = ISO_TO_CONTINENT[isoOfStation(s)] || '';
+    return (c === 'North America' || c === 'South America') ? 'Americas' : c;
+  } catch (e) { return ''; }
+}
+let _isoColour = null;
+function stationDotColour(s) {
+  // the colour this station's country has on the globe
+  try {
+    if (!_isoColour && world) {
+      _isoColour = {};
+      world.features.forEach(f => { const iso = _ISO_NUM[+f.id]; if (iso) _isoColour[iso] = f._c || 0; });
+    }
+    const k = _isoColour && _isoColour[isoOfStation(s)];
+    if (k !== undefined && k !== null) return GLOBE_THEMES.day.land[k % GLOBE_THEMES.day.land.length];
+  } catch (e) {}
+  return 'var(--off)';
+}
+function chipMatch(s) {
+  if (chipFilter === 'All') return true;
+  if (chipFilter === '♥') return favs.has(s.name);
+  return stationContinent(s) === chipFilter;
+}
+function renderChips() {
+  const el = document.getElementById('chips'); if (!el) return;
+  const present = new Set(stations.map(stationContinent));
+  const list = ['All', ...(favs.size ? ['♥'] : []), ...['Europe', 'Africa', 'Americas', 'Asia', 'Oceania'].filter(c => present.has(c))];
+  if (!list.includes(chipFilter)) chipFilter = 'All';
+  el.innerHTML = list.map(c => `<button class="chip ${c === chipFilter ? 'on' : ''}" style="--chip:${CHIP_COLOURS[c] || 'var(--card)'}" onclick="setChip('${c}')">${c}</button>`).join('');
+  el.classList.toggle('filtered', chipFilter !== 'All');
+  const t = document.getElementById('filter-toggle'); if (t) t.classList.toggle('on', chipFilter !== 'All');
+}
+function setChip(c) { chipFilter = c; renderList(); }
+function toggleChips() { document.getElementById('chips').classList.toggle('open'); }
 
 function sidebarClick(idx) {
   const s = stations[idx];
@@ -1872,7 +1992,9 @@ async function loadWorld() {
     let c = 0; while (used.has(c)) c++;
     world.features[i]._c = c;
   });
+  _isoColour = null;
   resize();
+  try { renderList(); } catch (e) {}
   drawGlobe();
 }
 
