@@ -11,6 +11,7 @@ Format: [date] — what changed and why.
 - **Day look (new default)** matches the physical globe: blue ocean, countries in political colours (neighbours always differ), white interface like the globe's plastic base.
 - **Night switch** (header button, "☾ night" / "☀ day"): the same globe with the lights off — deep blue ocean, dark land, navy interface.
 - **Follows the real sun**: day/night switches at sunrise/sunset where the visitor is. Rough location from their internet address via get.geojs.io (free, no key), looked up once a day and cached (`localStorage.oreloj_geo`); sun position computed in the page (`orelojSun` in `<head>`, applied before the page draws so there's no flash). No location / offline (e.g. setup Wi-Fi): day 07:00–19:00 local time. A tap on the switch overrides until the next sunrise or sunset, 12 h max (`localStorage.oreloj_theme_override`). Rechecked every 5 min while open.
+- **Logo** now in Chewy (rounded, toy-like), all capitals, plain ink — red wavy underline removed. Font self-hosted in `vendor/fonts/` (Apache 2.0) so it works offline.
 - **Stylus cursor** over the globe (click point = pen tip); grabbing hand while dragging stays.
 - Ocean is now actually painted (the old sphere fill used `clipAngle(180)` and drew nothing — invisible while everything was black).
 - Hard-coded dark colours replaced by theme variables (`--on-text`, `--line`, `--active-bg`, `--shadow`).
