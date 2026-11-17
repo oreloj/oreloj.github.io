@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-16T09:52:38+00:00",
+ "checked_at": "2026-11-17T10:50:13+00:00",
  "summary": {
-  "ok": 289,
-  "warn": 26,
-  "dead": 26
+  "ok": 295,
+  "warn": 27,
+  "dead": 19
  },
  "stations": [
   {
@@ -203,10 +203,8 @@
    "country": "Germany",
    "url": "https://neunzugmilradio.out.airtime.pro/neunzugmilradio_a",
    "source": "station",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio 80000",
@@ -352,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "RNZ Concert",
@@ -450,7 +448,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 10
+   "checks_dead": 11
   },
   {
    "name": "Ibero 909",
@@ -460,7 +458,7 @@
    "status": "dead",
    "detail": "server unreachable",
    "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "El Recreo FM",
@@ -550,7 +548,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Radio Siete",
@@ -565,20 +563,16 @@
    "country": "Bolivia",
    "url": "https://conectperu.com/8396/stream",
    "source": "station",
-   "status": "dead",
-   "detail": "a webpage, not a stream",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Wayna Tambo",
    "country": "Bolivia",
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "station",
-   "status": "dead",
-   "detail": "access refused (401)",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Filarmonía",
@@ -601,8 +595,10 @@
    "country": "Colombia",
    "url": "https://estructuraweb.com.co:9207/live",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-17T10:50:13+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Javeriana Estéreo 91,9",
@@ -649,8 +645,10 @@
    "country": "Panama",
    "url": "https://cast1.my-control-panel.com/proxy/voxlarad/stream",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-17T10:50:13+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Osa Radio Online",
@@ -729,10 +727,8 @@
    "country": "El Salvador",
    "url": "https://stream.codigosur.org/arpas.mp3",
    "source": "station",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 3
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Santa Cruz",
@@ -742,7 +738,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 12
+   "checks_dead": 13
   },
   {
    "name": "Nebaj Stereo FM",
@@ -864,7 +860,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "KLPM FM",
@@ -938,7 +934,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "Calotropis",
@@ -964,7 +960,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-15T09:34:11+00:00",
-   "checks_dead": 2
+   "checks_dead": 3
   },
   {
    "name": "Black Rhino Radio",
@@ -1278,7 +1274,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "Radio Kledu",
@@ -1325,10 +1321,8 @@
    "country": "Malawi",
    "url": "https://play.streamafrica.net/timveni",
    "source": "station",
-   "status": "dead",
-   "detail": "a webpage, not a stream",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Rádio Cidade - Beira 105.2 FM",
@@ -1399,10 +1393,8 @@
    "country": "South Sudan",
    "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
    "source": "station",
-   "status": "dead",
-   "detail": "stream stalls (no audio arriving)",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Tchad",
@@ -1668,7 +1660,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "UpBeat Radio",
@@ -1835,10 +1827,8 @@
    "country": "Italy",
    "url": "https://pantano.ovh:8444/pantano",
    "source": "station",
-   "status": "dead",
-   "detail": "server unreachable",
-   "dead_since": "2026-11-15T09:34:11+00:00",
-   "checks_dead": 2
+   "status": "warn",
+   "detail": "plays, but its security certificate is broken or outdated — may fail on the website"
   },
   {
    "name": "Fresh Air Radio KFAI",
@@ -2272,7 +2262,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "Radio Nova",
@@ -2375,10 +2365,8 @@
    "country": "Germany",
    "url": "https://neunzugmilradio.out.airtime.pro/neunzugmilradio_a",
    "source": "website",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Corax",
@@ -2444,7 +2432,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 10
+   "checks_dead": 11
   },
   {
    "name": "Ibero 909",
@@ -2454,7 +2442,7 @@
    "status": "dead",
    "detail": "server unreachable",
    "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "El Recreo FM",
@@ -2536,7 +2524,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Radio Siete",
@@ -2551,20 +2539,16 @@
    "country": "Bolivia",
    "url": "https://conectperu.com/8396/stream",
    "source": "website",
-   "status": "dead",
-   "detail": "a webpage, not a stream",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Wayna Tambo",
    "country": "Bolivia",
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "website",
-   "status": "dead",
-   "detail": "access refused (401)",
-   "dead_since": "2026-11-16T09:52:38+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Filarmonía",
@@ -2587,8 +2571,10 @@
    "country": "Colombia",
    "url": "https://estructuraweb.com.co:9207/live",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-17T10:50:13+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Javeriana Estéreo 91,9",
@@ -2635,8 +2621,10 @@
    "country": "Panama",
    "url": "https://cast1.my-control-panel.com/proxy/voxlarad/stream",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-17T10:50:13+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Osa Radio Online",
@@ -2723,10 +2711,8 @@
    "country": "El Salvador",
    "url": "https://stream.codigosur.org/arpas.mp3",
    "source": "website",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 3
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Santa Cruz",
@@ -2736,7 +2722,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 12
+   "checks_dead": 13
   },
   {
    "name": "Nebaj Stereo FM",
