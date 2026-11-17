@@ -6,7 +6,42 @@
 <title>Oreloj</title>
 <!-- Fonts and map libraries are served from vendor/ so the page works with no internet (hotspot setup mode). -->
 <link href="vendor/fonts.css" rel="stylesheet">
-<script>try{if(localStorage.getItem('oreloj_theme')==='night')document.documentElement.classList.add('night')}catch(e){}</script>
+<script>
+// Day / night follows the sun where the visitor is (rough location from their
+// internet address, looked up once a day — see locateForTheme). No location
+// yet or offline: day from 07:00 to 19:00 local time. A tap on the switch
+// overrides it until the next sunrise or sunset (max 12 h).
+window.orelojSun = {
+  up: function (lat, lng, d) {
+    var rad = Math.PI / 180, n = d.getTime() / 864e5 - 10957.5;
+    var g = (357.529 + 0.98560028 * n) * rad, q = 280.459 + 0.98564736 * n;
+    var L = (q + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * rad;
+    var e = (23.439 - 0.00000036 * n) * rad;
+    var ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+    var dec = Math.asin(Math.sin(e) * Math.sin(L));
+    var H = ((18.697374558 + 24.06570982441908 * n) * 15 + lng) * rad - ra;
+    var alt = Math.asin(Math.sin(lat * rad) * Math.sin(dec) + Math.cos(lat * rad) * Math.cos(dec) * Math.cos(H));
+    return alt / rad > -0.833;
+  },
+  auto: function () {
+    var now = new Date();
+    try {
+      var p = JSON.parse(localStorage.getItem('oreloj_geo') || 'null');
+      if (p && typeof p.lat === 'number') return orelojSun.up(p.lat, p.lng, now) ? 'day' : 'night';
+    } catch (e) {}
+    var h = now.getHours(); return (h >= 7 && h < 19) ? 'day' : 'night';
+  },
+  mode: function () {
+    var a = orelojSun.auto();
+    try {
+      var o = JSON.parse(localStorage.getItem('oreloj_theme_override') || 'null');
+      if (o && o.autoWas === a && Date.now() - o.at < 12 * 36e5) return o.mode;
+    } catch (e) {}
+    return a;
+  }
+};
+if (orelojSun.mode() === 'night') document.documentElement.classList.add('night');
+</script>
 <style>
 :root {
   /* Day = "faithful" look of the physical globe: white plastic, blue ocean */
@@ -580,7 +615,7 @@ audio { display: none; }
   <button id="discoverbtn" onclick="playDiscover()" title="Discover a random station">⚄ discover</button>
   <button id="lovebtn" onclick="playRandomLove()" title="Play a random favourite station">♥ random love</button>
   <button id="exportbtn" onclick="openExport()" title="Export pen mappings + radio stations">⤓ data</button>
-  <button id="themebtn" onclick="toggleTheme()" title="Switch day / night"><span class="ticon">☾</span><span class="tlabel"> night</span></button>
+  <button id="themebtn" onclick="toggleTheme()" title="Follows sunrise and sunset where you are. Tap to switch until the next sunrise or sunset."><span class="ticon">☾</span><span class="tlabel"> night</span></button>
   <button id="addbtn" onclick="openModal()">+ add radio</button>
 </div>
 <button id="mobile-add" onclick="openModal()">+ add radio</button>
@@ -1811,7 +1846,7 @@ function resize() {
 
 // ── Day / night look ──────────────────────────────────────────────────────
 // Day copies the physical globe (blue ocean, political colours); night is the
-// same globe with the lights off. Choice is remembered per browser.
+// same globe with the lights off. Which one shows: orelojSun in <head>.
 const GLOBE_THEMES = {
   day: {
     ocean: '#3c9ad6', rim: 'rgba(22,60,100,0.35)', grat: 'rgba(255,255,255,0.22)',
@@ -1833,14 +1868,42 @@ function syncThemeBtn() {
   b.querySelector('.ticon').textContent = isNight() ? '☀' : '☾';
   b.querySelector('.tlabel').textContent = isNight() ? ' day' : ' night';
 }
+function applyTheme() {
+  const night = orelojSun.mode() === 'night';
+  if (night !== isNight()) { document.documentElement.classList.toggle('night', night); drawGlobe(); }
+  syncThemeBtn();
+}
 function toggleTheme() {
-  const night = !isNight();
-  document.documentElement.classList.toggle('night', night);
-  try { localStorage.setItem('oreloj_theme', night ? 'night' : 'day'); } catch (e) {}
+  // Manual choice wins until the sun next rises or sets, then automatic again.
+  const next = isNight() ? 'day' : 'night';
+  const auto = orelojSun.auto();
+  try {
+    if (next === auto) localStorage.removeItem('oreloj_theme_override');
+    else localStorage.setItem('oreloj_theme_override', JSON.stringify({ mode: next, autoWas: auto, at: Date.now() }));
+  } catch (e) {}
+  document.documentElement.classList.toggle('night', next === 'night');
   syncThemeBtn();
   drawGlobe();
 }
+async function locateForTheme() {
+  try {
+    const p = JSON.parse(localStorage.getItem('oreloj_geo') || 'null');
+    if (p && Date.now() - p.t < 864e5) return;            // looked up less than a day ago
+  } catch (e) {}
+  try {
+    const ctl = new AbortController(); setTimeout(() => ctl.abort(), 4000);
+    const j = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: ctl.signal }).then(r => r.json());
+    const lat = parseFloat(j.latitude), lng = parseFloat(j.longitude);
+    if (isFinite(lat) && isFinite(lng)) {
+      localStorage.setItem('oreloj_geo', JSON.stringify({ lat, lng, t: Date.now() }));
+      applyTheme();
+    }
+  } catch (e) {}                                          // offline / blocked: clock fallback stays
+}
+try { localStorage.removeItem('oreloj_theme'); } catch (e) {}  // old manual-only setting
 syncThemeBtn();
+locateForTheme();
+setInterval(applyTheme, 5 * 60 * 1000);                  // flip at sunrise / sunset while open
 
 function drawGlobe() {
   if (!proj) return;
