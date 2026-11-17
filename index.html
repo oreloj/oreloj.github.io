@@ -703,6 +703,194 @@ audio { display: none; }
 }
 .si .fheart:hover { color: var(--red); border-color: var(--red); }
 .si .fheart.on { background: #f2a7b8; color: var(--red); border: 2px solid var(--outline); }
+/* ── Dice buttons + day/night key (mockup 2) ── */
+#discoverbtn.diebtn, #lovebtn.diebtn {
+  width: 40px; height: 40px; padding: 0; background: none; border: none; border-radius: 0;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+}
+:root.night #discoverbtn.diebtn, :root.night #lovebtn.diebtn { background: none; border: none; }
+.diebtn svg { width: 40px; height: 40px; display: block; transition: transform .15s; }
+#discoverbtn svg { transform: rotate(-8deg); }
+#lovebtn svg     { transform: rotate(7deg); }
+#discoverbtn:hover { transform: none; } #lovebtn:hover { transform: none; }
+#discoverbtn:hover svg { transform: rotate(-22deg) scale(1.06); }
+#lovebtn:hover svg     { transform: rotate(20deg) scale(1.06); }
+.diebtn:active svg { transform: translateY(2px) rotate(0deg) scale(.96); }
+.die-face { stroke: var(--die-ol, #16212b); stroke-width: 1.4; }
+.die-face.yellow { fill: var(--b-yellow); }
+.die-face.pink   { fill: var(--b-pink); }
+.die-pip   { fill: #16212b; }
+.die-heart { fill: var(--red); }
+:root.night { --die-ol: #0b1622; }
+#themebtn, :root.night #themebtn {
+  width: 40px; height: 40px; padding: 0; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--b-blue); border: 2px solid var(--outline); border-bottom-width: 4px;
+}
+:root.night #themebtn { border-color: #0b1622; }
+#themebtn svg { width: 24px; height: 24px; display: block; }
+@media (max-width: 550px) {
+  .diebtn, .diebtn svg, #themebtn { width: 36px !important; height: 36px !important; }
+}
+
+/* ── Station box (toy card, mockup 1) ── */
+#popup {
+  background: var(--card); border: 2px solid var(--outline); border-bottom-width: 5px;
+  border-radius: 18px; width: 262px; box-shadow: none; overflow: hidden; font-family: 'Fredoka', sans-serif;
+}
+#popup-inner { padding: 0; }
+.pop-band {
+  display: flex; align-items: flex-start; gap: 5px; padding: 11px 34px 10px 13px;
+  background: var(--band); border-bottom: 2px solid var(--outline);
+}
+:root.night .pop-band { background: var(--card-act); }
+.pop-titles { flex: 1; min-width: 0; }
+.pop-name { font-family: 'Chewy', 'Syne', sans-serif; font-weight: 400; font-size: 22px; line-height: 1.05; letter-spacing: .3px; color: #16212b; }
+.pop-loc { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 13px; font-style: normal; color: #4f4838; margin-top: 2px; }
+:root.night .pop-name { color: var(--b-yellow); }
+:root.night .pop-loc  { color: #d8c98a; }
+.pop-icon {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; padding: 0; opacity: 1;
+  display: flex; align-items: center; justify-content: center; font-size: 12px;
+  color: #4f4838; background: rgba(255,255,255,.4); border: 2px solid rgba(22,33,43,.35);
+}
+.pop-icon:hover { color: #16212b; border-color: #16212b; opacity: 1; }
+.pop-icon.heart { background: transparent; color: rgba(22,33,43,.45); border: 2px dashed rgba(22,33,43,.45); }
+.pop-icon.heart:hover { color: var(--red); border-color: var(--red); }
+.pop-icon.heart.on { background: #f2a7b8; color: var(--red); border: 2px solid var(--outline); }
+:root.night .pop-icon { background: transparent; color: #d8c98a; border-color: rgba(216,201,138,.45); }
+:root.night .pop-icon.heart { color: rgba(216,201,138,.6); border: 2px dashed rgba(216,201,138,.45); }
+:root.night .pop-icon.heart.on { background: #f2a7b8; color: var(--red); border: 2px solid #0b1622; }
+#popup-close { top: 9px; right: 10px; color: #4f4838; font-size: 19px; line-height: 1; }
+#popup-close:hover { color: #16212b; }
+:root.night #popup-close { color: #d8c98a; }
+.pop-body { padding: 11px 13px 13px; }
+.pop-desc { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 13px; line-height: 1.45; font-style: normal; color: var(--text); margin-bottom: 9px; }
+.pop-web {
+  display: inline-block; max-width: 100%; font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 11px;
+  color: var(--muted); opacity: 1; border: 1.5px solid var(--off); border-radius: 99px; padding: 2px 10px; margin-bottom: 11px;
+}
+.pop-web:hover { color: var(--text); border-color: var(--outline); }
+.pop-play {
+  display: block; width: 100%; text-align: center; font-family: 'Chewy', sans-serif; font-size: 18px; letter-spacing: .5px;
+  color: #fff; background: var(--red); border: 2px solid var(--outline); border-bottom-width: 5px; border-radius: 99px;
+  padding: 7px 0 5px; transition: transform .08s;
+}
+.pop-play:hover { color: #fff; border-color: var(--outline); transform: translateY(-1px); }
+.pop-play:active { transform: translateY(2px); }
+.pop-play.stop { background: #16212b; color: #fff; border-color: var(--outline); }
+:root.night .pop-play.stop { background: var(--surface2); }
+.pop-play.loading { background: var(--off); color: var(--text); border-color: var(--outline); }
+.pop-play.dead { background: var(--surface2); color: var(--blue); border-color: var(--blue); border-style: dashed; }
+.pop-preset-picker.open { margin-bottom: 10px; }
+.pop-preset-picker .ppp-label { font-family: 'Fredoka', sans-serif; font-size: 11px; }
+.pop-preset-slot {
+  width: 22px; height: 22px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Chewy', sans-serif; font-size: 12px; color: var(--muted); background: transparent; border: 2px solid var(--off);
+}
+.pop-preset-slot:hover { color: var(--text); border-color: var(--outline); }
+.pop-preset-slot.assigned { background: var(--b-yellow); color: #16212b; border-color: var(--outline); }
+.pop-preset-slot.occupied { color: var(--text); border-color: var(--muted); }
+.pop-preset-badge {
+  font-family: 'Chewy', sans-serif; font-size: 13px; color: #16212b; background: var(--b-yellow);
+  border: 2px solid var(--outline); border-radius: 99px; padding: 1px 9px 0; margin-bottom: 9px;
+}
+
+/* ── Country panel ── */
+#country-panel { background: var(--surface); border-left: 2px solid var(--outline); font-family: 'Fredoka', sans-serif; }
+.cp-header { background: var(--card); border-bottom: 2px solid var(--outline); padding: 12px 14px; }
+.cp-name { font-family: 'Chewy', 'Syne', sans-serif; font-weight: 400; font-size: 22px; letter-spacing: .3px; }
+.cp-close { font-size: 20px; }
+.cp-list { padding: 4px 0 8px; }
+.cp-empty { font-family: 'Fredoka', sans-serif; font-weight: 500; font-style: normal; font-size: 13px; }
+.cp-station {
+  margin: 6px 10px; padding: 6px 6px 6px 10px; gap: 5px; background: var(--card);
+  border: 2px solid var(--outline); border-bottom-width: 4px; border-radius: 12px; transition: transform .08s;
+}
+.cp-station:hover { background: var(--card); transform: translateY(-1px); }
+.cp-sinfo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cp-sname { font-family: 'Chewy', 'Syne', sans-serif; font-weight: 400; font-size: 15px; letter-spacing: .2px; line-height: 1.15; }
+.cp-scity { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-station .icon-btn { opacity: 0; }
+.cp-station:hover .icon-btn { opacity: .6; }
+@media (hover: none) { .cp-station .icon-btn { opacity: .5; } }
+.cp-station .cp-play, .cp-station:hover .cp-play {
+  opacity: 1; width: 24px; height: 24px; border-radius: 50%; background: var(--red); color: #fff;
+  border: 2px solid var(--outline); font-size: 9px; display: flex; align-items: center; justify-content: center; padding: 0 0 0 2px;
+}
+.cp-station .fheart, .cp-station:hover .fheart {
+  opacity: 1; width: 24px; height: 24px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--off); border: 2px dashed var(--off);
+}
+.cp-station .fheart.on { background: #f2a7b8; color: var(--red); border: 2px solid var(--outline); }
+.cp-footer { border-top: none; padding: 8px 10px 12px; }
+.cp-add-btn {
+  font-family: 'Chewy', sans-serif; font-size: 15px; letter-spacing: .3px; color: var(--muted);
+  background: transparent; border: 2px dashed var(--off); border-radius: 99px; padding: 6px 0 4px;
+}
+.cp-add-btn:hover { color: var(--text); border-color: var(--outline); }
+
+/* ── Boxes: add/edit radio, export, preset, zone ── */
+#modal-overlay, #export-overlay, #preset-modal-overlay { background: rgba(11,22,34,.55); }
+#modal, #export-modal, #preset-modal {
+  background: var(--card); border: 2px solid var(--outline); border-bottom-width: 5px; border-radius: 20px;
+  box-shadow: none; font-family: 'Fredoka', sans-serif;
+}
+#zone-modal { background: var(--card) !important; border: 2px solid var(--outline) !important; border-bottom-width: 5px !important; border-radius: 20px !important; font-family: 'Fredoka', sans-serif !important; }
+#modal h2, #export-modal h2, #preset-modal h2, #zone-modal h2 {
+  font-family: 'Chewy', sans-serif !important; font-weight: 400; font-size: 22px !important; letter-spacing: .3px;
+}
+.export-section h3 { font-family: 'Chewy', sans-serif; font-weight: 400; font-size: 17px; letter-spacing: .3px; }
+.export-section .hint { font-family: 'Fredoka', sans-serif; font-style: normal; font-size: 12px; }
+.mf label, .pmf label { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 12px; text-transform: none; letter-spacing: 0; }
+.mf input, .mf select, .mf textarea, .pmf input {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 99px; padding: 7px 12px;
+  font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 13px; font-style: normal; color: var(--text);
+}
+.mf textarea { border-radius: 14px; }
+.mf input:focus, .mf select:focus, .mf textarea:focus, .pmf input:focus { border-color: var(--outline); }
+.mbtns button, .pmbtns button, .export-actions button, #update-banner button {
+  font-family: 'Chewy', sans-serif; font-weight: 400; font-size: 16px; letter-spacing: .4px; line-height: 1.2;
+  border-radius: 99px; border: 2px solid var(--outline); border-bottom-width: 4px; padding: 6px 12px 4px;
+  background: transparent; color: var(--text); transition: transform .08s;
+}
+.export-actions button, #update-banner button { font-size: 14px; padding: 4px 11px 2px; }
+.mbtns button:active, .pmbtns button:active, .export-actions button:active, #update-banner button:active { transform: translateY(2px); }
+#msave, #pm-save, .export-actions button.primary { background: var(--b-green); color: #16212b; border: 2px solid var(--outline); border-bottom-width: 4px; }
+#mcancel, #pm-cancel { background: transparent; color: var(--text); border: 2px solid var(--outline); border-bottom-width: 4px; }
+#mdelete { background: transparent; color: var(--red); border: 2px solid var(--red); border-bottom-width: 4px; }
+.export-actions button.danger { background: transparent; color: var(--red); border-color: var(--red); border-style: solid; }
+.cp-station .icon-btn[title="Delete"] { opacity: 0 !important; }
+.cp-station:hover .icon-btn[title="Delete"] { opacity: .6 !important; }
+@media (hover: none) { .cp-station .icon-btn[title="Delete"] { opacity: .5 !important; } }
+.export-actions button:hover { color: var(--text); border-color: var(--outline); }
+.export-actions button.danger:hover { background: var(--red); color: #fff; border-color: var(--outline); }
+#rbgo, #pm-rb-go {
+  font-family: 'Chewy', sans-serif; font-size: 15px; color: var(--muted); border: 2px dashed var(--off); border-radius: 99px; padding: 5px;
+}
+#rbgo:hover, #pm-rb-go:hover { color: var(--text); border-color: var(--outline); }
+.rbn { font-family: 'Chewy', sans-serif; font-weight: 400; font-size: 14px; }
+
+/* ── Sidebar owner sections, banner, badges, small labels ── */
+.sb-section-hdr {
+  font-family: 'Chewy', sans-serif; font-size: 16px; letter-spacing: .3px; text-transform: none;
+  color: var(--text); border-top: 2px dashed var(--border); padding: 10px 12px 6px;
+}
+.sys-sub-hdr { font-family: 'Chewy', sans-serif; font-size: 14px; letter-spacing: .2px; text-transform: none; border-top: 1.5px dashed var(--border); }
+.zone-label, .preset-lbl, .sys-dev-name, .sys-dead-name { font-family: 'Chewy', sans-serif; font-weight: 400; font-size: 14px; letter-spacing: .2px; }
+.preset-slot { font-family: 'Chewy', sans-serif; font-weight: 400; font-size: 15px; }
+.preset-name, .sys-conn-info, .sys-dead-why, .sys-vol-lbl { font-family: 'Fredoka', sans-serif; font-weight: 500; font-style: normal; font-size: 12px; text-transform: none; letter-spacing: 0; }
+#update-banner {
+  font-family: 'Chewy', sans-serif; font-size: 15px; letter-spacing: .3px; color: #16212b;
+  background: var(--b-yellow); border-bottom: 2px solid var(--outline);
+}
+#update-banner button { background: var(--card); }
+#badge-globe, #badge-dev {
+  font-family: 'Chewy', sans-serif; font-size: 13px; letter-spacing: .3px;
+  border-style: solid; border-width: 2px; border-radius: 99px; padding: 3px 10px 2px;
+}
+#pi-hint { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 12px !important; }
+#version-tag { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 10px; text-transform: none; letter-spacing: .2px; }
 </style>
 </head>
 <body>
@@ -729,10 +917,10 @@ audio { display: none; }
   <div id="pen-pill" title="SmartGlobe pen ready — tap a country">
     <span class="pen-dot"></span><span>pen</span>
   </div>
-  <button id="discoverbtn" onclick="playDiscover()" title="Discover a random station">⚄<span class="blabel"> discover</span></button>
-  <button id="lovebtn" onclick="playRandomLove()" title="Play a random favourite station">♥<span class="blabel"> random love</span></button>
+  <button id="discoverbtn" class="diebtn" onclick="playDiscover()" title="Discover a random station" aria-label="Discover a random station"><svg viewBox="0 0 20 20" aria-hidden="true"><rect class="die-face yellow" x="1.1" y="1.1" width="17.8" height="17.8" rx="4.6"/><circle class="die-pip" cx="5.6" cy="5.6" r="1.75"/><circle class="die-pip" cx="14.4" cy="5.6" r="1.75"/><circle class="die-pip" cx="10" cy="10" r="1.75"/><circle class="die-pip" cx="5.6" cy="14.4" r="1.75"/><circle class="die-pip" cx="14.4" cy="14.4" r="1.75"/></svg></button>
+  <button id="lovebtn" class="diebtn" onclick="playRandomLove()" title="Play a random favourite station" aria-label="Play a random favourite station"><svg viewBox="0 0 20 20" aria-hidden="true"><rect class="die-face pink" x="1.1" y="1.1" width="17.8" height="17.8" rx="4.6"/><path class="die-heart" d="M5.7 7.2l-2.3-2.2a1.35 1.35 0 0 1 2.3-1.6a1.35 1.35 0 0 1 2.3 1.6z"/><path class="die-heart" d="M10 11.7l-2.3-2.2a1.35 1.35 0 0 1 2.3-1.6a1.35 1.35 0 0 1 2.3 1.6z"/><path class="die-heart" d="M14.3 16.2l-2.3-2.2a1.35 1.35 0 0 1 2.3-1.6a1.35 1.35 0 0 1 2.3 1.6z"/></svg></button>
   <button id="exportbtn" onclick="openExport()" title="Export pen mappings + radio stations">⤓<span class="blabel"> data</span></button>
-  <button id="themebtn" onclick="toggleTheme()" title="Follows sunrise and sunset where you are. Tap to switch until the next sunrise or sunset."><span class="ticon">☾</span><span class="tlabel"> night</span></button>
+  <button id="themebtn" onclick="toggleTheme()" title="Day / night — follows sunrise and sunset where you are. Tap to switch until the next sunrise or sunset." aria-label="Switch day or night"></button>
   <button id="addbtn" onclick="openModal()">+ add radio</button>
 </div>
 <button id="mobile-add" onclick="openModal()">+ add radio</button>
@@ -1719,7 +1907,7 @@ function refreshPopupIcons(name) {
   const heart = document.querySelector('.pop-icon.heart');
   if (heart) {
     heart.className = 'pop-icon heart' + (isFav?' on':'');
-    heart.textContent = isFav ? '♥' : '♡';
+    heart.textContent = '♥';
     heart.title = isFav ? 'Remove from favourites' : 'Add to favourites';
   }
 }
@@ -2038,8 +2226,13 @@ function globeTheme() { return GLOBE_THEMES[isNight() ? 'night' : 'day']; }
 function syncThemeBtn() {
   if (typeof drawVolDial === 'function') drawVolDial();
   const b = document.getElementById('themebtn'); if (!b) return;
-  b.querySelector('.ticon').textContent = isNight() ? '☀' : '☾';
-  b.querySelector('.tlabel').textContent = isNight() ? ' day' : ' night';
+  // shows what a tap switches to: moon by day, sun at night
+  b.innerHTML = isNight()
+    ? '<svg viewBox="0 0 20 20" aria-hidden="true">' + [0,1,2,3,4,5,6,7].map(i => { const a = i * Math.PI / 4;
+        return `<line x1="${(10 + Math.cos(a) * 6.4).toFixed(2)}" y1="${(10 + Math.sin(a) * 6.4).toFixed(2)}" x2="${(10 + Math.cos(a) * 8.8).toFixed(2)}" y2="${(10 + Math.sin(a) * 8.8).toFixed(2)}" stroke="#16212b" stroke-width="1.8" stroke-linecap="round"/>`; }).join('')
+      + '<circle cx="10" cy="10" r="4.3" fill="#f3d34a" stroke="#16212b" stroke-width="1.8"/></svg>'
+    : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13.3 3.4a6.9 6.9 0 1 0 3.7 11.2a5.5 5.5 0 0 1-3.7-11.2z" fill="#f1ead2" stroke="#16212b" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  b.title = isNight() ? 'Switch to day (follows sunrise and sunset where you are)' : 'Switch to night (follows sunrise and sunset where you are)';
 }
 function applyTheme() {
   const night = orelojSun.mode() === 'night';
@@ -2241,17 +2434,19 @@ function openPopup(idx) {
     const tip  = _slotName[n] ? `preset ${n}: ${_slotName[n]}` : `assign to preset ${n}`;
     return `<button class="${cls}" title="${esc(tip)}" onclick="assignToPreset(${n})">${n}</button>`;
   }).join('');
+  const band = stationDotColour(s);
   document.getElementById('popup-inner').innerHTML = `
-    <div class="pop-header">
-      <div class="pop-name">${s.name}</div>
-    </div>
-    ${presetBadge}
-    <div class="pop-row">
-      <div class="pop-loc">${s.city}, ${s.country}</div>
+    <div class="pop-band" style="--band:${band === 'var(--off)' ? 'var(--b-yellow)' : band}">
+      <div class="pop-titles">
+        <div class="pop-name">${s.name}</div>
+        <div class="pop-loc">${s.city}, ${s.country}</div>
+      </div>
+      <button class="pop-icon heart ${isFav?'on':''}" onclick="toggleFav('${safeName}')" title="${isFav?'Remove from favourites':'Add to favourites'}">♥</button>
       ${editBtn}
-      <button class="pop-icon heart ${isFav?'on':''}" onclick="toggleFav('${safeName}')" title="${isFav?'Remove from favourites':'Add to favourites'}">${isFav?'♥':'♡'}</button>
       ${presetBtn}
     </div>
+    <div class="pop-body">
+    ${presetBadge}
     <div class="pop-preset-picker" id="pop-preset-picker">
       <span class="ppp-label">preset:</span>
       ${presetSlots}
@@ -2260,6 +2455,7 @@ function openPopup(idx) {
     <div class="pop-desc">${s.desc}</div>
     ${webStr}
     <button class="pop-play ${btnClass}" id="pop-playbtn" onclick="playStation(${idx})">${btnLabel}</button>
+    </div>
   `;
   const isMobile = window.innerWidth < 600;
   if (isMobile) {
@@ -4331,8 +4527,8 @@ function _renderCountryList() {
     const div = document.createElement('div');
     div.className = 'cp-station';
     div.innerHTML = `
-      <span class="cp-sname" title="${_esc(s.name)}">${_esc(s.name)}</span>
-      <button class="icon-btn" onclick="sidebarClick(${i});closeCountryPanel()" title="Locate &amp; play">▶</button>
+      <span class="cp-sinfo"><span class="cp-sname" title="${_esc(s.name)}">${_esc(s.name)}</span><span class="cp-scity">${_esc(s.city || '')}</span></span>
+      <button class="icon-btn cp-play" onclick="sidebarClick(${i});closeCountryPanel()" title="Locate &amp; play">▶</button>
       <button class="icon-btn fheart ${isFav ? 'on' : ''}" onclick="toggleFav('${safeName}');_renderCountryList()" title="${isFav ? 'Unfav' : 'Favourite'}">♥</button>
       <button class="icon-btn edit-icon" onclick="openModalEdit('${safeName}')" title="Edit">✎</button>
       <button class="icon-btn" onclick="cpDeleteStation('${safeName}')" title="Delete" style="opacity:.4;font-size:11px;">✗</button>`;
