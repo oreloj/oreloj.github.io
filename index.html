@@ -6,19 +6,42 @@
 <title>Oreloj</title>
 <!-- Fonts and map libraries are served from vendor/ so the page works with no internet (hotspot setup mode). -->
 <link href="vendor/fonts.css" rel="stylesheet">
+<script>try{if(localStorage.getItem('oreloj_theme')==='night')document.documentElement.classList.add('night')}catch(e){}</script>
 <style>
 :root {
-  --bg: #0e0e0e;
-  --surface: #161616;
-  --surface2: #242424;
-  --border: #2e2e2e;
-  --accent: #e8e8e8;
+  /* Day = "faithful" look of the physical globe: white plastic, blue ocean */
+  --bg: #f6f7f8;
+  --surface: #ffffff;
+  --surface2: #eef1f4;
+  --border: #d5dbe1;
+  --line: #e8ecf0;
+  --accent: #16212b;
   --red: #d42b2b;
-  --red-dim: rgba(212,43,43,0.18);
+  --red-dim: rgba(212,43,43,0.12);
+  --active-bg: #fdeeee;
   --blue: #2b6dd4;
-  --text: #f0f0f0;
-  --muted: #555;
-  --pop-bg: #141414;
+  --text: #16212b;
+  --on-text: #ffffff;
+  --muted: #7d8893;
+  --pop-bg: #ffffff;
+  --shadow: rgba(22,33,43,0.14);
+}
+:root.night {
+  /* Night = the globe with the lights off */
+  --bg: #0b1622;
+  --surface: #0f1d2c;
+  --surface2: #1a2b3d;
+  --border: #24384c;
+  --line: #142334;
+  --accent: #e8eef4;
+  --red-dim: rgba(212,43,43,0.18);
+  --active-bg: #2a1620;
+  --blue: #4a8fe8;
+  --text: #eef2f6;
+  --on-text: #0b1622;
+  --muted: #6b7f93;
+  --pop-bg: #0e1b29;
+  --shadow: rgba(0,0,0,0.5);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -54,7 +77,7 @@ body {
   flex-shrink: 0; transition: transform .1s;
 }
 #pbtn:hover { transform: scale(1.1); }
-#pbtn svg { width: 10px; height: 10px; fill: #000; }
+#pbtn svg { width: 10px; height: 10px; fill: var(--on-text); }
 .pi { flex: 1; min-width: 0; }
 .pn { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pm { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; font-style: italic; }
@@ -80,12 +103,13 @@ body {
 }
 #exportbtn:hover { border-color: var(--text); color: var(--text); }
 @media (max-width: 550px) { #exportbtn { display: none; } }
-#discoverbtn, #lovebtn {
+#discoverbtn, #lovebtn, #themebtn {
   background: transparent; border: 1px dashed var(--border); color: var(--muted);
   padding: 7px 10px; border-radius: 2px; font-family: 'Space Mono', monospace;
   font-size: 10px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: all .15s;
 }
-#discoverbtn:hover { border-color: var(--text); color: var(--text); }
+#discoverbtn:hover, #themebtn:hover { border-color: var(--text); color: var(--text); }
+@media (max-width: 550px) { #themebtn .tlabel { display: none; } }
 #lovebtn:hover { border-color: var(--red); color: var(--red); }
 
 /* ── Export modal ── */
@@ -94,7 +118,7 @@ body {
 #export-modal {
   background: var(--surface); border: 1px solid var(--border); border-radius: 2px;
   padding: 22px; width: 640px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
-  box-shadow: 6px 6px 0 rgba(0,0,0,0.5);
+  box-shadow: 6px 6px 0 var(--shadow);
 }
 #export-modal h2 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--text); }
 .export-sub { font-size: 10px; color: var(--muted); font-style: italic; margin-bottom: 18px; }
@@ -116,7 +140,7 @@ body {
   background: var(--surface2); color: var(--muted); border: 1px dashed var(--border);
 }
 .export-actions button:hover { color: var(--text); border-color: var(--text); }
-.export-actions button.primary { background: var(--text); color: #000; border: none; }
+.export-actions button.primary { background: var(--text); color: var(--on-text); border: none; }
 .export-actions button.danger { color: var(--red); border-color: var(--red); }
 .export-actions button.danger:hover { background: var(--red); color: #fff; }
 .export-toast { font-size: 10px; color: #3ecf6e; font-style: italic; margin-left: 4px; opacity: 0; transition: opacity .2s; align-self: center; }
@@ -147,7 +171,7 @@ body {
   position: fixed; top: 56px; right: 16px; z-index: 200;
   background: var(--pop-bg); border: 1px solid var(--border);
   border-radius: 2px; width: 290px;
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+  box-shadow: 4px 4px 0 var(--shadow);
   display: none; font-family: 'Space Mono', monospace;
 }
 #assign-popup.open { display: block; }
@@ -200,7 +224,7 @@ body {
 #assign-clear { background: transparent; border: 1px dashed var(--border); color: var(--muted); display: none; }
 #assign-clear:hover { color: var(--red); border-color: var(--red); }
 #assign-cancel { background: var(--surface2); color: var(--muted); border: 1px dashed var(--border); }
-#assign-save { background: var(--text); color: #000; }
+#assign-save { background: var(--text); color: var(--on-text); }
 
 /* ── Layout ── */
 #main { display: flex; flex: 1; overflow: hidden; }
@@ -231,11 +255,11 @@ body {
 .sc { font-size: 9px; color: var(--muted); padding: 8px 12px; letter-spacing: .8px; text-transform: uppercase; }
 .fav-sep { font-size: 9px; color: var(--red); padding: 8px 12px 3px; letter-spacing: .8px; text-transform: uppercase; }
 .si {
-  padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #1c1c1c;
+  padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--line);
   display: flex; align-items: center; gap: 8px; transition: background .1s;
 }
 .si:hover { background: var(--surface2); }
-.si.active { background: #1a0000; border-left: 2px solid var(--red); }
+.si.active { background: var(--active-bg); border-left: 2px solid var(--red); }
 .si.faved .sd { background: var(--red) !important; opacity: 1 !important; }
 .si.dead .sd { background: var(--blue) !important; opacity: 1 !important; }
 .sd { width: 6px; height: 6px; border-radius: 50%; background: #888; flex-shrink: 0; opacity: .7; }
@@ -251,7 +275,7 @@ body {
 
 /* ── Globe ── */
 #globe-wrap { flex: 1; position: relative; overflow: hidden; background: var(--bg); }
-#globe-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+#globe-canvas { width: 100%; height: 100%; display: block; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g transform='rotate(45 16 16)'><path d='M13 3h6v19l-3 7-3-7z' fill='%23ffffff' stroke='%2316212b' stroke-width='1.3' stroke-linejoin='round'/><rect x='14.6' y='6' width='2.8' height='9' rx='1' fill='%238a949e'/><path d='M14.3 24.5h3.4L16 29z' fill='%2316212b'/></g></svg>") 7 25, pointer; }
 #globe-canvas:active { cursor: grabbing; }
 
 /* ── Popup ── */
@@ -259,7 +283,7 @@ body {
   position: absolute; background: var(--pop-bg);
   border: 1px solid var(--border);
   border-radius: 2px; padding: 0; width: 230px;
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+  box-shadow: 4px 4px 0 var(--shadow);
   display: none; z-index: 100; pointer-events: all;
   font-family: 'Space Mono', monospace;
 }
@@ -303,7 +327,7 @@ body {
 /* ── Modal ── */
 #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 9999; display: none; align-items: center; justify-content: center; }
 #modal-overlay.open { display: flex; }
-#modal { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 22px; width: 380px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 6px 6px 0 rgba(0,0,0,0.5); }
+#modal { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 22px; width: 380px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 6px 6px 0 var(--shadow); }
 #modal h2 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; margin-bottom: 14px; color: var(--text); }
 .mf { margin-bottom: 10px; }
 .mf label { display: block; font-size: 9px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: .5px; }
@@ -317,7 +341,7 @@ body {
 .mbtns { display: flex; gap: 8px; margin-top: 16px; }
 .mbtns button { flex: 1; padding: 9px 9px 12px; border-radius: 1px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; line-height: 1.4; cursor: pointer; border: none; }
 #mcancel { background: var(--surface2); color: var(--muted); border: 1px dashed var(--border); }
-#msave { background: var(--text); color: #000; }
+#msave { background: var(--text); color: var(--on-text); }
 #mdelete { background: transparent; color: var(--red); border: 1px dashed var(--red); display: none; }
 #merr { font-size: 10px; color: var(--red); margin-top: 6px; display: none; font-style: italic; }
 #mgeo { font-size: 10px; color: var(--muted); margin-top: 4px; font-style: italic; }
@@ -355,7 +379,7 @@ audio { display: none; }
   background: var(--surface); border: 1px dashed var(--border);
   color: var(--muted); padding: 10px 14px; border-radius: 2px;
   font-family: 'Space Mono', monospace; font-size: 11px; cursor: pointer;
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 0 var(--shadow);
 }
 
 /* ── Sidebar scroll wrapper ── */
@@ -377,7 +401,7 @@ audio { display: none; }
 
 /* Zone rows */
 .zone-row {
-  padding: 7px 12px 7px 10px; border-bottom: 1px solid #1c1c1c;
+  padding: 7px 12px 7px 10px; border-bottom: 1px solid var(--line);
   display: flex; align-items: center; gap: 7px; font-size: 10px;
 }
 .zone-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
@@ -406,7 +430,7 @@ audio { display: none; }
 
 /* Preset rows */
 .preset-row {
-  padding: 7px 12px 7px 10px; border-bottom: 1px solid #1c1c1c;
+  padding: 7px 12px 7px 10px; border-bottom: 1px solid var(--line);
   display: flex; align-items: center; gap: 7px; font-size: 10px;
 }
 .preset-slot  { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px; color: var(--muted); min-width: 14px; flex-shrink: 0; }
@@ -423,7 +447,7 @@ audio { display: none; }
 #preset-modal {
   background: var(--surface); border: 1px solid var(--border); border-radius: 2px;
   padding: 20px; width: 340px; max-width: 95vw;
-  box-shadow: 6px 6px 0 rgba(0,0,0,0.5); font-family: 'Space Mono', monospace;
+  box-shadow: 6px 6px 0 var(--shadow); font-family: 'Space Mono', monospace;
 }
 #preset-modal h2 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; margin-bottom: 14px; color: var(--text); }
 .pmf { margin-bottom: 10px; }
@@ -441,7 +465,7 @@ audio { display: none; }
 .pmbtns { display: flex; gap: 8px; margin-top: 14px; }
 .pmbtns button { flex: 1; padding: 8px 9px 11px; border-radius: 1px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px; line-height: 1.4; cursor: pointer; border: none; }
 #pm-cancel { background: var(--surface2); color: var(--muted); border: 1px dashed var(--border); }
-#pm-save   { background: var(--text); color: #000; }
+#pm-save   { background: var(--text); color: var(--on-text); }
 
 /* ── Country panel (slides in from right) ── */
 #country-panel {
@@ -463,7 +487,7 @@ audio { display: none; }
 .cp-list { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .cp-empty { color: var(--muted); font-style: italic; font-size: 11px; padding: 16px 14px; line-height: 1.6; }
 .cp-station {
-  padding: 8px 12px; border-bottom: 1px solid #1c1c1c;
+  padding: 8px 12px; border-bottom: 1px solid var(--line);
   display: flex; align-items: center; gap: 4px; min-width: 0;
 }
 .cp-station:hover { background: var(--surface2); }
@@ -556,6 +580,7 @@ audio { display: none; }
   <button id="discoverbtn" onclick="playDiscover()" title="Discover a random station">⚄ discover</button>
   <button id="lovebtn" onclick="playRandomLove()" title="Play a random favourite station">♥ random love</button>
   <button id="exportbtn" onclick="openExport()" title="Export pen mappings + radio stations">⤓ data</button>
+  <button id="themebtn" onclick="toggleTheme()" title="Switch day / night"><span class="ticon">☾</span><span class="tlabel"> night</span></button>
   <button id="addbtn" onclick="openModal()">+ add radio</button>
 </div>
 <button id="mobile-add" onclick="openModal()">+ add radio</button>
@@ -863,7 +888,7 @@ audio { display: none; }
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button onclick="closeZoneModal()" style="background:var(--surface);border:1px dashed var(--border);color:var(--muted);font-family:monospace;font-size:10px;padding:4px 10px;cursor:pointer">Cancel</button>
-      <button onclick="saveZoneModal()" style="background:var(--text);border:none;color:#000;font-family:monospace;font-size:10px;padding:4px 10px;cursor:pointer;font-weight:bold">Save</button>
+      <button onclick="saveZoneModal()" style="background:var(--text);border:none;color:var(--on-text);font-family:monospace;font-size:10px;padding:4px 10px;cursor:pointer;font-weight:bold">Save</button>
     </div>
   </div>
 </div>
@@ -1754,6 +1779,14 @@ async function loadWorld() {
   const topo = await getJson('vendor/countries-110m.json')
     .catch(() => getJson('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json'));
   world = topojson.feature(topo, topo.objects.countries);
+  // Give neighbouring countries different colours, like a political globe
+  const nb = topojson.neighbors(topo.objects.countries.geometries);
+  const order = world.features.map((_, i) => i).sort((a, b) => nb[b].length - nb[a].length);
+  order.forEach(i => {
+    const used = new Set(nb[i].map(j => world.features[j]._c));
+    let c = 0; while (used.has(c)) c++;
+    world.features[i]._c = c;
+  });
   resize();
   drawGlobe();
 }
@@ -1776,22 +1809,64 @@ function resize() {
   path = d3.geoPath(proj, ctx);
 }
 
+// ── Day / night look ──────────────────────────────────────────────────────
+// Day copies the physical globe (blue ocean, political colours); night is the
+// same globe with the lights off. Choice is remembered per browser.
+const GLOBE_THEMES = {
+  day: {
+    ocean: '#3c9ad6', rim: 'rgba(22,60,100,0.35)', grat: 'rgba(255,255,255,0.22)',
+    land: ['#f3d34a', '#f2a7b8', '#8cc75a', '#f4a54a', '#e9e2a0'],
+    border: 'rgba(90,70,40,0.45)', borderW: .5,
+    dot: '255,255,255', dotA: .95, sel: '22,33,43', dotStroke: '22,33,43', dotStrokeA: .8,
+  },
+  night: {
+    ocean: '#103656', rim: '#24384c', grat: 'rgba(255,255,255,0.05)',
+    land: ['#1c2b35'],
+    border: '#2f4b5e', borderW: .7,
+    dot: '210,220,230', dotA: .75, sel: '255,255,255', dotStroke: '0,0,0', dotStrokeA: .6,
+  },
+};
+function isNight() { return document.documentElement.classList.contains('night'); }
+function globeTheme() { return GLOBE_THEMES[isNight() ? 'night' : 'day']; }
+function syncThemeBtn() {
+  const b = document.getElementById('themebtn'); if (!b) return;
+  b.querySelector('.ticon').textContent = isNight() ? '☀' : '☾';
+  b.querySelector('.tlabel').textContent = isNight() ? ' day' : ' night';
+}
+function toggleTheme() {
+  const night = !isNight();
+  document.documentElement.classList.toggle('night', night);
+  try { localStorage.setItem('oreloj_theme', night ? 'night' : 'day'); } catch (e) {}
+  syncThemeBtn();
+  drawGlobe();
+}
+syncThemeBtn();
+
 function drawGlobe() {
   if (!proj) return;
   proj.rotate(rotation);
   ctx.clearRect(0, 0, width, height);
-  ctx.beginPath(); proj.clipAngle(180); path({type:'Sphere'}); proj.clipAngle(90);
-  ctx.fillStyle = '#0a0f14'; ctx.fill();
+  const t = globeTheme();
   ctx.beginPath(); path({type:'Sphere'});
-  ctx.strokeStyle = '#1e2a35'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.fillStyle = t.ocean; ctx.fill();
+  ctx.beginPath(); path({type:'Sphere'});
+  ctx.strokeStyle = t.rim; ctx.lineWidth = 1; ctx.stroke();
   ctx.beginPath(); path(d3.geoGraticule()());
-  ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = .5; ctx.setLineDash([2,4]);
+  ctx.strokeStyle = t.grat; ctx.lineWidth = .5; ctx.setLineDash([2,4]);
   ctx.stroke(); ctx.setLineDash([]);
   if (world) {
+    if (t.land.length > 1) {
+      t.land.forEach((col, k) => {
+        ctx.beginPath();
+        world.features.forEach(f => { if ((f._c || 0) % t.land.length === k) path(f); });
+        ctx.fillStyle = col; ctx.fill();
+      });
+    } else {
+      ctx.beginPath(); path(world);
+      ctx.fillStyle = t.land[0]; ctx.fill();
+    }
     ctx.beginPath(); path(world);
-    ctx.fillStyle = '#1a1a1a'; ctx.fill();
-    ctx.beginPath(); path(world);
-    ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = .7; ctx.stroke();
+    ctx.strokeStyle = t.border; ctx.lineWidth = t.borderW; ctx.stroke();
   }
   stations.forEach((s, i) => {
     const dist = d3.geoDistance([s.lng, s.lat], [-rotation[0], -rotation[1]]);
@@ -1819,11 +1894,11 @@ function drawGlobe() {
     if (isDead)        ctx.fillStyle = `rgba(43,109,212,${edgeFade})`;     // blue if stream dead
     else if (isPlaying) ctx.fillStyle = `rgba(212,43,43,${edgeFade})`;
     else if (isFav)    ctx.fillStyle = `rgba(212,43,43,${edgeFade})`;
-    else if (isSelected) ctx.fillStyle = `rgba(255,255,255,${edgeFade})`;
-    else ctx.fillStyle = `rgba(200,200,200,${0.7 * edgeFade})`;
+    else if (isSelected) ctx.fillStyle = `rgba(${t.sel},${edgeFade})`;
+    else ctx.fillStyle = `rgba(${t.dot},${t.dotA * edgeFade})`;
     ctx.fill();
     ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
-    ctx.strokeStyle = `rgba(0,0,0,${0.6 * edgeFade})`; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = `rgba(${t.dotStroke},${t.dotStrokeA * edgeFade})`; ctx.lineWidth = 1; ctx.stroke();
   });
 }
 
