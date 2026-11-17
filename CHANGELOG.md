@@ -5,6 +5,17 @@ Format: [date] — what changed and why.
 
 ---
 
+## 2026-11-17 — day / night look
+
+### Changed
+- **Day look (new default)** matches the physical globe: blue ocean, countries in political colours (neighbours always differ), white interface like the globe's plastic base.
+- **Night switch** (header button, "☾ night" / "☀ day"): the same globe with the lights off — deep blue ocean, dark land, navy interface. Choice remembered per browser (`localStorage.oreloj_theme`), applied before the page draws so there's no flash.
+- **Stylus cursor** over the globe (click point = pen tip); grabbing hand while dragging stays.
+- Ocean is now actually painted (the old sphere fill used `clipAngle(180)` and drew nothing — invisible while everything was black).
+- Hard-coded dark colours replaced by theme variables (`--on-text`, `--line`, `--active-bg`, `--shadow`).
+
+---
+
 ## 2026-11-04 (part 5) — stream audit + "check streams"
 
 ### Fixed
