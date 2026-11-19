@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-18T10:18:11+00:00",
+ "checked_at": "2026-11-19T10:28:11+00:00",
  "summary": {
-  "ok": 297,
+  "ok": 299,
   "warn": 27,
-  "dead": 17
+  "dead": 15
  },
  "stations": [
   {
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "RNZ Concert",
@@ -448,17 +448,15 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 12
+   "checks_dead": 13
   },
   {
    "name": "Ibero 909",
    "country": "Mexico",
    "url": "https://noasrv.caster.fm:10182/live",
    "source": "station",
-   "status": "dead",
-   "detail": "server unreachable",
-   "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 5
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "El Recreo FM",
@@ -548,7 +546,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 6
+   "checks_dead": 7
   },
   {
    "name": "Radio Siete",
@@ -574,7 +572,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Filarmonía",
@@ -736,7 +734,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 14
+   "checks_dead": 15
   },
   {
    "name": "Nebaj Stereo FM",
@@ -930,7 +928,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "Calotropis",
@@ -956,7 +954,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-15T09:34:11+00:00",
-   "checks_dead": 4
+   "checks_dead": 5
   },
   {
    "name": "Black Rhino Radio",
@@ -1270,7 +1268,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "Radio Kledu",
@@ -1392,7 +1390,7 @@
    "status": "dead",
    "detail": "stream stalls (no audio arriving)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Tchad",
@@ -1658,7 +1656,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "UpBeat Radio",
@@ -2258,9 +2256,9 @@
    "url": "https://cast1.my-control-panel.com/proxy/geethan3/stream",
    "source": "station",
    "status": "dead",
-   "detail": "server error (502)",
+   "detail": "not found (404)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "Radio Nova",
@@ -2430,17 +2428,15 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 12
+   "checks_dead": 13
   },
   {
    "name": "Ibero 909",
    "country": "Mexico",
    "url": "https://noasrv.caster.fm:10182/live",
    "source": "website",
-   "status": "dead",
-   "detail": "server unreachable",
-   "dead_since": "2026-11-14T09:04:17+00:00",
-   "checks_dead": 5
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "El Recreo FM",
@@ -2522,7 +2518,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 6
+   "checks_dead": 7
   },
   {
    "name": "Radio Siete",
@@ -2548,7 +2544,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Filarmonía",
@@ -2718,7 +2714,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 14
+   "checks_dead": 15
   },
   {
    "name": "Nebaj Stereo FM",
