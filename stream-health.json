@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-19T10:28:11+00:00",
+ "checked_at": "2026-11-20T10:08:39+00:00",
  "summary": {
-  "ok": 299,
+  "ok": 297,
   "warn": 27,
-  "dead": 15
+  "dead": 17
  },
  "stations": [
   {
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "RNZ Concert",
@@ -448,7 +448,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "Ibero 909",
@@ -546,7 +546,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 7
+   "checks_dead": 8
   },
   {
    "name": "Radio Siete",
@@ -572,7 +572,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 2
+   "checks_dead": 3
   },
   {
    "name": "Radio Filarmonía",
@@ -734,7 +734,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "Nebaj Stereo FM",
@@ -765,8 +765,10 @@
    "country": "Haiti",
    "url": "https://stream.zeno.fm/s096v26gfrruv",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "server error (503)",
+   "dead_since": "2026-11-20T10:08:39+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Seybo",
@@ -805,8 +807,10 @@
    "country": "Cuba",
    "url": "https://icecast.teveo.cu/zrXXWK9F",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-20T10:08:39+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Enciclopedia",
@@ -928,7 +932,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "Calotropis",
@@ -954,7 +958,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-15T09:34:11+00:00",
-   "checks_dead": 5
+   "checks_dead": 6
   },
   {
    "name": "Black Rhino Radio",
@@ -1268,7 +1272,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "Radio Kledu",
@@ -1387,10 +1391,8 @@
    "country": "South Sudan",
    "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
    "source": "station",
-   "status": "dead",
-   "detail": "stream stalls (no audio arriving)",
-   "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 2
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Tchad",
@@ -1656,7 +1658,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "UpBeat Radio",
@@ -2258,7 +2260,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "Radio Nova",
@@ -2428,7 +2430,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 13
+   "checks_dead": 14
   },
   {
    "name": "Ibero 909",
@@ -2518,7 +2520,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 7
+   "checks_dead": 8
   },
   {
    "name": "Radio Siete",
@@ -2544,7 +2546,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 2
+   "checks_dead": 3
   },
   {
    "name": "Radio Filarmonía",
@@ -2714,7 +2716,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 15
+   "checks_dead": 16
   },
   {
    "name": "Nebaj Stereo FM",
@@ -2753,8 +2755,10 @@
    "country": "Haiti",
    "url": "https://stream.zeno.fm/s096v26gfrruv",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "server error (503)",
+   "dead_since": "2026-11-20T10:08:39+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Seybo",
