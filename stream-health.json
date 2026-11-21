@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-20T10:08:39+00:00",
+ "checked_at": "2026-11-21T09:56:00+00:00",
  "summary": {
-  "ok": 297,
+  "ok": 294,
   "warn": 27,
-  "dead": 17
+  "dead": 20
  },
  "stations": [
   {
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "RNZ Concert",
@@ -448,7 +448,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 14
+   "checks_dead": 15
   },
   {
    "name": "Ibero 909",
@@ -546,7 +546,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Radio Siete",
@@ -570,9 +570,9 @@
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "station",
    "status": "dead",
-   "detail": "access refused (401)",
+   "detail": "server error (500)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "Radio Filarmonía",
@@ -723,8 +723,10 @@
    "country": "El Salvador",
    "url": "https://stream.codigosur.org/arpas.mp3",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-21T09:56:00+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Santa Cruz",
@@ -734,7 +736,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "Nebaj Stereo FM",
@@ -768,7 +770,7 @@
    "status": "dead",
    "detail": "server error (503)",
    "dead_since": "2026-11-20T10:08:39+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Seybo",
@@ -810,7 +812,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-20T10:08:39+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Enciclopedia",
@@ -932,7 +934,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "Calotropis",
@@ -958,7 +960,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-15T09:34:11+00:00",
-   "checks_dead": 6
+   "checks_dead": 7
   },
   {
    "name": "Black Rhino Radio",
@@ -1272,7 +1274,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "Radio Kledu",
@@ -1391,8 +1393,10 @@
    "country": "South Sudan",
    "url": "https://us5new.listen2myradio.com:2199/listen.php?port=8106&type=ice&mount=live",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "stream stalls (no audio arriving)",
+   "dead_since": "2026-11-21T09:56:00+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Tchad",
@@ -1658,7 +1662,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "UpBeat Radio",
@@ -2260,7 +2264,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "Radio Nova",
@@ -2430,7 +2434,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 14
+   "checks_dead": 15
   },
   {
    "name": "Ibero 909",
@@ -2520,7 +2524,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 8
+   "checks_dead": 9
   },
   {
    "name": "Radio Siete",
@@ -2544,9 +2548,9 @@
    "url": "https://s2.myradiostream.com/5038/listen.mp3",
    "source": "website",
    "status": "dead",
-   "detail": "access refused (401)",
+   "detail": "server error (500)",
    "dead_since": "2026-11-18T10:18:11+00:00",
-   "checks_dead": 3
+   "checks_dead": 4
   },
   {
    "name": "Radio Filarmonía",
@@ -2705,8 +2709,10 @@
    "country": "El Salvador",
    "url": "https://stream.codigosur.org/arpas.mp3",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-21T09:56:00+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Radio Santa Cruz",
@@ -2716,7 +2722,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 16
+   "checks_dead": 17
   },
   {
    "name": "Nebaj Stereo FM",
@@ -2758,7 +2764,7 @@
    "status": "dead",
    "detail": "server error (503)",
    "dead_since": "2026-11-20T10:08:39+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "Radio Seybo",
