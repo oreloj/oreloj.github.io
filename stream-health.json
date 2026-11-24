@@ -1,9 +1,9 @@
 {
- "checked_at": "2026-11-23T10:53:39+00:00",
+ "checked_at": "2026-11-24T12:36:51+00:00",
  "summary": {
-  "ok": 294,
+  "ok": 297,
   "warn": 27,
-  "dead": 20
+  "dead": 17
  },
  "stations": [
   {
@@ -350,7 +350,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 20
+   "checks_dead": 21
   },
   {
    "name": "RNZ Concert",
@@ -365,8 +365,10 @@
    "country": "USA",
    "url": "https://livepeercdn.studio/hls/85c28sa2o8wppm58/index.m3u8",
    "source": "station",
-   "status": "ok",
-   "detail": "audio (HLS)"
+   "status": "dead",
+   "detail": "empty HLS playlist",
+   "dead_since": "2026-11-24T12:36:51+00:00",
+   "checks_dead": 1
   },
   {
    "name": "KEXP",
@@ -448,7 +450,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "Ibero 909",
@@ -546,7 +548,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "Radio Siete",
@@ -593,10 +595,8 @@
    "country": "Colombia",
    "url": "https://estructuraweb.com.co:9207/live",
    "source": "station",
-   "status": "dead",
-   "detail": "server unreachable",
-   "dead_since": "2026-11-23T10:53:39+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Javeriana Estéreo 91,9",
@@ -643,8 +643,10 @@
    "country": "Panama",
    "url": "https://cast1.my-control-panel.com/proxy/voxlarad/stream",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-24T12:36:51+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Osa Radio Online",
@@ -723,20 +725,16 @@
    "country": "El Salvador",
    "url": "https://stream.codigosur.org/arpas.mp3",
    "source": "station",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-21T09:56:00+00:00",
-   "checks_dead": 3
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Santa Cruz",
    "country": "Guatemala",
    "url": "https://servidor26.brlogic.com:7014/live",
    "source": "station",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 19
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Nebaj Stereo FM",
@@ -767,10 +765,8 @@
    "country": "Haiti",
    "url": "https://stream.zeno.fm/s096v26gfrruv",
    "source": "station",
-   "status": "dead",
-   "detail": "server error (503)",
-   "dead_since": "2026-11-20T10:08:39+00:00",
-   "checks_dead": 4
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Seybo",
@@ -817,8 +813,10 @@
    "country": "Cuba",
    "url": "https://icecast.teveo.cu/9Rnrbjzq",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-24T12:36:51+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Jolt Radio",
@@ -857,10 +855,8 @@
    "country": "Mexico",
    "url": "https://radio.mensajito.mx/nopalA",
    "source": "station",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-23T10:53:39+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "KLPM FM",
@@ -934,7 +930,7 @@
    "status": "dead",
    "detail": "server error (502)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 20
+   "checks_dead": 21
   },
   {
    "name": "Calotropis",
@@ -960,7 +956,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-15T09:34:11+00:00",
-   "checks_dead": 9
+   "checks_dead": 10
   },
   {
    "name": "Black Rhino Radio",
@@ -1063,8 +1059,10 @@
    "country": "Cuba",
    "url": "https://icecast.teveo.cu/dXhtHs4P",
    "source": "station",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-24T12:36:51+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Vibz FM",
@@ -1274,7 +1272,7 @@
    "status": "dead",
    "detail": "access refused (403)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 20
+   "checks_dead": 21
   },
   {
    "name": "Radio Kledu",
@@ -1612,7 +1610,7 @@
    "status": "dead",
    "detail": "server no longer exists",
    "dead_since": "2026-11-23T10:53:39+00:00",
-   "checks_dead": 1
+   "checks_dead": 2
   },
   {
    "name": "VON Radio",
@@ -1662,7 +1660,7 @@
    "status": "dead",
    "detail": "access refused (401)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 20
+   "checks_dead": 21
   },
   {
    "name": "UpBeat Radio",
@@ -2262,9 +2260,9 @@
    "url": "https://cast1.my-control-panel.com/proxy/geethan3/stream",
    "source": "station",
    "status": "dead",
-   "detail": "not found (404)",
+   "detail": "no answer (timeout)",
    "dead_since": "2026-11-04T19:51:10+00:00",
-   "checks_dead": 20
+   "checks_dead": 21
   },
   {
    "name": "Radio Nova",
@@ -2434,7 +2432,7 @@
    "status": "dead",
    "detail": "no answer (timeout)",
    "dead_since": "2026-11-07T08:54:04+00:00",
-   "checks_dead": 17
+   "checks_dead": 18
   },
   {
    "name": "Ibero 909",
@@ -2524,7 +2522,7 @@
    "status": "dead",
    "detail": "not found (404)",
    "dead_since": "2026-11-13T09:40:29+00:00",
-   "checks_dead": 11
+   "checks_dead": 12
   },
   {
    "name": "Radio Siete",
@@ -2571,10 +2569,8 @@
    "country": "Colombia",
    "url": "https://estructuraweb.com.co:9207/live",
    "source": "website",
-   "status": "dead",
-   "detail": "server unreachable",
-   "dead_since": "2026-11-23T10:53:39+00:00",
-   "checks_dead": 1
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Javeriana Estéreo 91,9",
@@ -2621,8 +2617,10 @@
    "country": "Panama",
    "url": "https://cast1.my-control-panel.com/proxy/voxlarad/stream",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "no answer (timeout)",
+   "dead_since": "2026-11-24T12:36:51+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Osa Radio Online",
@@ -2709,20 +2707,16 @@
    "country": "El Salvador",
    "url": "https://stream.codigosur.org/arpas.mp3",
    "source": "website",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-21T09:56:00+00:00",
-   "checks_dead": 3
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Santa Cruz",
    "country": "Guatemala",
    "url": "https://servidor26.brlogic.com:7014/live",
    "source": "website",
-   "status": "dead",
-   "detail": "not found (404)",
-   "dead_since": "2026-11-05T09:36:40+00:00",
-   "checks_dead": 19
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Nebaj Stereo FM",
@@ -2753,18 +2747,18 @@
    "country": "Cuba",
    "url": "https://icecast.teveo.cu/dXhtHs4P",
    "source": "website",
-   "status": "ok",
-   "detail": "audio"
+   "status": "dead",
+   "detail": "not found (404)",
+   "dead_since": "2026-11-24T12:36:51+00:00",
+   "checks_dead": 1
   },
   {
    "name": "Alter Radio",
    "country": "Haiti",
    "url": "https://stream.zeno.fm/s096v26gfrruv",
    "source": "website",
-   "status": "dead",
-   "detail": "server error (503)",
-   "dead_since": "2026-11-20T10:08:39+00:00",
-   "checks_dead": 4
+   "status": "ok",
+   "detail": "audio"
   },
   {
    "name": "Radio Seybo",
